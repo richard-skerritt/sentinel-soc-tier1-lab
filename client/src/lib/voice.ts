@@ -5,7 +5,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || "";
+// Use the same proxy pattern as queryClient.ts so this works locally AND after deploy.
+// __PORT_5000__ is rewritten to /port/5000 by deploy_website at upload time.
+const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
 let queue: Promise<void> = Promise.resolve();
 let currentAudio: HTMLAudioElement | null = null;
