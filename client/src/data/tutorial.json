@@ -1,0 +1,133 @@
+{
+  "lessons": [
+    {
+      "id": "L1",
+      "title": "Lesson 1 — What logs actually are",
+      "estimatedMinutes": 8,
+      "intro": "Before you can hunt, you need to know what you're hunting through. Take five minutes with me — I promise this is the part most courses skip.",
+      "sections": [
+        {
+          "heading": "A log is just a row in a spreadsheet",
+          "body": "Every time something happens on a computer — someone signs in, a file opens, a network connection is made — the system writes a row to a list. That row is a 'log event'. It has a timestamp and a bunch of fields (columns) describing what happened. Imagine a giant Excel sheet where each row is one event. That's all a log is.\n\nIn Microsoft Sentinel, those rows live in **tables**. Different kinds of events go in different tables, the same way you'd have separate tabs in Excel for 'Sales' and 'Returns' and 'Customers'."
+        },
+        {
+          "heading": "The tables you'll meet today",
+          "body": "- **SigninLogs** — every time someone signs in to Azure AD / Office 365.\n- **DeviceProcessEvents** — every time a program starts on a computer protected by Defender for Endpoint.\n- **DeviceNetworkEvents** — every network connection made by those same computers.\n- **OfficeActivity** — actions in Office 365 (file edits, sharing, mailbox rules).\n- **AzureActivity** — changes made to the Azure cloud itself (someone creates a VM, changes a firewall rule).\n- **AzureFirewallNetworkRule** — traffic going through the cloud firewall.\n- **SysmonEvent** — deep Windows telemetry from a tool called Sysmon.\n- **ThreatIntelligenceIndicator** — a list of known-bad IPs, domains, and file hashes."
+        },
+        {
+          "heading": "A query is a question",
+          "body": "When you ask 'show me all sign-ins from the IP 45.83.193.150 in the last hour', you're writing a question in a language called **KQL** (Kusto Query Language).\n\nKQL is read left-to-right, top-to-bottom, like a pipeline. You start with a table, then add filters and transforms one at a time, separated by the pipe character `|`.\n\n```kql\nSigninLogs\n| where IPAddress == \"45.83.193.150\"\n| take 10\n```\n\nRead that out loud: 'Take the SigninLogs table, keep only rows where IPAddress is that one, then show me the first 10.'"
+        }
+      ],
+      "exercise": {
+        "prompt": "Write a query that returns the first 5 rows of the DeviceProcessEvents table. No filters yet — just get something on screen.",
+        "expectedTable": "DeviceProcessEvents",
+        "validator": {
+          "type": "shape",
+          "mustContain": ["DeviceProcessEvents"],
+          "mustReturnRows": true
+        },
+        "hint": "Start with the table name on its own line. Then add a pipe and 'take 5'."
+      }
+    },
+    {
+      "id": "L2",
+      "title": "Lesson 2 — The four operators you'll use every shift",
+      "estimatedMinutes": 12,
+      "intro": "These four operators handle about 80% of all real SOC work. Master these and you can answer most questions.",
+      "sections": [
+        {
+          "heading": "1) where — keep only the rows you care about",
+          "body": "`where` filters rows by a condition. Read it as 'keep rows where this is true'.\n\n```kql\nSigninLogs\n| where ResultType == \"0\"\n```\nKeeps only successful sign-ins (in Azure AD, ResultType '0' means success — yes, weird).\n\nYou can stack them:\n```kql\nSigninLogs\n| where ResultType == \"0\"\n| where IPAddress != \"10.4.2.18\"\n```\nKeeps successful sign-ins that are NOT from that one printer."
+        },
+        {
+          "heading": "2) project — pick which columns to show",
+          "body": "Logs have dozens of columns. Most you don't care about. `project` keeps only the ones you want.\n\n```kql\nSigninLogs\n| where ResultType == \"0\"\n| project TimeGenerated, UserPrincipalName, IPAddress, City\n```\nNow you only see four columns instead of twenty. Easier to read."
+        },
+        {
+          "heading": "3) summarize — count and group",
+          "body": "`summarize` is the magic one. It collapses many rows into a summary.\n\n```kql\nSigninLogs\n| where ResultType != \"0\"\n| summarize FailedCount = count() by IPAddress\n```\nRead it: 'Take failed sign-ins, then group them by IP address, and tell me how many fails per IP.' One row per IP, with the count.\n\nYou can summarize multiple things at once:\n```kql\nSigninLogs\n| summarize Attempts = count(), Users = dcount(UserPrincipalName) by IPAddress\n```\n`dcount` means 'distinct count' — how many different users, not how many events. That's how you spot a password spray: one IP, many users."
+        },
+        {
+          "heading": "4) sort by — order the results",
+          "body": "Self-explanatory.\n```kql\nSigninLogs\n| where ResultType != \"0\"\n| summarize Failures = count() by IPAddress\n| sort by Failures desc\n```\nThe worst offender goes to the top. `desc` = descending. Default is ascending if you don't say."
+        }
+      ],
+      "exercise": {
+        "prompt": "Find the top 5 IP addresses by number of failed sign-in attempts in SigninLogs. Show IP and failure count, biggest first.",
+        "validator": {
+          "type": "shape",
+          "mustContain": ["SigninLogs", "summarize", "count", "sort by", "IPAddress"],
+          "mustReturnRows": true
+        },
+        "hint": "where ResultType != \"0\" gets the failures. Then summarize ... by IPAddress. Then sort by your count column desc. Then take 5."
+      }
+    },
+    {
+      "id": "L3",
+      "title": "Lesson 3 — Pivoting: building a timeline across tables",
+      "estimatedMinutes": 15,
+      "intro": "A real incident touches multiple tables. The skill is taking a value you found in one table — an IP, a username, a host — and finding it again in another table to see the full story.",
+      "sections": [
+        {
+          "heading": "The pivot pattern",
+          "body": "You find something suspicious in one table. You take the entity (the IP, user, host) and search for it in another table.\n\nExample: Sign-in alert tells you `j.harrington@contoso.com` did something weird at 07:42. You now pivot to DeviceProcessEvents to see what their machine was doing around the same time.\n\nStep 1 — find the host the user is on. Usually you'd check a CMDB; in this lab assume j.harrington uses WS-FIN-014.\n\nStep 2 — pull every process on that host in a tight time window around the alert:\n```kql\nDeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where Timestamp between (datetime(2026-05-13T09:00:00Z) .. datetime(2026-05-13T11:00:00Z))\n| project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName\n| sort by Timestamp asc\n```\nYou'll see WINWORD launching, then PowerShell, then certutil, then rundll32. That's the attack chain in order."
+        },
+        {
+          "heading": "Time windows with ago()",
+          "body": "Instead of typing exact timestamps, use `ago()`:\n```kql\nDeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where Timestamp > ago(6h)\n```\nMeans: from six hours ago to now. The lab's 'now' is frozen at 2026-05-13T12:00:00Z."
+        },
+        {
+          "heading": "Cross-table joins (the heavier hammer)",
+          "body": "You can also join tables explicitly, but in practice you do most pivoting by copy-pasting an entity from one query into the next. That's what Tier 1 actually does on shift."
+        }
+      ],
+      "exercise": {
+        "prompt": "You just saw an alert about j.harrington from IP 185.220.101.42. Pivot to DeviceNetworkEvents and find every connection in the last 4 hours where RemoteIP == \"185.220.101.42\". Show timestamp, device, bytes sent, and the process that made the connection.",
+        "validator": {
+          "type": "shape",
+          "mustContain": ["DeviceNetworkEvents", "185.220.101.42"],
+          "mustReturnRows": true
+        },
+        "hint": "Start with the table, filter on RemoteIP, filter on Timestamp > ago(4h), then project the columns you want."
+      }
+    },
+    {
+      "id": "L4",
+      "title": "Lesson 4 — Hunting patterns (the stuff that actually catches attackers)",
+      "estimatedMinutes": 15,
+      "intro": "Once you've got the basics, these patterns let you catch the stuff that vanilla alerts miss. Memorise the shapes — they'll come up again and again.",
+      "sections": [
+        {
+          "heading": "Pattern: password spray (one IP, many users)",
+          "body": "```kql\nSigninLogs\n| where TimeGenerated > ago(24h)\n| where ResultType != \"0\"\n| summarize Failures=count(), Users=dcount(UserPrincipalName) by IPAddress\n| where Users > 20\n| sort by Users desc\n```\nFlags any IP that failed against 20+ different users. That ratio is the giveaway."
+        },
+        {
+          "heading": "Pattern: brute force (many tries, one user)",
+          "body": "```kql\nSigninLogs\n| where TimeGenerated > ago(1h)\n| where ResultType != \"0\"\n| summarize Failures=count() by UserPrincipalName\n| where Failures > 30\n```\nOne account being hammered. Opposite shape from spray."
+        },
+        {
+          "heading": "Pattern: beaconing (regular outbound to one IP)",
+          "body": "```kql\nDeviceNetworkEvents\n| where Timestamp > ago(12h)\n| summarize Connections=count() by DeviceName, RemoteIP, bin(Timestamp, 5m)\n| summarize Buckets=count() by DeviceName, RemoteIP\n| where Buckets > 10\n```\nBeaconing shows up as 'this host talked to this IP in lots of separate 5-minute buckets'. Real users don't do that — automation does."
+        },
+        {
+          "heading": "Pattern: anomalous parent-child process",
+          "body": "```kql\nDeviceProcessEvents\n| where Timestamp > ago(24h)\n| where InitiatingProcessFileName in~ (\"WINWORD.EXE\", \"EXCEL.EXE\", \"POWERPNT.EXE\")\n| where FileName in~ (\"powershell.exe\", \"cmd.exe\", \"wscript.exe\", \"cscript.exe\")\n```\nOffice spawning a shell is almost always phishing. This one-liner finds patient zero."
+        },
+        {
+          "heading": "Pattern: mass action by one user (deletion, sharing, etc.)",
+          "body": "```kql\nOfficeActivity\n| where TimeGenerated > ago(1h)\n| where Operation == \"FileDeleted\"\n| summarize Count=count() by UserId, bin(TimeGenerated, 5m)\n| where Count > 100\n```\nHumans don't delete 100 files in 5 minutes. Scripts do."
+        }
+      ],
+      "exercise": {
+        "prompt": "Use the beaconing pattern to find any (DeviceName, RemoteIP) pair that has communicated in more than 10 separate 5-minute buckets in the last 12 hours.",
+        "validator": {
+          "type": "shape",
+          "mustContain": ["DeviceNetworkEvents", "bin", "summarize", "count"],
+          "mustReturnRows": true
+        },
+        "hint": "Two-stage summarize: first by (DeviceName, RemoteIP, bin), then by (DeviceName, RemoteIP) counting the buckets."
+      }
+    }
+  ]
+}

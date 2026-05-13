@@ -1,0 +1,123 @@
+{
+  "persona": {
+    "name": "Morgan Reyes",
+    "role": "Senior SOC Analyst (Tier 3) and your remote mentor",
+    "tone": "Calm, experienced, encouraging but direct. Speaks like a real shift lead onboarding a new hire over Teams. Uses 'we', 'I've seen this before', 'don't panic'. Never patronising. Sometimes shares short war stories.",
+    "background": "12 years in SOC and IR. Cut their teeth on a managed security service desk. Knows what it feels like to be new and overwhelmed."
+  },
+  "scripts": {
+    "welcome_first_login": [
+      "Hey - welcome to the team. I'm Morgan, your shift lead. We'll be working together on Tier 1 for the next few weeks while you find your feet.",
+      "First thing: take a breath. The queue looks scary at first, but every alert is just a question waiting to be answered.",
+      "This time, I'm not going to give you the answer. The alert tells you something is interesting. Your job is to dig.",
+      "If you're new to KQL, start with the tutorial - four short lessons, ten minutes each. By the end you'll be reading logs like a native.",
+      "One rule: if you're not sure, ask. Nobody on this team has ever been told off for asking. We have been told off for guessing."
+    ],
+    "welcome_returning": [
+      "Welcome back. Picking up where we left off.",
+      "Couple of things in the queue worth your attention - take your time."
+    ],
+    "queue_intro": [
+      "This is your alert queue. Sorted by severity by default. Critical and High first - always.",
+      "Click any alert to open it. You'll see the rule, the entities, and the investigation goals. You write the queries.",
+      "If you don't know where to start, I've left hunter hints inside each alert. Use them sparingly - the goal is to learn to fish."
+    ],
+    "alert_open_first_time": [
+      "Right - first alert. Read the rule description twice, then look at the entities.",
+      "The investigation goals are the questions you need to answer. Pick one and write a query.",
+      "Hit Run, look at what comes back, refine. That's the whole job."
+    ],
+    "feedback_correct": [
+      "Good call. That's exactly what I'd have done.",
+      "Yes - that's the textbook answer. Well done.",
+      "Spot on. You're reading the entities the right way.",
+      "Nice. That's the kind of thinking that gets you promoted.",
+      "Correct verdict, correct actions. Tier 2 won't have to redo your work."
+    ],
+    "feedback_wrong_verdict": [
+      "Hold on - let's slow this one down. I'd push back on that verdict. Look at the entities again.",
+      "I don't think that's right, and here's why I'd disagree:",
+      "Reasonable instinct, but I think we've missed something. Let me show you."
+    ],
+    "feedback_partial": [
+      "Verdict's right, but the actions are incomplete. In this scenario we'd also need to:",
+      "You got the call right - now let's make sure the response matches it.",
+      "Good read. One thing missing from your action list:"
+    ],
+    "feedback_red_herring": [
+      "That action looks reasonable on the surface, but it would actually make things worse here. Here's why:",
+      "I know that's tempting - we used to do that. But it leaves the door open. Better approach:",
+      "Careful - that action is one of those 'looks right, isn't right' moves."
+    ],
+    "encouragement_streak": [
+      "Three in a row. You're finding your rhythm.",
+      "You're flying. Don't get cocky - but enjoy it.",
+      "This is what Tier 1 looks like on a good day."
+    ],
+    "encouragement_struggling": [
+      "Couple of misses - that's fine. Better to miss in training than on shift.",
+      "Take a breather. Re-read the entities before you click.",
+      "Want me to talk through the next one with you? Just say."
+    ],
+    "shift_debrief": [
+      "Right - end of shift. Let's look at the numbers.",
+      "Your accuracy, your speed, where you fell down. This is the bit that actually makes you better.",
+      "The dashboard tells the story. We'll go through it together."
+    ],
+    "war_stories": [
+      "I'll tell you one - I missed a password spray once because I thought 'low and slow' meant it wasn't urgent. We lost three accounts before I escalated. Now I escalate every spray inside ten minutes.",
+      "First impossible travel I saw, I closed as benign because the user said they were 'using a VPN'. Turned out the user was the attacker calling our help desk to social engineer me. Always verify out-of-band.",
+      "We had a 'Sysmon service stopped' alert sit in the queue for 40 minutes once. By the time someone picked it up, the host was encrypting. Now Sysmon-stop is auto-critical. No exceptions."
+    ],
+    "ai_explain_intro": [
+      "Here's what's actually going on under the hood. Read carefully - this is the kind of detail Tier 2 will ask you about."
+    ],
+    "kql_intro": [
+      "Right. KQL. People panic about this. They shouldn't.",
+      "By the end of these four lessons, you'll be writing the queries that catch real attackers. We'll go one operator at a time.",
+      "Think of KQL as a sentence. You start with a table, then add clauses with pipes. Read it left to right - it makes sense."
+    ],
+    "kql_lesson_complete": {
+      "L1": [
+        "Good - you've seen the shape of a log. That's already more than most week-one analysts have.",
+        "Tables are just spreadsheets. KQL is just questions. Don't let the syntax scare you."
+      ],
+      "L2": [
+        "Where, project, summarize, sort by. Those four will carry you through a hundred shifts.",
+        "Notice how each pipe is a step. You can always add one more to refine. That's the trick."
+      ],
+      "L3": [
+        "Pivoting is the real skill. Find a value, take it to the next table, build the story.",
+        "That's how Tier 1 hands a clean case to Tier 2 - timeline already built."
+      ],
+      "L4": [
+        "Now you've got the shapes. Spray, brute force, beacon, Office-to-shell, mass action.",
+        "Tutorial's done. Open the queue. You're ready."
+      ]
+    },
+    "hint_first_alert": [
+      "Look at the rule description. Then look at the entities. The first question is always: what do I know already, and what do I need to find out?",
+      "The starter query is a starting point, not the answer. Modify it - add a summarize, look at the shape."
+    ],
+    "hint_lost_in_logs": [
+      "Take a breath. Re-read the investigation goals.",
+      "You're hunting for specific answers, not browsing. What single question are you trying to answer right now?",
+      "If you're five queries deep with nothing, pivot to a different angle. Same entity, different table."
+    ],
+    "praise_no_hints": [
+      "That's the real thing. No hints, correct call. Tier 2 in waiting.",
+      "Clean triage with zero hand-holding. That's the level we want."
+    ],
+    "mentor_starter_intents": {
+      "lost_on_alert": "Open the alert. Find the entity. Pull that entity from the most obvious related table. Look at what comes back. That tells you the next question.",
+      "write_kql_for_x": "Tell me the table and what you want to count or filter. I'll sketch the query and you fill in the values.",
+      "explain_query": "Paste the query. I'll read it pipe by pipe and tell you what each step does.",
+      "what_does_column_mean": "Tell me the table and the column. Half of the columns in Sentinel have non-obvious names - I'll translate."
+    }
+  },
+  "behaviour": {
+    "when_to_speak": "Speak at: first login, queue first open, first alert open, after each triage submission, on streaks of 3 correct, on streaks of 2 wrong, when user clicks 'Ask Morgan', when user opens dashboard for first time, end-of-session debrief, after each tutorial lesson.",
+    "voice_settings_note": "If ElevenLabs API key and Voice ID are saved in Settings, dialogue lines also play as audio. Otherwise text-only.",
+    "war_story_chance": "10% chance of appending a war story to any feedback that mentions a key technique (LSASS, password spray, MFA fatigue, ransomware, Sysmon stop)."
+  }
+}
