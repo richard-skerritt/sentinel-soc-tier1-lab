@@ -48,3 +48,22 @@ export const settings = sqliteTable("settings", {
   id: text("id").primaryKey(),
   value: text("value"),
 });
+
+// Exported incident reports (one row per export — latest wins via app logic)
+export const incidentReports = sqliteTable("incidentReports", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  alertId: text("alertId").notNull(),
+  reportContent: text("reportContent").notNull(),
+  exportedAt: integer("exportedAt").notNull(),
+});
+export const insertIncidentReportSchema = createInsertSchema(incidentReports);
+export type IncidentReport = typeof incidentReports.$inferSelect;
+
+// Active tool stack preference (single row keyed by id=1)
+export const toolStackPreference = sqliteTable("toolStackPreference", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  activeStack: text("activeStack").notNull().default("nightshift-default"),
+  updatedAt: integer("updatedAt").notNull(),
+});
+export const insertToolStackPreferenceSchema = createInsertSchema(toolStackPreference);
+export type ToolStackPreference = typeof toolStackPreference.$inferSelect;

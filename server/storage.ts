@@ -5,8 +5,10 @@ import {
   notebooks,
   queryHistory,
   settings,
+  incidentReports,
+  toolStackPreference,
 } from "@shared/schema";
-import type { Triage } from "@shared/schema";
+import type { Triage, IncidentReport } from "@shared/schema";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
 import { eq, sql } from "drizzle-orm";
@@ -51,6 +53,17 @@ sqlite.exec(`
     id TEXT PRIMARY KEY,
     value TEXT
   );
+  CREATE TABLE IF NOT EXISTS incidentReports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    alertId TEXT NOT NULL,
+    reportContent TEXT NOT NULL,
+    exportedAt INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS toolStackPreference (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    activeStack TEXT NOT NULL DEFAULT 'nightshift-default',
+    updatedAt INTEGER NOT NULL
+  );
 `);
 
 export interface IStorage {
@@ -81,6 +94,14 @@ export interface IStorage {
   getSetting(key: string): string | undefined;
   setSetting(key: string, value: string): void;
   allSettings(): Record<string, string>;
+
+  // Incident reports
+  saveIncidentReport(alertId: string, content: string): IncidentReport;
+  getLatestIncidentReport(alertId: string): IncidentReport | undefined;
+
+  // Tool stack preference
+  getActiveToolStack(): string;
+  setActiveToolStack(stackId: string): void;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -190,6 +211,35 @@ export class DatabaseStorage implements IStorage {
     const out: Record<string, string> = {};
     for (const r of rows) out[r.id] = r.value ?? "";
     return out;
+  }
+
+  saveIncidentReport(alertId: string, content: string) {
+    const inserted = db
+      .insert(incidentReports)
+      .values({ alertId, reportContent: content, exportedAt: Date.now() })
+      .returning()
+      .get();
+    return inserted;
+  }
+  getLatestIncidentReport(alertId: string) {
+    const rows = db
+      .select()
+      .from(incidentReports)
+      .where(eq(incidentReports.alertId, alertId))
+      .all();
+    if (!rows.length) return undefined;
+    return rows.sort((a, b) => b.exportedAt - a.exportedAt)[0];
+  }
+
+  getActiveToolStack() {
+    const rows = db.select().from(toolStackPreference).all();
+    if (!rows.length) return "nightshift-default";
+    return rows.sort((a, b) => b.updatedAt - a.updatedAt)[0].activeStack;
+  }
+  setActiveToolStack(stackId: string) {
+    db.insert(toolStackPreference)
+      .values({ activeStack: stackId, updatedAt: Date.now() })
+      .run();
   }
 }
 

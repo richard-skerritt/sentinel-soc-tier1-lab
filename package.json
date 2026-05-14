@@ -1,7 +1,7 @@
 {
-  "name": "sentinel-soc-tier1-lab",
-  "version": "1.0.0",
-  "description": "Realistic desk simulation for entry-level Microsoft Sentinel / SOC Tier 1 analysts. Vague alerts, 8 raw log tables, a working KQL engine and a senior mentor.",
+  "name": "nightshift",
+  "version": "2.0.0",
+  "description": "Nightshift — SOC Tier 1 training for the 24/7 shift. Vague alerts across Sentinel, Rapid7, ELK and EDR; 10 raw log tables; runbooks; MITRE detail; a working KQL engine; and a senior mentor.",
   "license": "MIT",
   "type": "module",
   "scripts": {

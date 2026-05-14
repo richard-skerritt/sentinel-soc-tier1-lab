@@ -1,0 +1,664 @@
+{
+  "T1110.003": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "Brute Force: Password Spraying",
+    "techniqueId": "T1110.003",
+    "whatAttackerDoes": "The attacker tries a single common password against many user accounts to avoid lockout thresholds. Distributes failures across the user base instead of hammering one account.",
+    "whyItMatters": "Bypasses account-lockout policies. One valid credential is enough for initial foothold, and the noise hides in normal failure rates.",
+    "commonIndicators": [
+      "Low failure count per account but failures fanned out across many users",
+      "Failures from a single IP to many UPNs in a short window",
+      "Failures against accounts that don't exist (AADSTS50034)",
+      "Mixed result codes — invalid user, bad password, no MFA enrolled"
+    ],
+    "sentinelKql": "SigninLogs\n| where TimeGenerated > ago(1h)\n| where ResultType != \"0\"\n| summarize FailCount=count(), DistinctUsers=dcount(UserPrincipalName) by IPAddress\n| where DistinctUsers > 5\n| sort by FailCount desc",
+    "rapid7Query": "where(source_ip, EXISTS) groupby(source_ip, destination_user) having(count, >, 5)",
+    "elkQuery": "event.category: authentication AND event.outcome: failure | stats count, dc(user.name) by source.ip",
+    "nextMitreStep": "T1078 — Valid Accounts (if any spray hits succeed, the attacker now signs in legitimately)",
+    "differencesFromBruteForce": "Brute Force (T1110.001) = many passwords against one account. Password Spray = one password against many accounts. Spray is harder to detect because per-account failure count stays low."
+  },
+  "T1090.003": {
+    "tactic": "Command and Control",
+    "tacticId": "TA0011",
+    "technique": "Proxy: Multi-hop Proxy",
+    "techniqueId": "T1090.003",
+    "whatAttackerDoes": "Routes traffic through multiple intermediate proxies (commonly Tor) so the apparent source IP cannot be tied back to the attacker.",
+    "whyItMatters": "Geolocation and reputation lookups on the visible IP are useless. Forces analysts to rely on behaviour rather than IP allowlists.",
+    "commonIndicators": [
+      "Source IP appears on a Tor-exit feed",
+      "Sequential access to many resources from the same Tor IP",
+      "User agents matching Tor Browser defaults",
+      "No interactive MFA event recorded for the session"
+    ],
+    "sentinelKql": "SigninLogs\n| where IPAddress in (\"<TOR_IP_LIST>\")\n| project TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName, ResultType",
+    "rapid7Query": "where(source_ip, IN, tor_exit_list)",
+    "elkQuery": "source.ip: (185.220.* OR 192.42.*) AND user.name: *",
+    "nextMitreStep": "T1078 — Valid Accounts",
+    "differencesFromBruteForce": "Not a brute-force technique — this is a network-routing technique used alongside others to anonymise sources."
+  },
+  "T1078": {
+    "tactic": "Defense Evasion / Persistence / Initial Access",
+    "tacticId": "TA0001",
+    "technique": "Valid Accounts",
+    "techniqueId": "T1078",
+    "whatAttackerDoes": "Uses legitimate credentials (compromised via phishing, spray, theft, or insider) to access systems. The activity looks like a normal sign-in.",
+    "whyItMatters": "Blends with legitimate traffic. The only signal is behavioural: unusual time, location, app, or volume.",
+    "commonIndicators": [
+      "Sign-in from a geography or device the user has never used",
+      "Atypical travel — impossible distance between sequential sign-ins",
+      "Sign-in followed by atypical actions (mass download, role assignment, mailbox access)",
+      "Successful sign-in immediately after a spray / brute-force pattern"
+    ],
+    "sentinelKql": "SigninLogs\n| where UserPrincipalName == \"<USER>\"\n| where TimeGenerated > ago(24h)\n| summarize Countries=make_set(Location), Cities=make_set(City), IPs=make_set(IPAddress)",
+    "rapid7Query": "where(destination_user, <USER>) groupby(source_country)",
+    "elkQuery": "user.name: \"<USER>\" | stats values(source.geo.country_name) by user.name",
+    "nextMitreStep": "T1098 — Account Manipulation, or T1114 — Email Collection",
+    "differencesFromBruteForce": "Brute Force tries to obtain credentials. Valid Accounts uses them. Spray is detection-by-pattern; Valid Accounts is detection-by-anomaly."
+  },
+  "T1621": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "Multi-Factor Authentication Request Generation",
+    "techniqueId": "T1621",
+    "whatAttackerDoes": "Already possesses the password and repeatedly triggers MFA push prompts hoping the user eventually approves one out of fatigue or confusion (\"MFA bombing\").",
+    "whyItMatters": "Defeats MFA entirely if the user taps Approve. Often runs in the early hours when users are tired.",
+    "commonIndicators": [
+      "Many push notifications to a single user in minutes",
+      "Final 'Approve' after dozens of denies",
+      "Source IP is a new geography or anonymiser",
+      "Timing in unusual hours (e.g. 02:30 local)"
+    ],
+    "sentinelKql": "SigninLogs\n| where UserPrincipalName == \"<USER>\"\n| where TimeGenerated > ago(1h)\n| summarize Prompts=count(), Successes=countif(ResultType == \"0\") by bin(TimeGenerated, 1m)",
+    "rapid7Query": "where(destination_user, <USER>) where(action, mfa_prompt) groupby(time_bucket)",
+    "elkQuery": "user.name: <USER> AND event.action: mfa_prompt | stats count by @timestamp",
+    "nextMitreStep": "T1078 — Valid Accounts (the bomb succeeds → attacker is in)",
+    "differencesFromBruteForce": "Brute Force targets the password. MFA Bombing targets the second factor by exploiting user behaviour."
+  },
+  "T1566.001": {
+    "tactic": "Initial Access",
+    "tacticId": "TA0001",
+    "technique": "Phishing: Spearphishing Attachment",
+    "techniqueId": "T1566.001",
+    "whatAttackerDoes": "Sends a targeted email containing a malicious attachment (Office macro, ZIP, LNK, HTML smuggling) to a specific user.",
+    "whyItMatters": "Most common initial-access vector. One click can lead to full-host compromise.",
+    "commonIndicators": [
+      "Sender domain is a lookalike of a real partner (cont0so.com)",
+      "Attachment with macro-enabled extension (.docm, .xlsm)",
+      "Office process spawning a scripting engine after the user opens the attachment",
+      "Tenant-wide delivery of the same attachment to multiple recipients"
+    ],
+    "sentinelKql": "EmailEvents\n| where Attachment == \"<ATTACHMENT>\"\n| where Operation == \"EmailDelivered\"\n| project TimeGenerated, SenderFromAddress, RecipientEmailAddress, Subject",
+    "rapid7Query": "where(attachment_name, <ATTACHMENT>) groupby(recipient)",
+    "elkQuery": "event.category: email AND file.name: \"<ATTACHMENT>\"",
+    "nextMitreStep": "T1204.002 — User Execution: Malicious File, then T1059 execution",
+    "differencesFromBruteForce": "Not credential-related. This is the entry vector before any credential or execution technique."
+  },
+  "T1105": {
+    "tactic": "Command and Control",
+    "tacticId": "TA0011",
+    "technique": "Ingress Tool Transfer",
+    "techniqueId": "T1105",
+    "whatAttackerDoes": "Pulls additional tools/payloads onto the compromised host, typically using LOLBins (certutil, bitsadmin, curl, PowerShell) so the action blends with admin activity.",
+    "whyItMatters": "Confirms an active attacker who is staging more capability — not just a one-off detonation.",
+    "commonIndicators": [
+      "certutil -urlcache -split -f <url>",
+      "powershell.exe IEX (New-Object Net.WebClient).DownloadString(...)",
+      "bitsadmin /transfer ... http://...",
+      "Outbound HTTP from a non-browser process"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName in~ (\"certutil.exe\", \"bitsadmin.exe\", \"curl.exe\", \"powershell.exe\")\n| where ProcessCommandLine has_any (\"-urlcache\", \"DownloadString\", \"DownloadFile\", \"/transfer\")",
+    "rapid7Query": "where(process_name, IN, certutil, bitsadmin, powershell) where(command_line, CONTAINS, http)",
+    "elkQuery": "process.name: (certutil.exe OR bitsadmin.exe) AND process.command_line: *http*",
+    "nextMitreStep": "T1059 — Command and Scripting Interpreter (executes the downloaded payload)",
+    "differencesFromBruteForce": "Not credential-related. This is post-execution stager activity."
+  },
+  "T1003.001": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "OS Credential Dumping: LSASS Memory",
+    "techniqueId": "T1003.001",
+    "whatAttackerDoes": "Reads LSASS process memory (where Windows stores authentication secrets) to extract cleartext passwords, NTLM hashes, and Kerberos tickets.",
+    "whyItMatters": "Single biggest leverage step — turns one compromised host into many. Credentials extracted here are used for lateral movement.",
+    "commonIndicators": [
+      "rundll32 + comsvcs.dll MiniDump targeting lsass",
+      "procdump.exe -ma lsass.exe ...",
+      "Memory access events from non-security processes to LSASS PID",
+      "Output dump file written to a public/temp folder"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where ProcessCommandLine has_any (\"lsass\", \"comsvcs\", \"MiniDump\", \"procdump\")\n| project Timestamp, DeviceName, FileName, ProcessCommandLine",
+    "rapid7Query": "where(target_process, lsass.exe) where(action, memory_read)",
+    "elkQuery": "process.name: (rundll32.exe OR procdump.exe) AND process.command_line: *lsass*",
+    "nextMitreStep": "T1550 — Use Alternate Authentication Material (pass-the-hash, pass-the-ticket)",
+    "differencesFromBruteForce": "Brute Force guesses passwords externally. LSASS Dumping steals them directly from memory of an already-compromised host."
+  },
+  "T1055.002": {
+    "tactic": "Defense Evasion / Privilege Escalation",
+    "tacticId": "TA0005",
+    "technique": "Process Injection: Portable Executable Injection",
+    "techniqueId": "T1055.002",
+    "whatAttackerDoes": "Writes malicious PE code into the address space of a legitimate process (typically explorer.exe / svchost.exe) and starts a remote thread to execute it.",
+    "whyItMatters": "The malicious behaviour now runs under a trusted process, evading allowlists and many EDR heuristics.",
+    "commonIndicators": [
+      "Sysmon EID 8 — CreateRemoteThread from one process to another",
+      "Source process is a recent PS / unsigned binary; target is a system process",
+      "VirtualAllocEx / WriteProcessMemory API calls observed by EDR"
+    ],
+    "sentinelKql": "SysmonEvent\n| where EventID == 8\n| project TimeGenerated, Computer, SourceImage, TargetImage",
+    "rapid7Query": "where(event_type, remote_thread) where(target_process, IN, explorer.exe, svchost.exe)",
+    "elkQuery": "event.code: 8 AND winlog.event_data.TargetImage: (*explorer.exe OR *svchost.exe)",
+    "nextMitreStep": "T1071 — Application Layer Protocol (the injected code beacons out)",
+    "differencesFromBruteForce": "Unrelated to credentials. This is a stealth/evasion technique for code that already has execution."
+  },
+  "T1055": {
+    "tactic": "Defense Evasion / Privilege Escalation",
+    "tacticId": "TA0005",
+    "technique": "Process Injection",
+    "techniqueId": "T1055",
+    "whatAttackerDoes": "Generic category: any technique that runs attacker code inside the address space of another process. Includes named-pipe creation for IPC between injector and payload (a Cobalt Strike calling card).",
+    "whyItMatters": "Hides malicious activity inside trusted processes; reduces the surface area defenders can monitor.",
+    "commonIndicators": [
+      "Named pipes matching offensive-tool defaults (msagent_*, postex_*)",
+      "Unusual parent-child relationships (rundll32 → notepad)",
+      "Modules loaded into a process that aren't on its baseline"
+    ],
+    "sentinelKql": "SysmonEvent\n| where EventID == 17\n| where PipeName startswith \"\\\\msagent_\" or PipeName startswith \"\\\\postex_\"",
+    "rapid7Query": "where(pipe_name, STARTSWITH, msagent_) OR where(pipe_name, STARTSWITH, postex_)",
+    "elkQuery": "event.code: 17 AND winlog.event_data.PipeName: (msagent_* OR postex_*)",
+    "nextMitreStep": "T1071 — Application Layer Protocol (C2 beacons through the injected code)",
+    "differencesFromBruteForce": "Unrelated to credentials. Stealth technique, not access technique."
+  },
+  "T1547.001": {
+    "tactic": "Persistence / Privilege Escalation",
+    "tacticId": "TA0003",
+    "technique": "Boot/Logon Autostart: Registry Run Keys / Startup Folder",
+    "techniqueId": "T1547.001",
+    "whatAttackerDoes": "Writes a value to HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run (or equivalent) so a chosen binary executes at logon.",
+    "whyItMatters": "Survives reboots. Most common persistence mechanism for commodity malware.",
+    "commonIndicators": [
+      "Sysmon EID 13 with TargetObject ending in \\Run\\<name>",
+      "Run key value pointing to a Public / Temp / AppData binary",
+      "Multiple Run keys created in close succession alongside other persistence (scheduled task, WMI)"
+    ],
+    "sentinelKql": "SysmonEvent\n| where EventID == 13\n| where TargetObject has \"\\\\Run\\\\\"\n| project TimeGenerated, Computer, TargetObject, Details",
+    "rapid7Query": "where(registry_path, CONTAINS, \\Run\\)",
+    "elkQuery": "event.code: 13 AND winlog.event_data.TargetObject: *\\\\Run\\\\*",
+    "nextMitreStep": "T1059 — execution of the persisted binary at next logon",
+    "differencesFromBruteForce": "Persistence technique — establishes long-term access, not initial access or credential theft."
+  },
+  "T1562.001": {
+    "tactic": "Defense Evasion",
+    "tacticId": "TA0005",
+    "technique": "Impair Defenses: Disable or Modify Tools",
+    "techniqueId": "T1562.001",
+    "whatAttackerDoes": "Stops or disables security tooling (Sysmon, Defender, EDR agents) before performing further actions, blinding defenders.",
+    "whyItMatters": "Often the immediate precursor to destructive activity. The 'silence' is itself a high-fidelity signal.",
+    "commonIndicators": [
+      "Service stop events for Sysmon64, WinDefend, EDR agents",
+      "sc.exe stop <agent> command line",
+      "Tamper-protection events from the EDR itself",
+      "Stop followed within minutes by other suspicious activity"
+    ],
+    "sentinelKql": "SysmonEvent\n| where EventID == 7036\n| where ParameterXml has_any (\"Sysmon64\", \"WinDefend\", \"Sense\")\n| project TimeGenerated, Computer, ParameterXml",
+    "rapid7Query": "where(service_name, IN, Sysmon64, WinDefend, MsSense) where(state, stopped)",
+    "elkQuery": "event.code: 7036 AND winlog.event_data.param1: (Sysmon64 OR WinDefend)",
+    "nextMitreStep": "T1486 — Data Encrypted for Impact (ransomware), or T1003 (credential dumping)",
+    "differencesFromBruteForce": "Defense-evasion technique. Adjacent to credential theft / ransomware preparation rather than a credential technique itself."
+  },
+  "T1490": {
+    "tactic": "Impact",
+    "tacticId": "TA0040",
+    "technique": "Inhibit System Recovery",
+    "techniqueId": "T1490",
+    "whatAttackerDoes": "Deletes Volume Shadow Copies, Windows Backup catalogues, or Recycle Bin contents so victims cannot restore from local snapshots.",
+    "whyItMatters": "Highest-fidelity pre-ransomware indicator. By the time you see this, encryption is seconds away.",
+    "commonIndicators": [
+      "vssadmin.exe delete shadows /all /quiet",
+      "wmic shadowcopy delete",
+      "wbadmin delete catalog -quiet",
+      "Same command on multiple hosts within the same minute"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where ProcessCommandLine has \"vssadmin\" and ProcessCommandLine has \"delete shadows\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine",
+    "rapid7Query": "where(command_line, CONTAINS, vssadmin) where(command_line, CONTAINS, delete shadows)",
+    "elkQuery": "process.command_line: (*vssadmin* AND *delete shadows*)",
+    "nextMitreStep": "T1486 — Data Encrypted for Impact (the ransomware encryption phase)",
+    "differencesFromBruteForce": "Impact technique, not access. Treat as imminent ransomware — switch to containment over investigation."
+  },
+  "T1087": {
+    "tactic": "Discovery",
+    "tacticId": "TA0007",
+    "technique": "Account Discovery",
+    "techniqueId": "T1087",
+    "whatAttackerDoes": "Enumerates accounts (local, domain, cloud) to plan privilege escalation and lateral movement. Tools include SharpHound, ADFind, net.exe.",
+    "whyItMatters": "Confirms an attacker is planning their next move. Output files often contain everything they need to escalate.",
+    "commonIndicators": [
+      "SharpHound.exe execution with -c All",
+      "net group \"Domain Admins\" /domain",
+      "Bulk LDAP queries from a non-administrative host",
+      "ADFind.exe -f \"(objectClass=user)\" ..."
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName has_any (\"SharpHound\", \"ADFind\") or ProcessCommandLine has \"Invoke-BloodHound\"",
+    "rapid7Query": "where(process_name, IN, SharpHound.exe, ADFind.exe)",
+    "elkQuery": "process.name: (SharpHound.exe OR ADFind.exe) OR process.command_line: *Invoke-BloodHound*",
+    "nextMitreStep": "T1078 — Valid Accounts, or T1550 — Use Alternate Authentication Material",
+    "differencesFromBruteForce": "Reconnaissance technique. Sits before lateral movement, not before initial access."
+  },
+  "T1204": {
+    "tactic": "Execution",
+    "tacticId": "TA0002",
+    "technique": "User Execution",
+    "techniqueId": "T1204",
+    "whatAttackerDoes": "Relies on a user to perform an action (open an attachment, click a link, run a binary) that runs the attacker's code.",
+    "whyItMatters": "Last step of phishing. The technical detection happens earlier (email / network); the actual execution is what causes the host compromise.",
+    "commonIndicators": [
+      "Process creation events triggered by user action (Office spawn)",
+      "Untrusted binaries executed from Downloads / Desktop",
+      "EICAR / test files detected for genuine controlled tests"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where InitiatingProcessFileName in~ (\"explorer.exe\", \"WINWORD.EXE\", \"OUTLOOK.EXE\")\n| where FolderPath has \"\\\\Downloads\\\\\" or FolderPath has \"\\\\Desktop\\\\\"",
+    "rapid7Query": "where(initiating_process, IN, explorer.exe, WINWORD.EXE) where(folder_path, CONTAINS, Downloads)",
+    "elkQuery": "process.parent.name: (explorer.exe OR WINWORD.EXE) AND file.path: (*Downloads* OR *Desktop*)",
+    "nextMitreStep": "T1059 — Command and Scripting Interpreter (the executed code runs)",
+    "differencesFromBruteForce": "Different category entirely — relies on human action rather than automated cracking."
+  },
+  "T1114.003": {
+    "tactic": "Collection",
+    "tacticId": "TA0009",
+    "technique": "Email Collection: Email Forwarding Rule",
+    "techniqueId": "T1114.003",
+    "whatAttackerDoes": "Creates an inbox rule that auto-forwards (or copies) mail to an external address, exfiltrating future correspondence without further access to the mailbox.",
+    "whyItMatters": "Persistent, low-noise data exfil. Survives password resets if not explicitly removed.",
+    "commonIndicators": [
+      "Inbox rule with single-character name (.,  ) — hides in the UI",
+      "Rule ForwardTo address is external / free webmail",
+      "SubjectContainsWords with finance terms (invoice, wire, payment)",
+      "Rule created from a Tor / anonymiser source IP"
+    ],
+    "sentinelKql": "OfficeActivity\n| where Operation == \"New-InboxRule\"\n| where Parameters has_any (\"ForwardTo\", \"RedirectTo\")\n| project TimeGenerated, UserId, ClientIP, Parameters",
+    "rapid7Query": "where(operation, New-InboxRule) where(parameters, CONTAINS, ForwardTo)",
+    "elkQuery": "event.action: New-InboxRule AND event.outcome: success",
+    "nextMitreStep": "T1567 — Exfiltration Over Web Service (continued mail exfiltration)",
+    "differencesFromBruteForce": "Collection technique. Comes after initial access; designed for long-term passive theft."
+  },
+  "T1485": {
+    "tactic": "Impact",
+    "tacticId": "TA0040",
+    "technique": "Data Destruction",
+    "techniqueId": "T1485",
+    "whatAttackerDoes": "Deliberately deletes data — files in cloud storage, OneDrive items, database tables — to cause operational damage.",
+    "whyItMatters": "May be the attacker's goal (sabotage) or a cover-up of other activity. Recovery windows close fast.",
+    "commonIndicators": [
+      "Mass FileDeleted operations from a single user in minutes",
+      "Cloud-side bulk delete via PowerShell / Graph API",
+      "Deletion of audit logs in the same window"
+    ],
+    "sentinelKql": "OfficeActivity\n| where Operation == \"FileDeleted\"\n| summarize Count=count() by UserId, bin(TimeGenerated, 5m)\n| where Count > 100",
+    "rapid7Query": "where(operation, FileDeleted) groupby(user, time_bucket) having(count, >, 100)",
+    "elkQuery": "event.action: FileDeleted | stats count by user.name, @timestamp",
+    "nextMitreStep": "Often follows T1078 / T1098 (account compromise) and precedes T1486 (encryption) or stand-alone destruction.",
+    "differencesFromBruteForce": "Impact technique — focus on stopping the loss and engaging backup teams, not on detection."
+  },
+  "T1528": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "Steal Application Access Token",
+    "techniqueId": "T1528",
+    "whatAttackerDoes": "Tricks a user into granting OAuth consent to a malicious app, or steals refresh tokens, then uses the resulting access token. Bypasses MFA entirely.",
+    "whyItMatters": "The token persists past password resets and survives session revocation if refresh tokens aren't explicitly killed.",
+    "commonIndicators": [
+      "Consent to application from an unverified publisher",
+      "Granted scopes include Mail.ReadWrite / Files.Read.All / offline_access",
+      "Token issuance event without an interactive MFA event in the same flow",
+      "Application accessing mail / files from an anomalous IP"
+    ],
+    "sentinelKql": "OfficeActivity\n| where Operation == \"Consent to application\"\n| project TimeGenerated, UserId, ClientIP, Parameters",
+    "rapid7Query": "where(operation, oauth_consent) where(scopes, CONTAINS, Mail.ReadWrite)",
+    "elkQuery": "event.action: oauth_consent AND event.outcome: success",
+    "nextMitreStep": "T1114 — Email Collection (using the stolen token to read mail)",
+    "differencesFromBruteForce": "Credential-level technique but targets tokens rather than passwords. Password reset alone does not contain it."
+  },
+  "T1567.002": {
+    "tactic": "Exfiltration",
+    "tacticId": "TA0010",
+    "technique": "Exfiltration to Cloud Storage",
+    "techniqueId": "T1567.002",
+    "whatAttackerDoes": "Uploads stolen data to a cloud storage service (Dropbox, Mega, Google Drive, or SharePoint anonymous links) instead of directly to attacker infrastructure.",
+    "whyItMatters": "Egress traffic looks like normal cloud usage and is rarely blocked at the firewall.",
+    "commonIndicators": [
+      "Anonymous SharePoint / OneDrive links created on sensitive files",
+      "Outbound traffic to cloud storage endpoints from non-baseline accounts",
+      "Single user uploading abnormal volumes in a short window"
+    ],
+    "sentinelKql": "OfficeActivity\n| where Operation == \"AnonymousLinkCreated\"\n| project TimeGenerated, UserId, SourceFileName, ClientIP",
+    "rapid7Query": "where(operation, AnonymousLinkCreated)",
+    "elkQuery": "event.action: AnonymousLinkCreated AND file.name: *",
+    "nextMitreStep": "Often the final attacker step — followed only by T1070 (defense evasion / log clearing).",
+    "differencesFromBruteForce": "Exfiltration technique. Detection focuses on policy violations, not authentication failures."
+  },
+  "T1213": {
+    "tactic": "Collection",
+    "tacticId": "TA0009",
+    "technique": "Data from Information Repositories",
+    "techniqueId": "T1213",
+    "whatAttackerDoes": "Harvests data from internal repositories (SharePoint, Confluence, eDiscovery exports, code repos) where business-sensitive information accumulates.",
+    "whyItMatters": "Compliance / legal-grade exfil potential. eDiscovery exports especially can contain entire executive mailboxes.",
+    "commonIndicators": [
+      "SearchExportDownloaded by a recently-promoted admin account",
+      "Bulk SharePoint downloads from a new device",
+      "Repo cloning by an account with no engineering role"
+    ],
+    "sentinelKql": "OfficeActivity\n| where Operation == \"SearchExportDownloaded\"\n| project TimeGenerated, UserId, ClientIP, Parameters",
+    "rapid7Query": "where(operation, SearchExportDownloaded)",
+    "elkQuery": "event.action: SearchExportDownloaded",
+    "nextMitreStep": "T1567 — Exfiltration Over Web Service",
+    "differencesFromBruteForce": "Post-access collection technique."
+  },
+  "T1530": {
+    "tactic": "Collection",
+    "tacticId": "TA0009",
+    "technique": "Data from Cloud Storage",
+    "techniqueId": "T1530",
+    "whatAttackerDoes": "Reads or exposes data in cloud storage (Azure Blob, S3, GCS) — often by misconfiguring access (public containers) or using stolen keys.",
+    "whyItMatters": "Cloud storage often holds backups, secrets, and PII. A single misconfiguration can constitute a breach.",
+    "commonIndicators": [
+      "Storage account configuration changed to allowBlobPublicAccess",
+      "Bulk reads via a service principal from an external IP",
+      "Container ACL changes to public outside change windows"
+    ],
+    "sentinelKql": "AzureActivity\n| where OperationNameValue has \"STORAGEACCOUNTS\"\n| where Properties has \"publicAccess\"\n| project TimeGenerated, Caller, CallerIpAddress, ResourceId, Properties",
+    "rapid7Query": "where(resource_type, storage_account) where(property, allowBlobPublicAccess) where(value, true)",
+    "elkQuery": "azure.activitylogs.operation_name: *Storage* AND azure.activitylogs.properties.publicAccess: true",
+    "nextMitreStep": "T1567 — Exfiltration Over Web Service",
+    "differencesFromBruteForce": "Cloud-specific data-theft technique. Detection is config-state, not auth-event."
+  },
+  "T1078.004": {
+    "tactic": "Initial Access / Persistence",
+    "tacticId": "TA0001",
+    "technique": "Valid Accounts: Cloud Accounts",
+    "techniqueId": "T1078.004",
+    "whatAttackerDoes": "Uses compromised cloud identities (Entra ID users, service principals, AWS IAM users) to access cloud resources — often bypassing on-prem controls.",
+    "whyItMatters": "Cloud accounts can perform broad actions across many services with a single credential.",
+    "commonIndicators": [
+      "JIT VM access requested from a non-allowlisted IP",
+      "Service principal sign-in from a country never seen before",
+      "Same cloud identity active in two geographies within minutes"
+    ],
+    "sentinelKql": "SigninLogs\n| where AppDisplayName != \"\"\n| where UserPrincipalName contains \"svc-\" or UserPrincipalName contains \"sp-\"\n| where IPAddress != \"<EXPECTED_IP>\"",
+    "rapid7Query": "where(account_type, service_account) where(source_country, NOT, expected)",
+    "elkQuery": "user.type: service_principal AND source.geo.country_name: NOT (US OR UK)",
+    "nextMitreStep": "T1098 — Account Manipulation (escalating with the cloud account)",
+    "differencesFromBruteForce": "Subset of T1078 specialised for cloud identities. Same detection pattern as T1078 with cloud-specific log sources."
+  },
+  "T1552.001": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "Unsecured Credentials: Credentials In Files",
+    "techniqueId": "T1552.001",
+    "whatAttackerDoes": "Reads secrets out of config files, environment variables, Key Vaults, or CI variables that aren't sufficiently restricted.",
+    "whyItMatters": "Often the second hop after initial compromise — promotes a foothold into broader access (DB creds, API keys, certificates).",
+    "commonIndicators": [
+      "Key Vault secret reads by an unusual identity / IP",
+      "Reading appsettings.json / .env files via remote shell",
+      "Service principals reading secrets they don't normally touch"
+    ],
+    "sentinelKql": "AzureActivity\n| where OperationNameValue has \"KEYVAULT/SECRETS/READ\"\n| project TimeGenerated, Caller, CallerIpAddress, ResourceId, Properties",
+    "rapid7Query": "where(operation, key_vault_read) where(source_ip, NOT, allowlist)",
+    "elkQuery": "azure.activitylogs.operation_name: *KEYVAULT*GETSECRET*",
+    "nextMitreStep": "T1078 — Valid Accounts (using the freshly-retrieved credentials)",
+    "differencesFromBruteForce": "Credential theft from data-at-rest rather than from network or memory."
+  },
+  "T1133": {
+    "tactic": "Initial Access / Persistence",
+    "tacticId": "TA0001",
+    "technique": "External Remote Services",
+    "techniqueId": "T1133",
+    "whatAttackerDoes": "Uses internet-facing remote services (RDP, SSH, VPN, exposed management consoles) — often misconfigured to allow inbound from anywhere.",
+    "whyItMatters": "Single config error can directly expose internal assets to opportunistic scanning and brute force from the public internet.",
+    "commonIndicators": [
+      "NSG rule allowing 0.0.0.0/0 inbound on 22, 3389, or 5985",
+      "Firewall rule audit showing 'Any' source on management port",
+      "Service exposed externally with no jump-host requirement"
+    ],
+    "sentinelKql": "AzureActivity\n| where OperationNameValue has \"NETWORKSECURITYGROUPS/SECURITYRULES/WRITE\"\n| where Properties has \"0.0.0.0/0\"\n| project TimeGenerated, Caller, Properties",
+    "rapid7Query": "where(rule_change, ingress_any) where(port, IN, 22, 3389, 5985)",
+    "elkQuery": "azure.activitylogs.operation_name: *securityRules/write* AND azure.activitylogs.properties.sourceAddressPrefix: \"0.0.0.0/0\"",
+    "nextMitreStep": "T1110 — Brute Force, against the newly-exposed service",
+    "differencesFromBruteForce": "Provides the surface that brute force then targets. Detection is config-side, not auth-side."
+  },
+  "T1496": {
+    "tactic": "Impact",
+    "tacticId": "TA0040",
+    "technique": "Resource Hijacking",
+    "techniqueId": "T1496",
+    "whatAttackerDoes": "Steals compute or bandwidth (commonly for cryptocurrency mining) from a compromised host or cloud account.",
+    "whyItMatters": "Indicates compromise even when the financial damage is low — same entry vector that hosts a miner could host anything.",
+    "commonIndicators": [
+      "xmrig / nbminer / cpuminer process names",
+      "Outbound traffic to mining pool domains (pool.minexmr.com, etc)",
+      "Sustained CPU at 100% on cloud build agents"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName has_any (\"xmrig\", \"cpuminer\", \"nbminer\") or ProcessCommandLine has \"pool.minexmr\"",
+    "rapid7Query": "where(process_name, IN, xmrig, cpuminer)",
+    "elkQuery": "process.name: (xmrig OR cpuminer OR nbminer)",
+    "nextMitreStep": "Investigate the entry vector — mining is the symptom, not the goal.",
+    "differencesFromBruteForce": "Impact technique. Detection is straightforward — focus the investigation on how the miner landed."
+  },
+  "T1041": {
+    "tactic": "Exfiltration",
+    "tacticId": "TA0010",
+    "technique": "Exfiltration Over C2 Channel",
+    "techniqueId": "T1041",
+    "whatAttackerDoes": "Sends stolen data back over the same C2 channel used for command/control — typically HTTPS to the attacker's infrastructure.",
+    "whyItMatters": "Hides exfil inside legitimate-looking outbound HTTPS sessions; volume is the main signal.",
+    "commonIndicators": [
+      "Large BytesOut from a single host to a single external IP",
+      "Outbound to a TI-confirmed C2 IP",
+      "Consistent transfer size every beacon interval"
+    ],
+    "sentinelKql": "AzureFirewallNetworkRule\n| where DstIP == \"<C2_IP>\"\n| summarize Bytes=sum(toint(BytesOut)) by SrcIP\n| sort by Bytes desc",
+    "rapid7Query": "where(destination_ip, <C2_IP>) groupby(source_ip) having(bytes_out, >, 10000000)",
+    "elkQuery": "destination.ip: <C2_IP> | stats sum(network.bytes) by source.ip",
+    "nextMitreStep": "Final stage for many attacks — exfiltration is often the endpoint of the kill chain.",
+    "differencesFromBruteForce": "Exfiltration technique. Detected by volume / destination reputation rather than auth signal."
+  },
+  "T1071.004": {
+    "tactic": "Command and Control",
+    "tacticId": "TA0011",
+    "technique": "Application Layer Protocol: DNS",
+    "techniqueId": "T1071.004",
+    "whatAttackerDoes": "Encodes C2 commands and exfil data inside DNS queries / responses — abusing a protocol nearly every network allows outbound.",
+    "whyItMatters": "Often the last C2 channel left running when egress is restricted.",
+    "commonIndicators": [
+      "Very long subdomain labels (data-carrying)",
+      "High query volume to a single parent domain",
+      "TXT record queries from non-resolver processes"
+    ],
+    "sentinelKql": "DeviceNetworkEvents\n| where RemotePort == 53\n| where RemoteUrl contains \"<TUNNEL_DOMAIN>\"\n| project Timestamp, DeviceName, RemoteUrl, InitiatingProcessFileName",
+    "rapid7Query": "where(destination_port, 53) where(domain, MATCHES, *<tunnel-domain>*)",
+    "elkQuery": "destination.port: 53 AND dns.question.name: *<tunnel-domain>*",
+    "nextMitreStep": "T1041 — Exfiltration Over C2 Channel (via the same DNS tunnel)",
+    "differencesFromBruteForce": "Command-and-control technique. Detected by query volume and label length, not auth."
+  },
+  "T1071.001": {
+    "tactic": "Command and Control",
+    "tacticId": "TA0011",
+    "technique": "Application Layer Protocol: Web Protocols",
+    "techniqueId": "T1071.001",
+    "whatAttackerDoes": "C2 over HTTP/HTTPS — blends with normal web traffic. Beacons at a regular interval to fetch tasks.",
+    "whyItMatters": "Most common C2 channel for commodity and APT alike. Periodicity is the main behavioural signal.",
+    "commonIndicators": [
+      "Consistent interval between connections to one external IP (low jitter)",
+      "Small request size, larger response size (task pickup)",
+      "TLS to a host with self-signed or freshly-issued certificate"
+    ],
+    "sentinelKql": "DeviceNetworkEvents\n| where RemoteIP == \"<C2_IP>\"\n| summarize Count=count() by bin(Timestamp, 5m)",
+    "rapid7Query": "where(destination_ip, <C2_IP>) groupby(time_bucket)",
+    "elkQuery": "destination.ip: <C2_IP> | stats count by @timestamp",
+    "nextMitreStep": "T1041 — Exfiltration Over C2 Channel",
+    "differencesFromBruteForce": "C2 / network technique. Detected via periodicity, not credential events."
+  },
+  "T1187": {
+    "tactic": "Credential Access",
+    "tacticId": "TA0006",
+    "technique": "Forced Authentication",
+    "techniqueId": "T1187",
+    "whatAttackerDoes": "Coerces a host or user to authenticate to an attacker-controlled SMB / UNC / WebDAV endpoint — capturing NTLM hashes for offline cracking or relay.",
+    "whyItMatters": "Even a failed session leaks the hash. Outbound SMB from a workstation to the internet is the strongest signal.",
+    "commonIndicators": [
+      "Outbound SMB (port 445) to public IP",
+      "HTML / RTF documents with UNC paths to external hosts",
+      "PrintNightmare-style exploitation involving network spool calls"
+    ],
+    "sentinelKql": "DeviceNetworkEvents\n| where RemotePort == 445\n| where not(RemoteIP startswith \"10.\") and not(RemoteIP startswith \"172.\") and not(RemoteIP startswith \"192.168.\")",
+    "rapid7Query": "where(destination_port, 445) where(destination_ip, NOT_IN, rfc1918)",
+    "elkQuery": "destination.port: 445 AND NOT destination.ip: (10.0.0.0/8 OR 172.16.0.0/12 OR 192.168.0.0/16)",
+    "nextMitreStep": "T1003 — OS Credential Dumping (cracking the captured hash offline)",
+    "differencesFromBruteForce": "Credential-capture technique that doesn't require interactive guessing. Strong network-side detection."
+  },
+  "T1059.001": {
+    "tactic": "Execution",
+    "tacticId": "TA0002",
+    "technique": "Command and Scripting Interpreter: PowerShell",
+    "techniqueId": "T1059.001",
+    "whatAttackerDoes": "Runs PowerShell — typically with -EncodedCommand to obscure payload — to execute downloader / loader code on the host.",
+    "whyItMatters": "Native to Windows, signed binary, allowed by default. Encoded command lines are the highest-fidelity signal.",
+    "commonIndicators": [
+      "powershell.exe with -enc / -EncodedCommand / -e",
+      "Parent is an Office product (WINWORD, EXCEL, POWERPNT)",
+      "ExecutionPolicy bypass flags (-ep bypass, -nop)",
+      "Outbound network from powershell.exe to a non-corporate IP"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName == \"powershell.exe\"\n| where ProcessCommandLine has_any (\"-enc\", \"-EncodedCommand\", \"-e \")\n| project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessFileName",
+    "rapid7Query": "where(process_name, powershell.exe) where(command_line, CONTAINS, -enc)",
+    "elkQuery": "process.name: powershell.exe AND process.command_line: (*-enc* OR *-EncodedCommand*)",
+    "nextMitreStep": "T1105 — Ingress Tool Transfer (the encoded command typically downloads a stage 2)",
+    "differencesFromBruteForce": "Execution technique. Encoded payload is the key signal — decode and analyse before anything else."
+  },
+  "T1114.002": {
+    "tactic": "Collection",
+    "tacticId": "TA0009",
+    "technique": "Email Collection: Remote Email Collection",
+    "techniqueId": "T1114.002",
+    "whatAttackerDoes": "Accesses mailboxes remotely via stolen credentials or tokens (no on-host malware required). Common in BEC chains.",
+    "whyItMatters": "Pure-cloud compromise — no endpoint signal. Detection lives in O365 audit logs and source-IP behaviour.",
+    "commonIndicators": [
+      "MailItemsAccessed events from anomalous IPs (Tor, foreign geo)",
+      "Bulk session retrievals (many items in one MailItemsAccessed)",
+      "Multiple mailboxes accessed by the same source IP in sequence"
+    ],
+    "sentinelKql": "EmailEvents\n| where Operation == \"MailItemsAccessed\"\n| where SrcIP == \"<ATTACKER_IP>\"\n| project TimeGenerated, UserId, MailboxId, SrcIP",
+    "rapid7Query": "where(operation, MailItemsAccessed) where(source_ip, <ATTACKER_IP>)",
+    "elkQuery": "event.action: MailItemsAccessed AND source.ip: <ATTACKER_IP>",
+    "nextMitreStep": "T1114.003 — Email Forwarding Rule (for persistent exfiltration)",
+    "differencesFromBruteForce": "Collection technique. No password-guessing involved — relies on already-obtained tokens or credentials."
+  },
+  "T1046": {
+    "tactic": "Discovery",
+    "tacticId": "TA0007",
+    "technique": "Network Service Discovery",
+    "techniqueId": "T1046",
+    "whatAttackerDoes": "Scans the internal network to enumerate listening services, planning lateral movement to whatever responds.",
+    "whyItMatters": "Internal scans from a workstation are unambiguous — workstations don't legitimately probe peers.",
+    "commonIndicators": [
+      "Many destinations, many ports, narrow time window from a single source",
+      "Process invocation of nmap.exe / masscan.exe / Test-NetConnection in a loop",
+      "IDPS rule triggered on port-sweep timing"
+    ],
+    "sentinelKql": "AzureFirewallNetworkRule\n| where SrcIP == \"<HOST_IP>\"\n| summarize Attempts=count(), DistinctPorts=dcount(DstPort) by SrcIP, bin(TimeGenerated, 5m)\n| where DistinctPorts > 10",
+    "rapid7Query": "where(source_ip, <HOST_IP>) groupby(time_bucket) having(distinct_ports, >, 10)",
+    "elkQuery": "source.ip: <HOST_IP> | stats dc(destination.port) by @timestamp",
+    "nextMitreStep": "T1021 — Remote Services (lateral movement to whatever responded)",
+    "differencesFromBruteForce": "Network reconnaissance, not credential attack. Detected by fan-out pattern."
+  },
+  "T1486": {
+    "tactic": "Impact",
+    "tacticId": "TA0040",
+    "technique": "Data Encrypted for Impact",
+    "techniqueId": "T1486",
+    "whatAttackerDoes": "Encrypts files on disk and on accessible shares to deny access; usually paired with a ransom demand.",
+    "whyItMatters": "Recovery requires functional backups + clean rebuild. Speed of detection determines blast radius.",
+    "commonIndicators": [
+      "Mass file rename events with consistent suffix (.LOCKD, .encrypted)",
+      "Ransom notes written to many folders",
+      "Preceded within minutes by T1490 (shadow copy deletion)"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where ProcessCommandLine has_any (\".LOCKD\", \".encrypted\", \"ransom_note\")\n| summarize Files=count() by DeviceName, bin(Timestamp, 1m)",
+    "rapid7Query": "where(file_action, rename) where(extension, IN, .LOCKD, .encrypted) groupby(host)",
+    "elkQuery": "event.action: rename AND file.extension: (LOCKD OR encrypted) | stats count by host.name",
+    "nextMitreStep": "Final stage — focus on containment and recovery, not further detection.",
+    "differencesFromBruteForce": "Impact technique. Same handling as T1490 — switch to ransomware playbook immediately."
+  },
+  "T1098.003": {
+    "tactic": "Persistence",
+    "tacticId": "TA0003",
+    "technique": "Account Manipulation: Additional Cloud Roles",
+    "techniqueId": "T1098.003",
+    "whatAttackerDoes": "Adds privileged roles to an account (often a service account or a fresh user) the attacker controls, giving them persistent elevated access independent of the original entry.",
+    "whyItMatters": "Survives password resets on the original compromised account. Service accounts are rarely monitored, making this a stealthy persistence move.",
+    "commonIndicators": [
+      "ROLEASSIGNMENTS/WRITE outside the change window",
+      "Caller account itself is recently compromised (cross-reference with phishing alerts)",
+      "Grantee is a service account or a freshly-created user",
+      "Role granted is Global Administrator / Privileged Role Administrator"
+    ],
+    "sentinelKql": "AzureActivity\n| where OperationNameValue has \"ROLEASSIGNMENTS/WRITE\"\n| project TimeGenerated, Caller, CallerIpAddress, ResourceId, Properties",
+    "rapid7Query": "where(operation, RoleAssignment) where(role, IN, GlobalAdmin, PrivilegedRoleAdmin)",
+    "elkQuery": "azure.activitylogs.operation_name: *roleAssignments/write*",
+    "nextMitreStep": "T1078.004 — Valid Accounts: Cloud Accounts (using the newly-privileged identity)",
+    "differencesFromBruteForce": "Persistence technique in the identity plane. Detection is event-side, not behavioural."
+  },
+  "T1218": {
+    "tactic": "Defense Evasion",
+    "tacticId": "TA0005",
+    "technique": "Signed Binary Proxy Execution",
+    "techniqueId": "T1218",
+    "whatAttackerDoes": "Uses legitimate, Microsoft-signed binaries (rundll32, mshta, regsvr32) to execute malicious code — bypassing application allowlists.",
+    "whyItMatters": "Allowlists trust signed binaries by default. The attacker piggybacks on that trust.",
+    "commonIndicators": [
+      "rundll32.exe ... ,DllRegisterServer with non-system DLLs",
+      "mshta.exe http://...",
+      "regsvr32 /s /n /u /i:http://... scrobj.dll (Squiblydoo)"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName in~ (\"rundll32.exe\", \"mshta.exe\", \"regsvr32.exe\")\n| where ProcessCommandLine has_any (\"http://\", \"https://\", \"scrobj.dll\")",
+    "rapid7Query": "where(process_name, IN, rundll32.exe, mshta.exe, regsvr32.exe) where(command_line, CONTAINS, http)",
+    "elkQuery": "process.name: (rundll32.exe OR mshta.exe OR regsvr32.exe) AND process.command_line: *http*",
+    "nextMitreStep": "T1059 — Command and Scripting Interpreter (the proxied payload runs)",
+    "differencesFromBruteForce": "Defense evasion through trusted-binary abuse, not a credential technique."
+  },
+  "T1053.005": {
+    "tactic": "Persistence / Execution",
+    "tacticId": "TA0003",
+    "technique": "Scheduled Task/Job: Scheduled Task",
+    "techniqueId": "T1053.005",
+    "whatAttackerDoes": "Creates a Windows scheduled task that runs attacker code at boot, logon, or on a recurring schedule.",
+    "whyItMatters": "Standard Windows feature so easily overlooked. Often paired with Run keys / WMI for redundancy.",
+    "commonIndicators": [
+      "schtasks.exe /create from a non-admin context",
+      "Task name impersonates Microsoft (GoogleUpdaterTask, OfficeTelemetry)",
+      "Task action points to a Public / Temp / AppData binary"
+    ],
+    "sentinelKql": "DeviceProcessEvents\n| where FileName == \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"",
+    "rapid7Query": "where(process_name, schtasks.exe) where(command_line, CONTAINS, /create)",
+    "elkQuery": "process.name: schtasks.exe AND process.command_line: */create*",
+    "nextMitreStep": "T1059 — execution of the persisted task action",
+    "differencesFromBruteForce": "Persistence technique."
+  },
+  "T1546.003": {
+    "tactic": "Persistence / Privilege Escalation",
+    "tacticId": "TA0003",
+    "technique": "Event Triggered Execution: WMI Event Subscription",
+    "techniqueId": "T1546.003",
+    "whatAttackerDoes": "Registers a WMI consumer + filter pair so attacker code runs when a specific event fires (boot, logon, time-of-day).",
+    "whyItMatters": "Stealth persistence — lives in the WMI repository, often missed by AV scanners.",
+    "commonIndicators": [
+      "Sysmon EID 20 / 21 (WMI consumer/binding) outside of management tooling",
+      "ActiveScriptEventConsumer / CommandLineEventConsumer with attacker-controlled script",
+      "WMI subscription created within the same hour as other persistence mechanisms"
+    ],
+    "sentinelKql": "SysmonEvent\n| where EventID in (20, 21)\n| project TimeGenerated, Computer, Consumer, Destination",
+    "rapid7Query": "where(wmi_event, subscription_create)",
+    "elkQuery": "event.code: (20 OR 21)",
+    "nextMitreStep": "T1059 — execution when the WMI event fires",
+    "differencesFromBruteForce": "Persistence technique, WMI subsystem rather than registry / scheduled task."
+  }
+}

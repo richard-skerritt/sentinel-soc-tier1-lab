@@ -14,3 +14,6 @@ data.db-journal
 
 *.log
 .DS_Store
+
+# Claude Code per-machine config — user-specific permissions, not project state
+.claude/

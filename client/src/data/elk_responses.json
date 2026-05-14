@@ -1,0 +1,3532 @@
+{
+  "INC-2026-0501": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T04:33:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:34:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:35:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:35:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:35:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:35:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:35:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T04:36:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:36:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "45.83.193.150",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0502": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T08:14:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "service-scanner@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "service-scanner@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:15:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "service-scanner@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:16:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:16:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:16:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "service-scanner@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:16:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:16:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T08:17:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "service-scanner@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:17:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "199.249.230.100",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0503": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T07:43:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:44:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:45:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:45:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:45:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:45:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:45:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:46:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:46:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0504": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T02:58:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "ceo@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "ceo@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T02:59:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "ceo@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:00:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:00:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:00:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "ceo@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:00:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:00:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T03:01:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "ceo@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T03:01:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0505": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T07:40:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "old.printer@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "old.printer@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:41:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "old.printer@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:42:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:42:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:42:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "old.printer@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:42:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:42:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T07:43:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "old.printer@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:43:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0506": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T09:48:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:48:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:48:24.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:48:36.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:48:48.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:49:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:49:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "j.harrington",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:50:00.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0507": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T09:51:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:51:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:51:24.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:51:36.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:51:48.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:52:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:52:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:53:00.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0508": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:02:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:02:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:02:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:03:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:03:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:03:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:03:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:04:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0509": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:05:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:06:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:06:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:06:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:06:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:07:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0510": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:04:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:04:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:04:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:05:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:06:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0511": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:29:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:29:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:29:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:30:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:30:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:30:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:30:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:31:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0512": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:33:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:33:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:33:24.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:33:36.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:33:48.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:34:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:34:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:35:00.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0513": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:51:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:51:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:51:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:53:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0514": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:42:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:42:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:42:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:43:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:43:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:43:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:43:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WS-FIN-014",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:44:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0515": {
+    "events": [
+      {
+        "@timestamp": "2026-05-12T16:32:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:32:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:32:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:33:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:33:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:33:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:33:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "soc.analyst",
+        "host.name": "WS-IT-002",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T16:34:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "soc.analyst",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0516": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T09:55:30.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:56:02.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:56:34.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:57:06.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:57:38.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:58:10.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:58:42.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:59:14.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:59:46.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:00:18.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:00:50.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:01:22.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0517": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:51:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:51:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:51:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:52:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "j.harrington@contoso.com",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:53:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0518": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T08:56:00.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:56:32.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:57:04.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:57:36.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:58:08.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:58:40.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:59:12.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T08:59:44.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:00:16.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:00:48.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:01:20.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:01:52.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0519": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T11:36:50.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:37:10.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:37:30.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:37:50.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:38:10.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:38:30.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:38:50.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:39:10.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:39:30.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:39:50.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:40:10.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:40:30.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:40:50.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:41:10.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "j.harrington@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0520": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T11:16:00Z",
+        "event.category": "iam",
+        "event.action": "role-assigned",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:16:30.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:16:48.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:17:06.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:17:24.000Z",
+        "event.category": "iam",
+        "event.action": "role-add",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:17:42.000Z",
+        "event.category": "iam",
+        "event.action": "audit-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:18:00.000Z",
+        "event.category": "iam",
+        "event.action": "mail-accessed",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:18:18.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:18:36.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:18:54.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "temp.admin@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0521": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T05:59:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T05:59:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:00:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:00:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:00:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:01:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:01:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:01:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:02:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:02:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:02:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:03:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:03:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T06:03:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0522": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T11:01:50.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:01.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user1@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:12.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user2@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:23.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:34.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user4@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:45.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user5@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:02:56.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:03:07.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user7@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:03:18.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user8@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:03:29.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:03:40.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user10@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:03:51.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user11@contoso.com",
+        "event.outcome": "failure"
+      },
+      {
+        "@timestamp": "2026-05-13T11:04:02.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:04:13.000Z",
+        "event.category": "authentication",
+        "event.action": "user-login",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "20.190.151.5",
+        "user.name": "user13@contoso.com",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0523": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T11:23:00Z",
+        "event.category": "iam",
+        "event.action": "role-assigned",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:23:30.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:23:48.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:24:06.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:24:24.000Z",
+        "event.category": "iam",
+        "event.action": "role-add",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:24:42.000Z",
+        "event.category": "iam",
+        "event.action": "audit-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:25:00.000Z",
+        "event.category": "iam",
+        "event.action": "mail-accessed",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:25:18.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:25:36.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T11:25:54.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "10.4.5.114",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0524": {
+    "events": [
+      {
+        "@timestamp": "2026-05-12T22:10:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:10:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:11:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:11:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:11:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:12:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:12:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:12:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:13:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:13:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:13:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:14:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:14:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-12T22:14:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0525": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T04:18:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:18:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:18:54.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:19:06.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:19:18.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:19:30.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:19:42.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "host-unknown",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T04:20:30.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0526": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T09:42:00.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:42:32.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:43:04.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:43:36.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:44:08.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:44:40.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:45:12.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:45:44.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:46:16.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:46:48.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:47:20.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:47:52.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0527": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:14:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:14:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:15:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:15:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:15:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:16:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:16:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:16:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:17:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:17:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:17:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:18:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:18:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:18:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0528": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T10:23:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:23:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:24:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:24:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:24:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:25:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:25:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:25:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:26:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:26:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:26:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:27:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:27:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T10:27:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0529": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T12:58:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T12:58:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T12:59:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T12:59:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T12:59:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:00:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:00:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:00:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:01:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:01:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:01:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:02:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:02:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T13:02:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0530": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T07:54:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:54:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:55:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:55:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:55:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:56:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:56:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:56:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:57:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:57:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:57:40.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:58:00.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "45.83.193.150",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:58:20.000Z",
+        "event.category": "network",
+        "event.action": "allowed",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.42",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T07:58:40.000Z",
+        "event.category": "network",
+        "event.action": "denied",
+        "source.ip": "10.4.5.114",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "failure"
+      }
+    ]
+  },
+  "INC-2026-0531": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T14:06:52.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:07:04.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:07:16.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:07:28.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:07:40.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:07:52.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:08:04.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "jamie.chen@contoso.com",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:08:52.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "185.220.101.47",
+        "user.name": "jamie.chen@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0532": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T09:22:11.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:22:43.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:23:15.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:23:47.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:24:19.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:24:51.000Z",
+        "event.category": "email",
+        "event.action": "mailbox-access",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:25:23.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:25:55.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:26:27.000Z",
+        "event.category": "email",
+        "event.action": "inbox-rule-created",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ap@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:26:59.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "ar@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:27:31.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "payroll@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T09:28:03.000Z",
+        "event.category": "email",
+        "event.action": "oauth-token-issued",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "",
+        "user.name": "controller@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0533": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T14:30:35.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:30:47.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:30:59.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:31:11.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:31:23.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:31:35.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:31:47.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:32:35.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "10.0.2.88",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0534": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T15:43:48.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "OUTLOOK.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:44:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "WINWORD.EXE",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:44:12.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "powershell.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:44:24.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "svchost.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:44:36.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "nmap.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:44:48.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "wmic.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:45:00.000Z",
+        "event.category": "process",
+        "event.action": "process_started",
+        "process.name": "vssadmin.exe",
+        "user.name": "unknown.user",
+        "host.name": "WIN10-WS-047",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T15:45:48.000Z",
+        "event.category": "network",
+        "event.action": "connection",
+        "source.ip": "185.220.101.47",
+        "destination.ip": "185.220.101.47",
+        "user.name": "unknown.user",
+        "event.outcome": "success"
+      }
+    ]
+  },
+  "INC-2026-0535": {
+    "events": [
+      {
+        "@timestamp": "2026-05-13T14:53:00Z",
+        "event.category": "iam",
+        "event.action": "role-assigned",
+        "source.ip": "185.220.101.47",
+        "user.name": "finance-controller@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:53:30.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:53:48.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:54:06.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:54:24.000Z",
+        "event.category": "iam",
+        "event.action": "role-add",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:54:42.000Z",
+        "event.category": "iam",
+        "event.action": "audit-read",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:55:00.000Z",
+        "event.category": "iam",
+        "event.action": "mail-accessed",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:55:18.000Z",
+        "event.category": "iam",
+        "event.action": "app-created",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:55:36.000Z",
+        "event.category": "iam",
+        "event.action": "policy-disabled",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      },
+      {
+        "@timestamp": "2026-05-13T14:55:54.000Z",
+        "event.category": "iam",
+        "event.action": "secret-read",
+        "source.ip": "185.220.101.47",
+        "user.name": "svc-backup@contoso.com",
+        "event.outcome": "success"
+      }
+    ]
+  }
+}

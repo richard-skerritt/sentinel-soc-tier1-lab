@@ -3,8 +3,21 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Settings as SettingsIcon, Volume2, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import {
+  Settings as SettingsIcon,
+  Volume2,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Layers,
+} from "lucide-react";
 import { testVoice, invalidateVoiceConfig } from "@/lib/voice";
+import {
+  listStacks,
+  getActiveStackId,
+  setActiveStackId,
+  isStackFullySupported,
+} from "@/lib/toolStack";
 
 export default function Settings() {
   const { data: settings = {} } = useQuery<Record<string, string>>({ queryKey: ["/api/settings"] });
@@ -62,6 +75,14 @@ export default function Settings() {
 
   const configured = !!(elevenKey && elevenVoice);
 
+  const stacks = listStacks();
+  const [activeStack, setStack] = useState<string>(() => getActiveStackId());
+  const handleStackChange = (id: string) => {
+    setStack(id);
+    setActiveStackId(id);
+  };
+  const stackSupported = isStackFullySupported(activeStack);
+
   return (
     <Layout>
       <div className="max-w-2xl mx-auto p-8 space-y-6">
@@ -71,6 +92,63 @@ export default function Settings() {
           </div>
           <h1 className="text-xl font-semibold tracking-tight">Lab configuration</h1>
         </header>
+
+        <section className="bg-card border border-border rounded-lg p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Layers className="h-4 w-4" /> Tool stack
+            </h2>
+            <span
+              className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded ${
+                stackSupported
+                  ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                  : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+              }`}
+            >
+              {stackSupported ? "Active" : "Preview only"}
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Switches the labels and tool panels used throughout the lab. Only the Nightshift
+            default stack has fully-wired tool panels; the others show a Coming-soon overlay.
+          </p>
+          <label className="block">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+              Active stack
+            </div>
+            <select
+              value={activeStack}
+              onChange={(e) => handleStackChange(e.target.value)}
+              className="w-full bg-background border border-border rounded px-3 py-2 text-sm"
+              data-testid="tool-stack-select"
+            >
+              {stacks.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          {(() => {
+            const current = stacks.find((s) => s.id === activeStack) ?? stacks[0];
+            return (
+              <dl className="grid grid-cols-2 gap-y-1 text-[11px] mono pt-2 border-t border-border">
+                <dt className="text-muted-foreground">SIEM</dt>
+                <dd>{current.siem} ({current.siemQueryLanguage})</dd>
+                <dt className="text-muted-foreground">XDR</dt>
+                <dd>{current.xdr}</dd>
+                <dt className="text-muted-foreground">Log platform</dt>
+                <dd>{current.logPlatform}</dd>
+                <dt className="text-muted-foreground">EDR</dt>
+                <dd>{current.edr}</dd>
+                <dt className="text-muted-foreground">IDPS</dt>
+                <dd>{current.idps}</dd>
+                <dt className="text-muted-foreground">Ticketing</dt>
+                <dd>{current.ticketing}</dd>
+              </dl>
+            );
+          })()}
+        </section>
 
         <section className="bg-card border border-border rounded-lg p-5 space-y-4">
           <h2 className="text-sm font-semibold">Analyst profile</h2>

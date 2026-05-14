@@ -1,0 +1,29 @@
+{
+  "stacks": [
+    {
+      "id": "nightshift-default",
+      "name": "Nightshift Default (Sentinel + Rapid7 + ELK)",
+      "siem": "Microsoft Sentinel",
+      "siemQueryLanguage": "KQL",
+      "xdr": "Rapid7 InsightIDR",
+      "logPlatform": "ELK Stack",
+      "edr": "Microsoft Defender for Endpoint",
+      "ngav": "Microsoft Defender Antivirus",
+      "idps": "Azure Firewall IDPS",
+      "ticketing": "ServiceNow"
+    },
+    {
+      "id": "splunk-crowdstrike",
+      "name": "Generic SOC (Splunk + CrowdStrike)",
+      "siem": "Splunk Enterprise",
+      "siemQueryLanguage": "SPL",
+      "xdr": "CrowdStrike Falcon",
+      "logPlatform": "Splunk",
+      "edr": "CrowdStrike Falcon Prevent",
+      "ngav": "CrowdStrike Falcon",
+      "idps": "Palo Alto NGFW",
+      "ticketing": "Jira"
+    }
+  ],
+  "activeStack": "nightshift-default"
+}

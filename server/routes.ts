@@ -8,8 +8,10 @@ import { storage } from "./storage";
 const LOG_TABLE_NAMES = [
   "AzureActivity",
   "AzureFirewallNetworkRule",
+  "DeviceAlertEvents",
   "DeviceNetworkEvents",
   "DeviceProcessEvents",
+  "EmailEvents",
   "OfficeActivity",
   "SigninLogs",
   "SysmonEvent",
@@ -156,6 +158,32 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     const body = req.body || {};
     for (const [k, v] of Object.entries(body)) storage.setSetting(k, String(v));
     res.json({ ok: true });
+  });
+
+  // ===== Incident reports =====
+  app.post("/api/incident-reports", (req, res) => {
+    const { alertId, reportContent } = req.body || {};
+    if (!alertId || !reportContent) {
+      return res.status(400).json({ error: "alertId and reportContent required" });
+    }
+    const saved = storage.saveIncidentReport(String(alertId), String(reportContent));
+    res.json(saved);
+  });
+  app.get("/api/incident-reports/:alertId", (req, res) => {
+    const r = storage.getLatestIncidentReport(req.params.alertId);
+    if (!r) return res.status(404).json({ error: "not found" });
+    res.json(r);
+  });
+
+  // ===== Tool stack preference =====
+  app.get("/api/tool-stack", (_req, res) => {
+    res.json({ activeStack: storage.getActiveToolStack() });
+  });
+  app.post("/api/tool-stack", (req, res) => {
+    const { activeStack } = req.body || {};
+    if (!activeStack) return res.status(400).json({ error: "activeStack required" });
+    storage.setActiveToolStack(String(activeStack));
+    res.json({ ok: true, activeStack });
   });
 
   // ===== Voice (ElevenLabs proxy) =====

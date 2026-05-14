@@ -13,6 +13,20 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import mentor from "@/data/mentor.json";
 import { MorganBubble } from "@/components/MorganBubble";
+import { RunbookPanel } from "@/components/RunbookPanel";
+import { Rapid7Panel } from "@/components/Rapid7Panel";
+import { ElkPanel } from "@/components/ElkPanel";
+import { MitreDetailDialog } from "@/components/MitreDetailDialog";
+import {
+  exportIncident,
+  downloadIncidentReport,
+  type QueryHistoryEntry,
+} from "@/lib/exportIncident";
+import {
+  getActiveStack,
+  getActiveStackId,
+  isStackFullySupported,
+} from "@/lib/toolStack";
 import {
   Play,
   Save,
@@ -27,6 +41,10 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
+  FileDown,
+  Shield,
+  Search as SearchIcon,
+  Server,
 } from "lucide-react";
 
 const alerts = alertsData as unknown as Alert[];
@@ -63,6 +81,33 @@ export default function AlertDetail() {
   const [pivot, setPivot] = useState<{ col: string; value: any } | null>(null);
   const [activeTab, setActiveTab] = useState<"editor" | "schema">("editor");
   const [rightTab, setRightTab] = useState<"notebook" | "triage">("triage");
+  const [activeTool, setActiveTool] = useState<"sentinel" | "rapid7" | "elk" | "edr">("sentinel");
+  const [runbookOpen, setRunbookOpen] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("runbook_panel_open") !== "false";
+    } catch {
+      return true;
+    }
+  });
+  const [mitreOpen, setMitreOpen] = useState(false);
+  const [stackId, setStackId] = useState<string>(() => getActiveStackId());
+  useEffect(() => {
+    const handler = () => setStackId(getActiveStackId());
+    window.addEventListener("tool-stack-changed", handler);
+    return () => window.removeEventListener("tool-stack-changed", handler);
+  }, []);
+  const activeStack = useMemo(() => getActiveStack(), [stackId]);
+  const stackSupported = useMemo(() => isStackFullySupported(stackId), [stackId]);
+
+  const toggleRunbook = () => {
+    setRunbookOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("runbook_panel_open", String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   const runIt = async () => {
     setRunning(true);
@@ -186,6 +231,48 @@ export default function AlertDetail() {
     );
   };
 
+  // ===== Incident export =====
+  const { data: queryHist = [] } = useQuery<any[]>({
+    queryKey: ["/api/queryHistory", { alertId: alert.id }],
+    queryFn: async () => {
+      try {
+        const r = await apiRequest("GET", `/api/queryHistory?alertId=${encodeURIComponent(alert.id)}`);
+        return r.json();
+      } catch {
+        return [];
+      }
+    },
+  });
+
+  const handleExport = () => {
+    if (!submitted) return;
+    const history: QueryHistoryEntry[] = (queryHist ?? []).map((q: any) => ({
+      query: q.query ?? "",
+      executedAt: q.executedAt ?? q.createdAt ?? Date.now(),
+      resultRows: q.resultRows ?? 0,
+    }));
+    const markdown = exportIncident(
+      alert,
+      {
+        verdict: submitted.verdict,
+        actions: submitted.actions ?? [],
+        notes: submitted.notes ?? "",
+        correct: submitted.correct,
+        partial: submitted.partial,
+        submittedAt: submitted.submittedAt,
+      },
+      history,
+    );
+    downloadIncidentReport(alert, markdown);
+    try {
+      navigator.clipboard.writeText(markdown);
+    } catch {}
+    apiRequest("POST", "/api/incident-reports", {
+      alertId: alert.id,
+      reportContent: markdown,
+    }).catch(() => {});
+  };
+
   // ===== Pivot menu =====
   const onCellClick = (col: string, value: any) => {
     setPivot({ col, value });
@@ -250,11 +337,23 @@ export default function AlertDetail() {
           <div className="space-y-1">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">MITRE</div>
             <div className="flex flex-wrap gap-1.5">
-              {alert.mitre.map((m) => (
-                <span key={m} className="text-[11px] bg-primary/10 border border-primary/30 text-primary rounded px-2 py-0.5">
-                  {m}
-                </span>
-              ))}
+              {alert.mitre.map((m) => {
+                const id = m.split(" ")[0];
+                return (
+                  <button
+                    key={m}
+                    onClick={() => setMitreOpen(true)}
+                    className="text-[11px] bg-primary/10 border border-primary/30 text-primary rounded px-2 py-0.5 hover:bg-primary/20 transition-colors cursor-pointer"
+                    data-testid={`mitre-${id}`}
+                    title="View MITRE technique detail"
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="text-[10px] text-muted-foreground">
+              Category: <span className="text-foreground/80">{alert.category}</span>
             </div>
           </div>
 
@@ -305,8 +404,47 @@ export default function AlertDetail() {
           </div>
         </aside>
 
-        {/* ===== Middle pane: KQL Console ===== */}
+        {/* ===== Middle pane: Tools (Sentinel / Rapid7 / ELK / EDR) ===== */}
         <section className="flex-1 min-w-0 border-r border-border flex flex-col overflow-hidden">
+          <div className="flex items-stretch border-b border-border bg-muted/30 px-1">
+            <ToolTab
+              active={activeTool === "sentinel"}
+              onClick={() => setActiveTool("sentinel")}
+              icon={<Code2 className="h-3 w-3" />}
+              label={`KQL (${activeStack.siem.replace("Microsoft ", "")})`}
+              testId="tool-tab-sentinel"
+            />
+            <ToolTab
+              active={activeTool === "rapid7"}
+              onClick={() => setActiveTool("rapid7")}
+              icon={<SearchIcon className="h-3 w-3" />}
+              label={activeStack.xdr}
+              testId="tool-tab-rapid7"
+            />
+            <ToolTab
+              active={activeTool === "elk"}
+              onClick={() => setActiveTool("elk")}
+              icon={<Server className="h-3 w-3" />}
+              label={activeStack.logPlatform}
+              testId="tool-tab-elk"
+            />
+            <ToolTab
+              active={activeTool === "edr"}
+              onClick={() => setActiveTool("edr")}
+              icon={<Shield className="h-3 w-3" />}
+              label={`EDR (${activeStack.edr.split(" ").pop()})`}
+              testId="tool-tab-edr"
+            />
+          </div>
+
+          {activeTool === "rapid7" ? (
+            <Rapid7Panel alertId={alert.id} stackAvailable={stackSupported} />
+          ) : activeTool === "elk" ? (
+            <ElkPanel alertId={alert.id} stackAvailable={stackSupported} />
+          ) : activeTool === "edr" ? (
+            <EdrPanel alert={alert} stackAvailable={stackSupported} edrName={activeStack.edr} />
+          ) : (
+            <>
           <div className="flex items-center border-b border-border bg-muted/20 px-2">
             <button
               onClick={() => setActiveTab("editor")}
@@ -391,6 +529,8 @@ export default function AlertDetail() {
                 </div>
               ))}
             </div>
+          )}
+            </>
           )}
         </section>
 
@@ -585,15 +725,121 @@ export default function AlertDetail() {
                   </div>
                 ))}
               </div>
+              <Button
+                onClick={handleExport}
+                variant="outline"
+                size="sm"
+                className="w-full gap-2"
+                data-testid="btn-export-report"
+              >
+                <FileDown className="h-3.5 w-3.5" />
+                Export Report (.md)
+              </Button>
               <MorganBubble lines={feedbackLines} compact />
             </div>
           )}
         </aside>
 
+        {/* ===== Far-right rail: Runbook ===== */}
+        <RunbookPanel
+          alertId={alert.id}
+          alertCategory={alert.category}
+          mitreId={alert.mitreId}
+          isOpen={runbookOpen}
+          onToggle={toggleRunbook}
+        />
+
         {/* ===== Pivot menu ===== */}
         {pivot && <PivotMenu pivot={pivot} onClose={closePivot} onApply={applyPivot} />}
       </div>
+
+      <MitreDetailDialog
+        mitreId={alert.mitreId}
+        open={mitreOpen}
+        onOpenChange={setMitreOpen}
+      />
     </Layout>
+  );
+}
+
+function ToolTab({
+  active,
+  onClick,
+  icon,
+  label,
+  testId,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  testId: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      data-testid={testId}
+      className={`px-3 py-2 text-xs flex items-center gap-1.5 border-b-2 transition-colors ${
+        active
+          ? "border-primary text-primary bg-background"
+          : "border-transparent text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {icon} {label}
+    </button>
+  );
+}
+
+function EdrPanel({
+  alert,
+  stackAvailable,
+  edrName,
+}: {
+  alert: Alert;
+  stackAvailable: boolean;
+  edrName: string;
+}) {
+  if (!stackAvailable) {
+    return (
+      <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+        <div className="text-center space-y-1">
+          <div className="text-sm text-foreground">{edrName}</div>
+          <div>Not configured for the active tool stack.</div>
+        </div>
+      </div>
+    );
+  }
+  const host =
+    (alert.entities as Record<string, string>).host ??
+    (alert.entities as Record<string, string>).srcHost ??
+    (alert.entities as Record<string, string>).fileServer ??
+    "—";
+  return (
+    <div className="flex-1 overflow-auto scrollbar-thin p-5 space-y-3">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+        {edrName} — Device summary
+      </div>
+      <div className="bg-card border border-border rounded p-3 space-y-2">
+        <div className="flex items-center gap-2">
+          <Shield className="h-4 w-4 text-primary" />
+          <span className="font-semibold mono text-sm">{host}</span>
+        </div>
+        <dl className="grid grid-cols-2 gap-y-1.5 text-xs">
+          <dt className="text-muted-foreground">Alert title</dt>
+          <dd>{alert.ruleName}</dd>
+          <dt className="text-muted-foreground">Severity</dt>
+          <dd>{alert.alertSeverity}</dd>
+          <dt className="text-muted-foreground">Category</dt>
+          <dd>{alert.category}</dd>
+          <dt className="text-muted-foreground">First seen</dt>
+          <dd className="mono">{alert.displayedAt}</dd>
+        </dl>
+      </div>
+      <div className="text-xs text-muted-foreground leading-relaxed">
+        Use the Sentinel tab for full timeline / process-tree queries. This pane shows the EDR's
+        device-level summary only.
+      </div>
+    </div>
   );
 }
 

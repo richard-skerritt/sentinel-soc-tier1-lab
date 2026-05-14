@@ -1,0 +1,470 @@
+{
+  "authentication": {
+    "title": "Suspicious Authentication Runbook",
+    "tool": "Microsoft Sentinel",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Confirm the alert fired correctly — count failures per IP in the last hour",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where TimeGenerated > ago(1h)\n| where ResultType != \"0\"\n| summarize FailureCount=count(), DistinctUsers=dcount(UserPrincipalName) by IPAddress\n| where FailureCount > 10\n| sort by FailureCount desc",
+        "expectedResult": "Table showing one or more IPs with high failure counts. The DistinctUsers column tells you spray vs brute force.",
+        "decisionYes": "Note the source IP and DistinctUsers count. Proceed to Step 2 to check for successful sign-ins from the same IP.",
+        "decisionNo": "No high-failure IPs. Check service accounts / misconfigured clients before closing. If still nothing, document and close as benign."
+      },
+      {
+        "id": 2,
+        "action": "Check for any successful sign-in after the failures",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where TimeGenerated > ago(1h)\n| where IPAddress == \"<ATTACKER_IP>\"\n| where ResultType == \"0\"\n| project TimeGenerated, UserPrincipalName, IPAddress, Location, AppDisplayName",
+        "expectedResult": "Any row = at least one account is compromised. Empty result = the attack failed.",
+        "decisionYes": "ESCALATE to Tier 2 immediately. Capture the compromised UPNs and the success timestamp before continuing.",
+        "decisionNo": "No successful sign-in — attack failed. Continue to Step 3 to scope and block the source."
+      },
+      {
+        "id": 3,
+        "action": "Cross-reference source IP against ThreatIntelligenceIndicator",
+        "tool": "Sentinel",
+        "kql": "ThreatIntelligenceIndicator\n| where IndicatorValue == \"<ATTACKER_IP>\"\n| project IndicatorValue, ThreatType, Source, Description",
+        "expectedResult": "A row confirms the IP is known-bad (TOR exit, C2, scanner). No row means unknown reputation.",
+        "decisionYes": "Known-bad — confidence high. Block at edge firewall and add to conditional-access named locations.",
+        "decisionNo": "Unknown IP. Still block at firewall but note as 'unknown reputation' in the ticket for IR enrichment."
+      },
+      {
+        "id": 4,
+        "action": "Identify all user accounts touched by the source IP",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where TimeGenerated > ago(6h)\n| where IPAddress == \"<ATTACKER_IP>\"\n| summarize Attempts=count(), Successes=countif(ResultType == \"0\") by UserPrincipalName\n| sort by Successes desc, Attempts desc",
+        "expectedResult": "Per-user breakdown. Accounts with Successes > 0 are confirmed compromised.",
+        "decisionYes": "Document compromised accounts. Move to containment (Step 5).",
+        "decisionNo": "No successful auth. Document attempted accounts so password expiry / MFA enrolment can be verified."
+      },
+      {
+        "id": 5,
+        "action": "Containment — disable / reset compromised accounts and revoke sessions",
+        "tool": "Sentinel",
+        "kql": "// Verify post-containment with this query a few minutes later:\nSigninLogs\n| where UserPrincipalName in (\"<COMPROMISED_UPN>\")\n| where TimeGenerated > ago(15m)\n| project TimeGenerated, IPAddress, ResultType, ResultDescription",
+        "expectedResult": "After containment, no successful sign-ins should appear for the affected accounts.",
+        "decisionYes": "Containment confirmed — proceed to Step 6 for the post-mortem.",
+        "decisionNo": "Sessions still active. Repeat session revocation; if it persists, escalate as token theft."
+      },
+      {
+        "id": 6,
+        "action": "Pivot to Rapid7 InsightIDR for corroborating session/network activity",
+        "tool": "Rapid7",
+        "kql": "where(source_ip, <ATTACKER_IP>) groupby(destination_user)",
+        "expectedResult": "InsightIDR returns the same set of users (or more) seen in Sentinel. Confirms scope across data sources.",
+        "decisionYes": "Scope confirmed across both tools. Proceed to documentation.",
+        "decisionNo": "Discrepancy between tools — investigate ingestion lag in InsightIDR before declaring containment complete."
+      },
+      {
+        "id": 7,
+        "action": "Verify MFA / conditional access posture on affected accounts",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where UserPrincipalName in (\"<COMPROMISED_UPN>\")\n| summarize MFAUsed=countif(AuthenticationRequirement == \"multiFactorAuthentication\"), Total=count() by UserPrincipalName",
+        "expectedResult": "Per-account MFA usage ratio. Accounts with 0% MFA had no second factor protecting them.",
+        "decisionYes": "MFA gaps identified — open an identity policy ticket for enforcement.",
+        "decisionNo": "MFA was enforced — that means the attacker bypassed it (token theft, MFA fatigue). Re-investigate."
+      },
+      {
+        "id": 8,
+        "action": "Document and hand off — write the incident report, attach query history, escalate or close",
+        "tool": "Sentinel",
+        "kql": "// Export the incident from the AlertDetail panel.\n// Include: source IP, scope of accounts, containment actions, MFA gaps.",
+        "expectedResult": "A complete SOC ticket suitable for Tier 2 handoff or audit.",
+        "decisionYes": "True Positive with containment → escalate to Tier 2 with the export attached.",
+        "decisionNo": "False Positive → close ticket with reason (service account, scheduled scanner, known exception)."
+      }
+    ]
+  },
+  "malware": {
+    "title": "Endpoint Malware / Suspicious Process Runbook",
+    "tool": "Microsoft Defender for Endpoint",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Confirm the alert in DeviceAlertEvents and capture the process tree",
+        "tool": "Sentinel",
+        "kql": "DeviceAlertEvents\n| where DeviceName == \"<HOST>\"\n| where Timestamp > ago(2h)\n| project Timestamp, AlertTitle, Severity, FileName, ProcessCommandLine, InitiatingProcessFileName, RemoteIP",
+        "expectedResult": "Ordered list of alerts on the host with the offending command lines and parents.",
+        "decisionYes": "Alert reproduces — note the InitiatingProcessFileName (the parent) and proceed to Step 2.",
+        "decisionNo": "No matching events. Verify host name spelling, check time window, then close as no-evidence."
+      },
+      {
+        "id": 2,
+        "action": "Walk the process tree — what spawned the suspicious process?",
+        "tool": "Sentinel",
+        "kql": "DeviceProcessEvents\n| where DeviceName == \"<HOST>\"\n| where Timestamp between (datetime(<START>) .. datetime(<END>))\n| project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine\n| sort by Timestamp asc",
+        "expectedResult": "A chain like OUTLOOK.EXE → WINWORD.EXE → powershell.exe -enc — confirms initial access vector.",
+        "decisionYes": "Office spawning a scripting engine is unambiguous — proceed to Step 3.",
+        "decisionNo": "Standard parent (services.exe, explorer.exe). Could be legit; gather more context before declaring TP."
+      },
+      {
+        "id": 3,
+        "action": "Decode the encoded PowerShell command (-enc / -EncodedCommand)",
+        "tool": "Sentinel",
+        "kql": "DeviceProcessEvents\n| where DeviceName == \"<HOST>\"\n| where ProcessCommandLine has_any (\"-enc\", \"-EncodedCommand\")\n| project Timestamp, ProcessCommandLine",
+        "expectedResult": "The base64 string. Decode externally (CyberChef) — typically reveals an IEX DownloadString to an attacker URL.",
+        "decisionYes": "Decoded command shows download/exec — that's the C2 stager. Note the URL/IP. Proceed to Step 4.",
+        "decisionNo": "Decoded command is benign (build script, monitoring). Still document; close as benign positive."
+      },
+      {
+        "id": 4,
+        "action": "Confirm outbound C2 — did the process actually connect?",
+        "tool": "Sentinel",
+        "kql": "DeviceNetworkEvents\n| where DeviceName == \"<HOST>\"\n| where InitiatingProcessFileName == \"powershell.exe\"\n| where Timestamp > ago(2h)\n| project Timestamp, RemoteIP, RemotePort, BytesSent, BytesReceived",
+        "expectedResult": "Outbound connection to the IP from the decoded payload. BytesReceived > BytesSent = stager downloaded.",
+        "decisionYes": "C2 confirmed. Isolate host now (Step 5).",
+        "decisionNo": "No outbound. Stager was blocked by firewall / proxy. Still isolate as precaution and investigate."
+      },
+      {
+        "id": 5,
+        "action": "Isolate the host via the EDR (Defender / network isolation)",
+        "tool": "EDR",
+        "kql": "// Action — perform from the Defender portal:\n// Device → <HOST> → Isolate device\n// Reason: 'macro-driven PowerShell with C2 callback'",
+        "expectedResult": "Defender confirms isolation. DeviceNetworkEvents stops showing outbound connections from the host.",
+        "decisionYes": "Isolation confirmed → proceed to Step 6 for scope assessment.",
+        "decisionNo": "Isolation failed — escalate to IR immediately for manual containment (firewall block by source IP)."
+      },
+      {
+        "id": 6,
+        "action": "Scope assessment — is any other host showing the same IOCs?",
+        "tool": "Sentinel",
+        "kql": "DeviceNetworkEvents\n| where RemoteIP == \"<ATTACKER_IP>\"\n| where Timestamp > ago(24h)\n| summarize Beacons=count() by DeviceName",
+        "expectedResult": "Count per host. More than one host = lateral movement / multiple infections — different playbook.",
+        "decisionYes": "Single host — limited scope. Proceed to Step 7 for forensics.",
+        "decisionNo": "Multiple hosts — escalate Critical, activate IR playbook (full incident, not Tier 1 work)."
+      },
+      {
+        "id": 7,
+        "action": "Preserve artefacts — dropped binaries, scheduled tasks, registry persistence",
+        "tool": "EDR",
+        "kql": "DeviceProcessEvents\n| where DeviceName == \"<HOST>\"\n| where FileName in~ (\"schtasks.exe\", \"reg.exe\", \"sc.exe\", \"wmic.exe\")\n| where ProcessCommandLine has_any (\"create\", \"add\", \"/c\", \"/i\")",
+        "expectedResult": "Any persistence-related command lines. Note the target paths and consumer names.",
+        "decisionYes": "Persistence found — re-imaging the host is the right call. Note all mechanisms before wiping.",
+        "decisionNo": "No persistence detected. Still recommend re-image (presence of unknown injected code in memory)."
+      },
+      {
+        "id": 8,
+        "action": "Escalate or close — document the chain, file the ticket",
+        "tool": "Sentinel",
+        "kql": "// Use the 'Export Report' button in AlertDetail to generate the markdown ticket.\n// Attach: process tree screenshot, decoded payload, outbound IOCs, scope query result.",
+        "expectedResult": "Complete handoff package for Tier 2 / IR.",
+        "decisionYes": "TP with scope contained → escalate to Tier 2 with report attached.",
+        "decisionNo": "FP after deep dive (red team / EICAR / scheduled test) → close with full justification."
+      }
+    ]
+  },
+  "phishing": {
+    "title": "Phishing / BEC Runbook",
+    "tool": "Microsoft Defender for Office 365",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Locate the originating email and sender details",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where TimeGenerated > ago(6h)\n| where RecipientEmailAddress == \"<USER>\"\n| where Operation == \"EmailDelivered\"\n| project TimeGenerated, SenderFromAddress, Subject, Attachment, SrcIP",
+        "expectedResult": "Inbound mail to the user with sender and attachment. A lookalike domain (cont0so.com) is the smoking gun.",
+        "decisionYes": "Suspicious sender confirmed → proceed to Step 2 to scope tenant-wide.",
+        "decisionNo": "No matching mail. Could be cleaned by Threat Explorer already — check quarantine logs."
+      },
+      {
+        "id": 2,
+        "action": "Find every recipient of the same sender / attachment in the tenant",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where TimeGenerated > ago(24h)\n| where SenderFromAddress == \"<SENDER>\" or Attachment == \"<ATTACHMENT>\"\n| summarize Count=count() by RecipientEmailAddress",
+        "expectedResult": "Full list of recipients. Anyone who opened the attachment is a candidate for compromise.",
+        "decisionYes": "Multiple recipients — purge tenant-wide via Threat Explorer / Soft-Delete soon as possible.",
+        "decisionNo": "Single recipient — still purge that one and add the sender to the blocklist."
+      },
+      {
+        "id": 3,
+        "action": "Check whether the recipient opened the attachment",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where Attachment == \"<ATTACHMENT>\"\n| where Operation == \"AttachmentOpened\"\n| project TimeGenerated, UserId, SrcIP",
+        "expectedResult": "AttachmentOpened event = the user ran the malicious doc. That timestamp is your pivot into DeviceProcessEvents.",
+        "decisionYes": "User opened it — pivot to malware runbook on the host that opened it.",
+        "decisionNo": "Not opened — purge the mail and educate the user; no host investigation needed."
+      },
+      {
+        "id": 4,
+        "action": "Check for OAuth consent grants / token issuance from the same window",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where Operation in (\"OAuthTokenIssued\", \"Consent to application\")\n| where UserId == \"<USER>\"\n| where TimeGenerated > ago(24h)\n| project TimeGenerated, Operation, SrcIP, ResultStatus",
+        "expectedResult": "Token issuance from a Tor / anonymizer IP = the attacker now has persistent access without needing the password.",
+        "decisionYes": "Token theft — revoke all sessions / refresh tokens for the user immediately (Step 5).",
+        "decisionNo": "No token theft visible — proceed to inbox-rule check (Step 6)."
+      },
+      {
+        "id": 5,
+        "action": "Revoke sessions and tokens for the compromised user",
+        "tool": "Sentinel",
+        "kql": "// Action — perform from the Entra portal:\n// Users → <USER> → Sign-in sessions → Revoke all\n// And: Audit logs to confirm RevokeAllRefreshTokens succeeded.",
+        "expectedResult": "All active sessions invalidated. Next access will require fresh interactive sign-in with MFA.",
+        "decisionYes": "Sessions revoked → proceed to Step 6 to check inbox rules.",
+        "decisionNo": "Revocation failed (rare) — escalate to identity team immediately."
+      },
+      {
+        "id": 6,
+        "action": "Look for malicious inbox rules created from the attacker IP",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where Operation == \"New-InboxRule\"\n| where SrcIP == \"<ATTACKER_IP>\"\n| project TimeGenerated, UserId, RecipientEmailAddress, ResultStatus",
+        "expectedResult": "Rules with single-character names (.,  ) and ForwardTo external addresses = BEC exfil. Note the rule details.",
+        "decisionYes": "Malicious rules found — delete them and audit Sent Items for exfil.",
+        "decisionNo": "No rules — BEC may not have progressed that far. Still complete user training step."
+      },
+      {
+        "id": 7,
+        "action": "Block sender domain / IP at the email gateway",
+        "tool": "Defender for O365",
+        "kql": "// Action — in M365 Defender:\n// Threat policies → Anti-phish → Add to blocked sender list: <SENDER>\n// Also: Tenant Allow/Block List → URL/Domain: <SENDER_DOMAIN>",
+        "expectedResult": "Future mail from the same sender is rejected at delivery.",
+        "decisionYes": "Block confirmed → proceed to escalation/closure.",
+        "decisionNo": "Block not applied — open ticket with email security team to enforce."
+      },
+      {
+        "id": 8,
+        "action": "Escalate with full timeline — user impact, exfil scope, IOCs",
+        "tool": "Sentinel",
+        "kql": "// Export the AlertDetail report. Include:\n// - sender domain, attachment hash, attacker IP\n// - opened-by user(s), token-issuance events, inbox rules\n// - revocation timestamps and tenant-wide purge confirmation",
+        "expectedResult": "Tier 2 has everything needed to assess data exposure / regulatory impact.",
+        "decisionYes": "TP with confirmed BEC → escalate to Tier 2 + Legal/Compliance.",
+        "decisionNo": "FP (legit external sender, false-flag classification) → document and close."
+      }
+    ]
+  },
+  "network": {
+    "title": "Network / Egress / C2 Runbook",
+    "tool": "Microsoft Sentinel",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Confirm the outbound traffic in AzureFirewallNetworkRule",
+        "tool": "Sentinel",
+        "kql": "AzureFirewallNetworkRule\n| where DstIP == \"<DST_IP>\"\n| where TimeGenerated > ago(2h)\n| summarize Bytes=sum(toint(BytesOut)), Count=count() by SrcIP, DstPort, Action",
+        "expectedResult": "Volume and frequency per source/port. Allow + high bytes = active exfil. Deny + many attempts = blocked probing.",
+        "decisionYes": "Allowed traffic confirmed — proceed to scope on host side (Step 2).",
+        "decisionNo": "Only denies — already contained at network layer. Still investigate source host for compromise."
+      },
+      {
+        "id": 2,
+        "action": "Pivot to endpoint — which host and process generated the traffic",
+        "tool": "Sentinel",
+        "kql": "DeviceNetworkEvents\n| where RemoteIP == \"<DST_IP>\"\n| where Timestamp > ago(2h)\n| project Timestamp, DeviceName, InitiatingProcessFileName, BytesSent, BytesReceived",
+        "expectedResult": "Hostname plus the actual process making the calls — that's your pivot into DeviceProcessEvents.",
+        "decisionYes": "Source host identified → proceed to TI check (Step 3).",
+        "decisionNo": "No endpoint correlation — could be a non-EDR-covered device. Escalate for network capture."
+      },
+      {
+        "id": 3,
+        "action": "Threat-intelligence lookup on the destination IP / domain",
+        "tool": "Sentinel",
+        "kql": "ThreatIntelligenceIndicator\n| where IndicatorValue == \"<DST_IP>\"\n| project IndicatorValue, ThreatType, Source, Description",
+        "expectedResult": "A row confirming the IP is on a feed (C2, Phishing, Malware-Hosting).",
+        "decisionYes": "Known-bad — high confidence TP. Move to containment (Step 5).",
+        "decisionNo": "Unknown. Check geolocation, ASN, certificate. If anomalous for the org, treat as suspicious."
+      },
+      {
+        "id": 4,
+        "action": "Look for periodicity (beaconing pattern) on the same destination",
+        "tool": "Sentinel",
+        "kql": "DeviceNetworkEvents\n| where RemoteIP == \"<DST_IP>\"\n| where Timestamp > ago(6h)\n| summarize Count=count() by bin(Timestamp, 5m)\n| sort by Timestamp asc",
+        "expectedResult": "Even distribution per 5-minute bucket = automated beacon. Bursty / human-paced = manual.",
+        "decisionYes": "Consistent beaconing — definite C2. Move to containment.",
+        "decisionNo": "Single burst — could be exfil. Different containment priority (block, then forensics)."
+      },
+      {
+        "id": 5,
+        "action": "Block the destination at the edge firewall",
+        "tool": "Firewall",
+        "kql": "// Action — at the Azure Firewall:\n// Rule collection → ThreatBlock → Add: deny <DST_IP> from any to any\n// Also add IP to the conditional-access blocked named location.",
+        "expectedResult": "Subsequent AzureFirewallNetworkRule queries for <DST_IP> show Action='Deny' only.",
+        "decisionYes": "Block confirmed → isolate source host next (Step 6).",
+        "decisionNo": "Block not propagated — escalate to network team."
+      },
+      {
+        "id": 6,
+        "action": "Isolate the source host via EDR",
+        "tool": "EDR",
+        "kql": "// Action — in Defender for Endpoint:\n// Device → <HOST> → Isolate device\n// Keep MDE comms allowed so forensics can pull artefacts.",
+        "expectedResult": "Host shows 'Isolated' status. DeviceNetworkEvents stops producing rows.",
+        "decisionYes": "Isolated → proceed to scope check (Step 7).",
+        "decisionNo": "Isolation failed — request manual network port shutdown from infra team."
+      },
+      {
+        "id": 7,
+        "action": "Scope — are other hosts reaching the same destination?",
+        "tool": "Sentinel",
+        "kql": "DeviceNetworkEvents\n| where RemoteIP == \"<DST_IP>\"\n| where Timestamp > ago(48h)\n| summarize Hits=count() by DeviceName\n| sort by Hits desc",
+        "expectedResult": "If only one host: limited scope. Two+ hosts: likely common malware spread.",
+        "decisionYes": "Single host — contain and close after forensics.",
+        "decisionNo": "Multiple hosts — escalate Critical and trigger full IR (out of Tier 1 scope)."
+      },
+      {
+        "id": 8,
+        "action": "Document the IOC set and escalate",
+        "tool": "Sentinel",
+        "kql": "// Export the AlertDetail report. Capture:\n// - Destination IP/domain, TI verdict, volume, beacon period\n// - Source host, process, isolation timestamp\n// - Tenant scope summary",
+        "expectedResult": "Network IOCs added to the firewall blocklist + AlertDetail report attached to Tier 2 ticket.",
+        "decisionYes": "TP with C2 confirmed → escalate to Tier 2.",
+        "decisionNo": "FP (CDN, partner service misclassified) → close with proper justification + add to allowlist."
+      }
+    ]
+  },
+  "lateral-movement": {
+    "title": "Lateral Movement / Recon Runbook",
+    "tool": "Microsoft Sentinel",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Confirm the scan/recon source and timing",
+        "tool": "Sentinel",
+        "kql": "AzureFirewallNetworkRule\n| where SrcIP == \"<SCAN_HOST>\"\n| where TimeGenerated > ago(2h)\n| summarize Attempts=count(), DistinctPorts=dcount(DstPort), Allowed=countif(Action == \"Allow\") by SrcIP",
+        "expectedResult": "High Attempts + many DistinctPorts in a short window = scanning. Allowed > 0 = successful pivots.",
+        "decisionYes": "Scanning pattern confirmed → proceed to identify the binary (Step 2).",
+        "decisionNo": "Low fan-out — could be normal monitoring. Verify before declaring an incident."
+      },
+      {
+        "id": 2,
+        "action": "Identify the scanning binary on the source host",
+        "tool": "Sentinel",
+        "kql": "DeviceProcessEvents\n| where DeviceName == \"<SCAN_HOST>\"\n| where FileName in~ (\"nmap.exe\", \"masscan.exe\", \"naabu.exe\") or ProcessCommandLine has_any (\"Test-NetConnection\", \"-PortScan\", \"PortScan\")\n| project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName",
+        "expectedResult": "Either a known scanner binary or a PowerShell loop calling Test-NetConnection.",
+        "decisionYes": "Scanner identified — note parent process (likely an attacker shell). Proceed to Step 3.",
+        "decisionNo": "No obvious scanner — could be a custom tool / built-in script. Pivot via network events instead."
+      },
+      {
+        "id": 3,
+        "action": "Find successful connections from the scan",
+        "tool": "Sentinel",
+        "kql": "AzureFirewallNetworkRule\n| where SrcIP == \"<SCAN_HOST>\"\n| where Action == \"Allow\"\n| project TimeGenerated, DstIP, DstPort\n| sort by TimeGenerated asc",
+        "expectedResult": "Destinations that responded — these are the candidate lateral-movement targets.",
+        "decisionYes": "Successful pivots identified — proceed to authentication check (Step 4).",
+        "decisionNo": "All connections denied. The scan failed; still investigate the source for the initial compromise."
+      },
+      {
+        "id": 4,
+        "action": "Check for follow-up authentication or remote-exec on the targets",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where IPAddress == \"<SCAN_HOST_IP>\"\n| where TimeGenerated > ago(2h)\n| project TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName, ResultType",
+        "expectedResult": "Any successful sign-in from the scanning host = attacker has working creds and is using them.",
+        "decisionYes": "Lateral movement underway → containment (Step 5).",
+        "decisionNo": "Scan only — still pivot to DeviceProcessEvents on target hosts for WMI / WinRM evidence."
+      },
+      {
+        "id": 5,
+        "action": "Isolate the source host and any confirmed-touched targets",
+        "tool": "EDR",
+        "kql": "// Action — in Defender for Endpoint:\n// Isolate <SCAN_HOST> and every host in the 'Allow' list from Step 3 that showed auth or process activity.",
+        "expectedResult": "All affected hosts show Isolated status in Defender.",
+        "decisionYes": "Isolation complete → proceed to credential rotation (Step 6).",
+        "decisionNo": "Could not isolate one or more — escalate to IR for manual containment."
+      },
+      {
+        "id": 6,
+        "action": "Identify and rotate credentials used during the movement",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where IPAddress == \"<SCAN_HOST_IP>\"\n| where ResultType == \"0\"\n| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by UserPrincipalName",
+        "expectedResult": "List of accounts that authenticated from the attacker-controlled host — they are compromised.",
+        "decisionYes": "Force password reset + revoke sessions for every account in the list.",
+        "decisionNo": "No identity reuse seen — still inspect the source host for cached credentials and known dumping tools."
+      },
+      {
+        "id": 7,
+        "action": "Check for AD reconnaissance tools (SharpHound / BloodHound / ADFind)",
+        "tool": "Sentinel",
+        "kql": "DeviceProcessEvents\n| where Timestamp > ago(6h)\n| where FileName has_any (\"SharpHound\", \"BloodHound\", \"ADFind\") or ProcessCommandLine has \"Invoke-BloodHound\"",
+        "expectedResult": "Any row indicates the attacker is mapping AD for further movement.",
+        "decisionYes": "AD recon present — preserve output files for IR, audit privileged group memberships immediately.",
+        "decisionNo": "No AD recon — scope likely smaller; still continue with documentation."
+      },
+      {
+        "id": 8,
+        "action": "Escalate Critical — multi-host activity is out of Tier 1 scope",
+        "tool": "Sentinel",
+        "kql": "// Export the AlertDetail report with:\n// - Scan source + ports + allowed destinations\n// - Compromised account list\n// - AD recon evidence (if any)\n// Attach to Tier 2 / IR engagement.",
+        "expectedResult": "IR has the data needed to scope and plan eradication.",
+        "decisionYes": "TP with confirmed lateral movement → Critical escalation.",
+        "decisionNo": "FP (vuln scanner / red-team exercise) → confirm with the relevant team and close."
+      }
+    ]
+  },
+  "privilege-escalation": {
+    "title": "Privilege Escalation / Identity Abuse Runbook",
+    "tool": "Microsoft Sentinel",
+    "steps": [
+      {
+        "id": 1,
+        "action": "Identify the role / privilege change in AzureActivity",
+        "tool": "Sentinel",
+        "kql": "AzureActivity\n| where OperationNameValue has \"ROLEASSIGNMENTS/WRITE\"\n| where TimeGenerated > ago(2h)\n| project TimeGenerated, Caller, CallerIpAddress, ResourceId, Properties",
+        "expectedResult": "The Caller, the IP, and the role definition ID. GA = 62e90394-69f5-4237-9190-012177145e10.",
+        "decisionYes": "Role assignment confirmed → cross-check change-management (Step 2).",
+        "decisionNo": "No matching events — check whether the change happened via PIM activation instead."
+      },
+      {
+        "id": 2,
+        "action": "Verify against the ITSM change request system",
+        "tool": "ServiceNow",
+        "kql": "// External check — search ServiceNow / Jira for an approved change ticket\n// matching the role assignment timestamp and the affected principal.",
+        "expectedResult": "Approved change ticket = legitimate. No ticket = suspect.",
+        "decisionYes": "Ticket exists → close as benign, but verify the ticket was raised by the right person.",
+        "decisionNo": "No ticket → proceed to investigate the Caller (Step 3)."
+      },
+      {
+        "id": 3,
+        "action": "Investigate the assigning identity — recent sign-in pattern",
+        "tool": "Sentinel",
+        "kql": "SigninLogs\n| where UserPrincipalName == \"<CALLER>\"\n| where TimeGenerated > ago(24h)\n| project TimeGenerated, IPAddress, Location, ResultType, RiskLevelDuringSignIn",
+        "expectedResult": "Sign-ins from unusual geographies or Tor exit IPs = the caller account itself is compromised.",
+        "decisionYes": "Caller is compromised — start containment of the caller too (revoke sessions, disable).",
+        "decisionNo": "Caller looks normal — still suspect, since no ticket. Could be insider threat."
+      },
+      {
+        "id": 4,
+        "action": "Audit what the newly-privileged account did after assignment",
+        "tool": "Sentinel",
+        "kql": "AzureActivity\n| where Caller == \"<GRANTEE>\"\n| where TimeGenerated > ago(2h)\n| project TimeGenerated, OperationNameValue, ResourceId, ActivityStatusValue",
+        "expectedResult": "Every privileged action since the role landed — app registrations, conditional-access policy edits, secret reads.",
+        "decisionYes": "Damaging actions found — escalate immediately and roll back each before continuing.",
+        "decisionNo": "No abuse yet — still revoke the role; attacker will use it the moment you stop watching."
+      },
+      {
+        "id": 5,
+        "action": "Remove the unauthorised role assignment",
+        "tool": "Entra ID",
+        "kql": "// Action — in Entra admin centre:\n// Roles → <ROLE> → Remove assignment for <GRANTEE>\n// Confirm AzureActivity ROLEASSIGNMENTS/DELETE event lands.",
+        "expectedResult": "AzureActivity shows the DELETE event with your account as Caller.",
+        "decisionYes": "Role removed → proceed to credential rotation (Step 6).",
+        "decisionNo": "Role removal blocked (insufficient privileges) — escalate to Global Admin immediately."
+      },
+      {
+        "id": 6,
+        "action": "Disable the involved accounts and rotate secrets / tokens",
+        "tool": "Entra ID",
+        "kql": "// Disable both the assigning and the granted account.\n// Rotate any Key Vault secrets accessed during the window:\nAzureActivity\n| where Caller == \"<GRANTEE>\"\n| where OperationNameValue has \"KEYVAULT/SECRETS\"\n| project TimeGenerated, ResourceId, Properties",
+        "expectedResult": "Identified secrets are rotated; downstream apps redeployed with new values.",
+        "decisionYes": "Containment complete → proceed to root-cause (Step 7).",
+        "decisionNo": "Rotation failed for some secrets — open Sev1 ticket with the owning team."
+      },
+      {
+        "id": 7,
+        "action": "Trace the root cause — how was the assigning account taken over?",
+        "tool": "Sentinel",
+        "kql": "EmailEvents\n| where UserId == \"<CALLER>\"\n| where Operation in (\"OAuthTokenIssued\", \"AttachmentOpened\", \"New-InboxRule\")\n| where TimeGenerated > ago(48h)",
+        "expectedResult": "Earlier phishing / token theft evidence linking back to the original entry point.",
+        "decisionYes": "Root cause linked to an upstream alert — pivot to that runbook (phishing / authentication).",
+        "decisionNo": "No upstream evidence — escalate as 'unknown vector', engage IR for deep investigation."
+      },
+      {
+        "id": 8,
+        "action": "Escalate with timeline and impact summary",
+        "tool": "Sentinel",
+        "kql": "// Export the AlertDetail report. Include:\n// - Role granted + timestamp + assigning identity\n// - Actions taken with the new role\n// - Containment timestamps (role removal, account disable, secret rotation)\n// - Linked upstream alert(s)",
+        "expectedResult": "Tier 2 / IR has the full identity-compromise chain.",
+        "decisionYes": "TP — escalate Critical (executive-impacting roles always escalate).",
+        "decisionNo": "FP (legitimate emergency change, missing ticket) → close with corrective action on the change process."
+      }
+    ]
+  }
+}

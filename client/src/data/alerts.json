@@ -7,8 +7,12 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T04:35:00Z",
     "ruleDescription": "Detects when a single source IP generates a high volume of failed authentications across multiple users within a short window. May indicate password spraying, credential stuffing, or a misconfigured client.",
-    "entities": {"srcIp": "45.83.193.150"},
-    "relatedTables": ["SigninLogs"],
+    "entities": {
+      "srcIp": "45.83.193.150"
+    },
+    "relatedTables": [
+      "SigninLogs"
+    ],
     "starterQuery": "SigninLogs\n| where TimeGenerated > ago(6h)\n| where IPAddress == \"45.83.193.150\"\n| take 50",
     "investigationGoals": [
       "Is this a single account or many?",
@@ -18,15 +22,27 @@
     ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Password spray from 45.83.193.150 targeting 247 users with 1,840 attempts. 3 successful sign-ins.",
-    "correctActions": ["Block source IP at firewall", "Force password reset on the 3 compromised accounts", "Enable MFA enforcement", "Escalate to Tier 2"],
-    "redHerrings": ["Monitor for 24h", "Email all users to change passwords"],
+    "correctActions": [
+      "Block source IP at firewall",
+      "Force password reset on the 3 compromised accounts",
+      "Enable MFA enforcement",
+      "Escalate to Tier 2"
+    ],
+    "redHerrings": [
+      "Monitor for 24h",
+      "Email all users to change passwords"
+    ],
     "playbookReason": "Classic low-and-slow password spray. The smoking gun is dcount(UserPrincipalName) grouped by IP - one IP touching hundreds of users is never legitimate. Three successful logins means active foothold - escalate immediately.",
-    "mitre": ["T1110.003 - Password Spraying"],
+    "mitre": [
+      "T1110.003 - Password Spraying"
+    ],
     "hunterHints": [
       "Start by counting failures per IP and per user. The ratio tells you the technique.",
       "Try: SigninLogs | where IPAddress == \"45.83.193.150\" | summarize Attempts=count(), Users=dcount(UserPrincipalName), Successes=countif(ResultType == \"0\") by IPAddress",
       "Once you know it's spraying, find the successful ones: filter ResultType == \"0\"."
-    ]
+    ],
+    "category": "authentication",
+    "mitreId": "T1110.003"
   },
   {
     "id": "INC-2026-0502",
@@ -36,17 +52,43 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T08:16:00Z",
     "ruleDescription": "Sign-in detected from an IP categorised as Tor/proxy/anonymizer. Default risk indicator - context determines verdict.",
-    "entities": {"user": "service-scanner@contoso.com", "srcIp": "199.249.230.100"},
-    "relatedTables": ["SigninLogs", "ThreatIntelligenceIndicator"],
+    "entities": {
+      "user": "service-scanner@contoso.com",
+      "srcIp": "199.249.230.100"
+    },
+    "relatedTables": [
+      "SigninLogs",
+      "ThreatIntelligenceIndicator"
+    ],
     "starterQuery": "SigninLogs\n| where IPAddress == \"199.249.230.100\"\n| take 20",
-    "investigationGoals": ["Who is the user?", "What kind of account is it?", "Has this account used anonymizers before?", "Is the activity at expected time/scope?"],
+    "investigationGoals": [
+      "Who is the user?",
+      "What kind of account is it?",
+      "Has this account used anonymizers before?",
+      "Is the activity at expected time/scope?"
+    ],
     "groundTruthVerdict": "False Positive",
     "groundTruthSummary": "service-scanner is a documented OSINT service account that performs external scans via Tor. Matches scheduled window.",
-    "correctActions": ["Verify the service account purpose in CMDB", "Confirm activity matches scheduled scan window", "Document as known", "Close"],
-    "redHerrings": ["Disable account immediately", "Escalate to Tier 3"],
+    "correctActions": [
+      "Verify the service account purpose in CMDB",
+      "Confirm activity matches scheduled scan window",
+      "Document as known",
+      "Close"
+    ],
+    "redHerrings": [
+      "Disable account immediately",
+      "Escalate to Tier 3"
+    ],
     "playbookReason": "Always check what an account IS before reacting. Service accounts have documented exceptions. Killing this account would break the scanner.",
-    "mitre": ["T1090.003 - Multi-hop Proxy"],
-    "hunterHints": ["The account name 'service-scanner' is a clue. Service accounts usually have a single purpose - check what it does.", "AppDisplayName field tells you which application the sign-in was for."]
+    "mitre": [
+      "T1090.003 - Multi-hop Proxy"
+    ],
+    "hunterHints": [
+      "The account name 'service-scanner' is a clue. Service accounts usually have a single purpose - check what it does.",
+      "AppDisplayName field tells you which application the sign-in was for."
+    ],
+    "category": "authentication",
+    "mitreId": "T1090.003"
   },
   {
     "id": "INC-2026-0503",
@@ -56,17 +98,42 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T07:45:00Z",
     "ruleDescription": "Two sign-ins for the same user from geographically distant locations within a window that is physically impossible to travel.",
-    "entities": {"user": "j.harrington@contoso.com"},
-    "relatedTables": ["SigninLogs", "ThreatIntelligenceIndicator"],
+    "entities": {
+      "user": "j.harrington@contoso.com"
+    },
+    "relatedTables": [
+      "SigninLogs",
+      "ThreatIntelligenceIndicator"
+    ],
     "starterQuery": "SigninLogs\n| where UserPrincipalName == \"j.harrington@contoso.com\"\n| where TimeGenerated > ago(4h)\n| project TimeGenerated, IPAddress, City, Location, ResultType, AppDisplayName\n| sort by TimeGenerated asc",
-    "investigationGoals": ["What are the two locations and times?", "Did MFA succeed in both cases?", "Is the suspicious IP on a TI list?", "Could it be VPN/business travel?"],
+    "investigationGoals": [
+      "What are the two locations and times?",
+      "Did MFA succeed in both cases?",
+      "Is the suspicious IP on a TI list?",
+      "Could it be VPN/business travel?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Hull, UK at 07:04 then Bucharest, RO at 07:42. 38 minutes apart - physically impossible. Suspicious IP is a known C2.",
-    "correctActions": ["Disable user account", "Force password reset", "Revoke active sessions", "Escalate to Tier 2"],
-    "redHerrings": ["Mark as benign - traveler", "Ignore - VPN likely"],
+    "correctActions": [
+      "Disable user account",
+      "Force password reset",
+      "Revoke active sessions",
+      "Escalate to Tier 2"
+    ],
+    "redHerrings": [
+      "Mark as benign - traveler",
+      "Ignore - VPN likely"
+    ],
     "playbookReason": "38 minutes between Hull and Bucharest is impossible. Cross-reference the second IP against the TI table - it's a known C2. Containment first.",
-    "mitre": ["T1078 - Valid Accounts"],
-    "hunterHints": ["Pull every sign-in for this user in the last few hours and look at the City/Location columns.", "When you find the suspicious IP, check it against the ThreatIntelligenceIndicator table."]
+    "mitre": [
+      "T1078 - Valid Accounts"
+    ],
+    "hunterHints": [
+      "Pull every sign-in for this user in the last few hours and look at the City/Location columns.",
+      "When you find the suspicious IP, check it against the ThreatIntelligenceIndicator table."
+    ],
+    "category": "authentication",
+    "mitreId": "T1078"
   },
   {
     "id": "INC-2026-0504",
@@ -76,17 +143,41 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T03:00:00Z",
     "ruleDescription": "Detects when a user receives an abnormal number of MFA prompts within a short window. May indicate push-bombing / MFA fatigue attacks.",
-    "entities": {"user": "ceo@contoso.com"},
-    "relatedTables": ["SigninLogs"],
+    "entities": {
+      "user": "ceo@contoso.com"
+    },
+    "relatedTables": [
+      "SigninLogs"
+    ],
     "starterQuery": "SigninLogs\n| where UserPrincipalName == \"ceo@contoso.com\"\n| where TimeGenerated between (datetime(2026-05-13T02:00:00Z) .. datetime(2026-05-13T03:00:00Z))\n| project TimeGenerated, IPAddress, City, ResultType, ResultDescription\n| sort by TimeGenerated asc",
-    "investigationGoals": ["How many prompts in what timeframe?", "What was the final outcome - did any succeed?", "Where did the prompts come from?", "What time of day?"],
+    "investigationGoals": [
+      "How many prompts in what timeframe?",
+      "What was the final outcome - did any succeed?",
+      "Where did the prompts come from?",
+      "What time of day?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "38 MFA prompts to CEO between 02:30-02:45 from Bucharest IP. Prompt 36 was approved (likely tap-by-mistake at 02:45 AM). Account compromised.",
-    "correctActions": ["Revoke approved session immediately", "Force password reset", "Switch user to number-matching MFA or FIDO2", "Escalate Critical - executive compromise"],
-    "redHerrings": ["Reset MFA only", "Notify user via email"],
+    "correctActions": [
+      "Revoke approved session immediately",
+      "Force password reset",
+      "Switch user to number-matching MFA or FIDO2",
+      "Escalate Critical - executive compromise"
+    ],
+    "redHerrings": [
+      "Reset MFA only",
+      "Notify user via email"
+    ],
     "playbookReason": "MFA fatigue works by exhausting the user. Approval on attempt #36 at 02:45 AM is the breach. The durable fix is number-matching or hardware keys.",
-    "mitre": ["T1621 - MFA Request Generation"],
-    "hunterHints": ["Use bin(TimeGenerated, 1m) and count() to see the prompt rate per minute.", "ResultDescription tells you which prompt was approved vs denied."]
+    "mitre": [
+      "T1621 - MFA Request Generation"
+    ],
+    "hunterHints": [
+      "Use bin(TimeGenerated, 1m) and count() to see the prompt rate per minute.",
+      "ResultDescription tells you which prompt was approved vs denied."
+    ],
+    "category": "authentication",
+    "mitreId": "T1621"
   },
   {
     "id": "INC-2026-0505",
@@ -96,19 +187,39 @@
     "alertSeverity": "Low",
     "displayedAt": "2026-05-13T07:42:00Z",
     "ruleDescription": "Sign-in detected using legacy authentication (POP, IMAP, SMTP). Legacy auth bypasses modern conditional access and MFA.",
-    "entities": {"user": "old.printer@contoso.com"},
-    "relatedTables": ["SigninLogs"],
+    "entities": {
+      "user": "old.printer@contoso.com"
+    },
+    "relatedTables": [
+      "SigninLogs"
+    ],
     "starterQuery": "SigninLogs\n| where ClientAppUsed in (\"POP\", \"IMAP\", \"SMTP\", \"Other clients\")\n| where TimeGenerated > ago(6h)\n| project TimeGenerated, UserPrincipalName, IPAddress, ClientAppUsed",
-    "investigationGoals": ["Which account?", "Internal or external source?", "Documented exception?"],
+    "investigationGoals": [
+      "Which account?",
+      "Internal or external source?",
+      "Documented exception?"
+    ],
     "groundTruthVerdict": "False Positive",
     "groundTruthSummary": "Internal printer service account using POP3 from printer subnet. Documented legacy exception.",
-    "correctActions": ["Verify exception ticket in CMDB", "Add to migration roadmap", "Document and close"],
-    "redHerrings": ["Disable account", "Block protocol immediately"],
+    "correctActions": [
+      "Verify exception ticket in CMDB",
+      "Add to migration roadmap",
+      "Document and close"
+    ],
+    "redHerrings": [
+      "Disable account",
+      "Block protocol immediately"
+    ],
     "playbookReason": "Legacy auth is risky but printers exist. Documented exceptions get respected. Push migration without breaking the business.",
-    "mitre": ["T1078 - Valid Accounts"],
-    "hunterHints": ["The IP address tells you internal vs external. Internal RFC1918 ranges (10., 172.16-31., 192.168.) are inside."]
+    "mitre": [
+      "T1078 - Valid Accounts"
+    ],
+    "hunterHints": [
+      "The IP address tells you internal vs external. Internal RFC1918 ranges (10., 172.16-31., 192.168.) are inside."
+    ],
+    "category": "authentication",
+    "mitreId": "T1078"
   },
-
   {
     "id": "INC-2026-0506",
     "ruleName": "Office application spawned scripting engine",
@@ -117,17 +228,44 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T09:48:30Z",
     "ruleDescription": "An Office application (Word, Excel, PowerPoint) created a child process that is a scripting engine (PowerShell, cmd, wscript). Common in phishing-driven macro attacks.",
-    "entities": {"host": "WS-FIN-014", "user": "j.harrington"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-FIN-014",
+      "user": "j.harrington"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where InitiatingProcessFileName in~ (\"WINWORD.EXE\", \"EXCEL.EXE\", \"POWERPNT.EXE\")\n| project Timestamp, FileName, ProcessCommandLine, InitiatingProcessCommandLine",
-    "investigationGoals": ["What document was opened?", "What did the child process do?", "Where did the document come from (Outlook attachment?)", "What ran next?"],
+    "investigationGoals": [
+      "What document was opened?",
+      "What did the child process do?",
+      "Where did the document come from (Outlook attachment?)",
+      "What ran next?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "WINWORD opened Invoice_April2026.docm from Outlook cache, spawned encoded PowerShell that contacts 185.220.101.42. Patient zero.",
-    "correctActions": ["Isolate WS-FIN-014", "Block sender domain", "Purge email tenant-wide", "Escalate - phishing entry point"],
-    "redHerrings": ["Educate user", "Delete the document"],
+    "correctActions": [
+      "Isolate WS-FIN-014",
+      "Block sender domain",
+      "Purge email tenant-wide",
+      "Escalate - phishing entry point"
+    ],
+    "redHerrings": [
+      "Educate user",
+      "Delete the document"
+    ],
     "playbookReason": "Office spawning PowerShell is the classic phishing chain. Trace forward: what did PowerShell do next? You'll find certutil, rundll32, the lot.",
-    "mitre": ["T1566.001 - Spearphishing Attachment", "T1059.001 - PowerShell"],
-    "hunterHints": ["Pivot on the host: every malicious thing that happens next is on WS-FIN-014.", "Sort by Timestamp ascending to build the timeline.", "Look at InitiatingProcessFileName to follow the parent-child chain."]
+    "mitre": [
+      "T1566.001 - Spearphishing Attachment",
+      "T1059.001 - PowerShell"
+    ],
+    "hunterHints": [
+      "Pivot on the host: every malicious thing that happens next is on WS-FIN-014.",
+      "Sort by Timestamp ascending to build the timeline.",
+      "Look at InitiatingProcessFileName to follow the parent-child chain."
+    ],
+    "category": "malware",
+    "mitreId": "T1566.001"
   },
   {
     "id": "INC-2026-0507",
@@ -137,17 +275,42 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T09:51:30Z",
     "ruleDescription": "Detects use of legitimate Windows binaries (certutil, bitsadmin, mshta, regsvr32) with command lines typical of malicious download or execution proxying.",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where FileName in~ (\"certutil.exe\", \"bitsadmin.exe\", \"mshta.exe\", \"regsvr32.exe\")\n| project Timestamp, FileName, ProcessCommandLine, AccountName",
-    "investigationGoals": ["Which LOLBin?", "What URL or file is it touching?", "Who/what spawned it?", "Did the downloaded payload run?"],
+    "investigationGoals": [
+      "Which LOLBin?",
+      "What URL or file is it touching?",
+      "Who/what spawned it?",
+      "Did the downloaded payload run?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "certutil.exe -urlcache -split -f downloading payload.bin from 185.220.101.42. Parent process is the encoded PowerShell from INC-2026-0506.",
-    "correctActions": ["Isolate host (if not already)", "Block URL at proxy", "Hash and submit downloaded file", "Escalate"],
-    "redHerrings": ["Block certutil for all users", "Educate the user"],
+    "correctActions": [
+      "Isolate host (if not already)",
+      "Block URL at proxy",
+      "Hash and submit downloaded file",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Block certutil for all users",
+      "Educate the user"
+    ],
     "playbookReason": "certutil pulling from a raw IP is textbook LOLBin abuse. Connect to the parent process to confirm the attack chain.",
-    "mitre": ["T1105 - Ingress Tool Transfer", "T1218 - Signed Binary Proxy Execution"],
-    "hunterHints": ["The -urlcache flag is the giveaway - it downloads remote content.", "The destination IP appears in other alerts. Pivot."]
+    "mitre": [
+      "T1105 - Ingress Tool Transfer",
+      "T1218 - Signed Binary Proxy Execution"
+    ],
+    "hunterHints": [
+      "The -urlcache flag is the giveaway - it downloads remote content.",
+      "The destination IP appears in other alerts. Pivot."
+    ],
+    "category": "malware",
+    "mitreId": "T1105"
   },
   {
     "id": "INC-2026-0508",
@@ -157,17 +320,42 @@
     "alertSeverity": "Critical",
     "displayedAt": "2026-05-13T10:03:00Z",
     "ruleDescription": "A process other than known security tools accessed the memory of LSASS. Classic credential dumping behaviour.",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["DeviceProcessEvents", "SysmonEvent"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents",
+      "SysmonEvent"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where ProcessCommandLine has_any (\"lsass\", \"comsvcs\", \"MiniDump\")\n| project Timestamp, FileName, ProcessCommandLine, AccountName",
-    "investigationGoals": ["What technique was used (mimikatz, comsvcs, procdump)?", "Was a dump file created?", "Who initiated it?", "Was the host already showing other badness?"],
+    "investigationGoals": [
+      "What technique was used (mimikatz, comsvcs, procdump)?",
+      "Was a dump file created?",
+      "Who initiated it?",
+      "Was the host already showing other badness?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "rundll32 + comsvcs.dll MiniDump against LSASS PID 712, output to C:\\Users\\Public\\lsass.dmp. Active credential theft.",
-    "correctActions": ["Isolate host immediately", "Collect memory dump for IR", "Disable user account", "Escalate Critical"],
-    "redHerrings": ["Quarantine the file only", "Run AV scan"],
+    "correctActions": [
+      "Isolate host immediately",
+      "Collect memory dump for IR",
+      "Disable user account",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Quarantine the file only",
+      "Run AV scan"
+    ],
     "playbookReason": "Every minute the host is online, more credentials are at risk. Isolation first, evidence second.",
-    "mitre": ["T1003.001 - LSASS Memory"],
-    "hunterHints": ["The comsvcs.dll MiniDump technique is a living-off-the-land credential dump - no extra tools required.", "PID 712 is the LSASS process target."]
+    "mitre": [
+      "T1003.001 - LSASS Memory"
+    ],
+    "hunterHints": [
+      "The comsvcs.dll MiniDump technique is a living-off-the-land credential dump - no extra tools required.",
+      "PID 712 is the LSASS process target."
+    ],
+    "category": "malware",
+    "mitreId": "T1003.001"
   },
   {
     "id": "INC-2026-0509",
@@ -177,17 +365,40 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T10:06:00Z",
     "ruleDescription": "Sysmon Event ID 8: a process created a remote thread in another process. Often used to inject malicious code into a trusted process to evade detection.",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["SysmonEvent"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "SysmonEvent"
+    ],
     "starterQuery": "SysmonEvent\n| where Computer == \"WS-FIN-014\"\n| where EventID == 8\n| project TimeGenerated, SourceImage, TargetImage",
-    "investigationGoals": ["What's the source process?", "What's the target?", "Is the source/target combination legitimate?"],
+    "investigationGoals": [
+      "What's the source process?",
+      "What's the target?",
+      "Is the source/target combination legitimate?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "powershell.exe injected a remote thread into explorer.exe. Classic stealth technique.",
-    "correctActions": ["Isolate host", "Memory capture", "Hash payload", "Escalate"],
-    "redHerrings": ["Kill powershell.exe", "Restart explorer.exe"],
+    "correctActions": [
+      "Isolate host",
+      "Memory capture",
+      "Hash payload",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Kill powershell.exe",
+      "Restart explorer.exe"
+    ],
     "playbookReason": "PS injecting into explorer is almost certainly malicious. Memory capture is essential - payload lives in RAM.",
-    "mitre": ["T1055.002 - Portable Executable Injection"],
-    "hunterHints": ["Sysmon EID 8 fields: SourceImage (the injector), TargetImage (the victim).", "Look for other EID types on the same host - injection is rarely alone."]
+    "mitre": [
+      "T1055.002 - Portable Executable Injection"
+    ],
+    "hunterHints": [
+      "Sysmon EID 8 fields: SourceImage (the injector), TargetImage (the victim).",
+      "Look for other EID types on the same host - injection is rarely alone."
+    ],
+    "category": "malware",
+    "mitreId": "T1055.002"
   },
   {
     "id": "INC-2026-0510",
@@ -197,17 +408,38 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T10:05:00Z",
     "ruleDescription": "Sysmon EID 17: named pipe created with a pattern matching known offensive tool defaults (e.g. Cobalt Strike's msagent_*).",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["SysmonEvent"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "SysmonEvent"
+    ],
     "starterQuery": "SysmonEvent\n| where Computer == \"WS-FIN-014\"\n| where EventID == 17\n| project TimeGenerated, PipeName, Image",
-    "investigationGoals": ["What's the pipe name?", "Match known C2 defaults?", "What created it?"],
+    "investigationGoals": [
+      "What's the pipe name?",
+      "Match known C2 defaults?",
+      "What created it?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "msagent_57 pipe created by rundll32 - Cobalt Strike default pattern.",
-    "correctActions": ["Isolate host", "Confirm beacon via memory", "Escalate Critical"],
-    "redHerrings": ["Block pipe creation via GPO", "Document and move on"],
+    "correctActions": [
+      "Isolate host",
+      "Confirm beacon via memory",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Block pipe creation via GPO",
+      "Document and move on"
+    ],
     "playbookReason": "msagent_* is a Cobalt Strike default. Real adversaries forget to rename. High-confidence beacon indicator.",
-    "mitre": ["T1055 - Process Injection"],
-    "hunterHints": ["PipeName starting with 'msagent_' or 'postex_' is a Cobalt Strike calling card."]
+    "mitre": [
+      "T1055 - Process Injection"
+    ],
+    "hunterHints": [
+      "PipeName starting with 'msagent_' or 'postex_' is a Cobalt Strike calling card."
+    ],
+    "category": "malware",
+    "mitreId": "T1055"
   },
   {
     "id": "INC-2026-0511",
@@ -217,17 +449,43 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T10:30:00Z",
     "ruleDescription": "Detects creation of Run keys, scheduled tasks, services, or WMI subscriptions - common persistence techniques.",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["SysmonEvent", "DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "SysmonEvent",
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "SysmonEvent\n| where Computer == \"WS-FIN-014\"\n| where EventID in (12, 13, 20, 21)\n| project TimeGenerated, EventID, TargetObject, Details, Consumer, Destination",
-    "investigationGoals": ["What mechanism (Run key, task, WMI, service)?", "What does it execute?", "Multiple mechanisms?"],
+    "investigationGoals": [
+      "What mechanism (Run key, task, WMI, service)?",
+      "What does it execute?",
+      "Multiple mechanisms?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Three persistence mechanisms on same host: scheduled task 'GoogleUpdaterTask', Run key 'Updater', WMI consumer. All point to C:\\Users\\Public\\svchost.exe.",
-    "correctActions": ["Keep host isolated", "Remove all three persistence items", "Hash binary", "Re-image (multiple persistence = full compromise)"],
-    "redHerrings": ["Delete Run key only", "Disable task only"],
+    "correctActions": [
+      "Keep host isolated",
+      "Remove all three persistence items",
+      "Hash binary",
+      "Re-image (multiple persistence = full compromise)"
+    ],
+    "redHerrings": [
+      "Delete Run key only",
+      "Disable task only"
+    ],
     "playbookReason": "Belt-and-braces persistence means re-image. Removing one mechanism just leaves the others.",
-    "mitre": ["T1547.001 - Registry Run Keys", "T1053.005 - Scheduled Task", "T1546.003 - WMI Event Subscription"],
-    "hunterHints": ["EID 13 = registry value set. EID 20 = WMI consumer. DeviceProcessEvents shows schtasks.exe.", "All three point to the same binary path - that's the smoking gun."]
+    "mitre": [
+      "T1547.001 - Registry Run Keys",
+      "T1053.005 - Scheduled Task",
+      "T1546.003 - WMI Event Subscription"
+    ],
+    "hunterHints": [
+      "EID 13 = registry value set. EID 20 = WMI consumer. DeviceProcessEvents shows schtasks.exe.",
+      "All three point to the same binary path - that's the smoking gun."
+    ],
+    "category": "malware",
+    "mitreId": "T1547.001"
   },
   {
     "id": "INC-2026-0512",
@@ -237,17 +495,39 @@
     "alertSeverity": "Critical",
     "displayedAt": "2026-05-13T10:33:30Z",
     "ruleDescription": "Detects service stop events for known security tools (Sysmon, Defender, EDR agents).",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["SysmonEvent"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "SysmonEvent"
+    ],
     "starterQuery": "SysmonEvent\n| where Computer == \"WS-FIN-014\"\n| where EventID == 7036\n| project TimeGenerated, ParameterXml",
-    "investigationGoals": ["Which service?", "Authorised change?", "What happened next on the host?"],
+    "investigationGoals": [
+      "Which service?",
+      "Authorised change?",
+      "What happened next on the host?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Sysmon64 service stopped by SYSTEM on WS-FIN-014. No change request. Anti-forensics.",
-    "correctActions": ["Isolate via EDR (still online to MDE)", "Treat as fully compromised", "Force restart + re-enable Sysmon via GPO", "Escalate Critical"],
-    "redHerrings": ["Restart Sysmon and continue monitoring", "Open ticket for tomorrow"],
+    "correctActions": [
+      "Isolate via EDR (still online to MDE)",
+      "Treat as fully compromised",
+      "Force restart + re-enable Sysmon via GPO",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Restart Sysmon and continue monitoring",
+      "Open ticket for tomorrow"
+    ],
     "playbookReason": "Attacker is blinding defenders. Typically precedes deeper compromise like ransomware.",
-    "mitre": ["T1562.001 - Disable or Modify Tools"],
-    "hunterHints": ["After a tool-stop event, look for what happens in the 10 minutes that follow. The attacker chose THIS moment for a reason."]
+    "mitre": [
+      "T1562.001 - Disable or Modify Tools"
+    ],
+    "hunterHints": [
+      "After a tool-stop event, look for what happens in the 10 minutes that follow. The attacker chose THIS moment for a reason."
+    ],
+    "category": "malware",
+    "mitreId": "T1562.001"
   },
   {
     "id": "INC-2026-0513",
@@ -257,17 +537,39 @@
     "alertSeverity": "Critical",
     "displayedAt": "2026-05-13T10:52:00Z",
     "ruleDescription": "vssadmin or wmic used to delete shadow copies. Highest-fidelity pre-ransomware indicator.",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where DeviceName == \"WS-FIN-014\"\n| where ProcessCommandLine has \"vssadmin\" and ProcessCommandLine has \"delete shadows\"\n| project Timestamp, AccountName, ProcessCommandLine",
-    "investigationGoals": ["Confirm command?", "Who invoked?", "Backups verified?"],
+    "investigationGoals": [
+      "Confirm command?",
+      "Who invoked?",
+      "Backups verified?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "vssadmin delete shadows /all /quiet by SYSTEM on WS-FIN-014. Ransomware-imminent.",
-    "correctActions": ["Confirm host isolated", "Trigger backup verification", "Activate ransomware playbook", "Escalate Critical"],
-    "redHerrings": ["Investigate cause", "Restore from backup later"],
+    "correctActions": [
+      "Confirm host isolated",
+      "Trigger backup verification",
+      "Activate ransomware playbook",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Investigate cause",
+      "Restore from backup later"
+    ],
     "playbookReason": "Shadow copy deletion = ransomware in seconds. Activate the playbook now.",
-    "mitre": ["T1490 - Inhibit System Recovery"],
-    "hunterHints": ["The /quiet flag suppresses prompts - silent destruction. Look for it explicitly."]
+    "mitre": [
+      "T1490 - Inhibit System Recovery"
+    ],
+    "hunterHints": [
+      "The /quiet flag suppresses prompts - silent destruction. Look for it explicitly."
+    ],
+    "category": "malware",
+    "mitreId": "T1490"
   },
   {
     "id": "INC-2026-0514",
@@ -277,17 +579,39 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T10:43:00Z",
     "ruleDescription": "Detects execution of known AD reconnaissance tools (SharpHound, ADExplorer, BloodHound).",
-    "entities": {"host": "WS-FIN-014"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where FileName has_any (\"SharpHound\", \"BloodHound\")\n| or ProcessCommandLine has_any (\"Invoke-BloodHound\", \"-CollectionMethod\")",
-    "investigationGoals": ["Confirm tool execution", "Output artefact location?", "What's the user account doing else?"],
+    "investigationGoals": [
+      "Confirm tool execution",
+      "Output artefact location?",
+      "What's the user account doing else?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "SharpHound.exe -c All --zipfilename loot.zip on WS-FIN-014. AD recon for lateral movement planning.",
-    "correctActions": ["Isolate host", "Preserve output zip for IR", "Audit AD attack paths", "Escalate"],
-    "redHerrings": ["Block by hash", "Run AV scan"],
+    "correctActions": [
+      "Isolate host",
+      "Preserve output zip for IR",
+      "Audit AD attack paths",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Block by hash",
+      "Run AV scan"
+    ],
     "playbookReason": "AD recon means lateral movement is next. The output is gold for IR - preserve before cleanup.",
-    "mitre": ["T1087 - Account Discovery"],
-    "hunterHints": ["-c All is the SharpHound 'collect everything' flag. --zipfilename names the output."]
+    "mitre": [
+      "T1087 - Account Discovery"
+    ],
+    "hunterHints": [
+      "-c All is the SharpHound 'collect everything' flag. --zipfilename names the output."
+    ],
+    "category": "lateral-movement",
+    "mitreId": "T1087"
   },
   {
     "id": "INC-2026-0515",
@@ -297,19 +621,41 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-12T16:33:00Z",
     "ruleDescription": "EICAR antivirus test string detected. Universal test file - not real malware.",
-    "entities": {"host": "WS-IT-002", "user": "soc.analyst"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "host": "WS-IT-002",
+      "user": "soc.analyst"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where SHA256 == \"275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f\"",
-    "investigationGoals": ["Who/where?", "Test ticket exists?", "Confirm with user"],
+    "investigationGoals": [
+      "Who/where?",
+      "Test ticket exists?",
+      "Confirm with user"
+    ],
     "groundTruthVerdict": "False Positive",
     "groundTruthSummary": "Scheduled control test by SOC analyst on their own machine.",
-    "correctActions": ["Verify ticket", "Confirm with analyst", "Document as test", "Close"],
-    "redHerrings": ["Wipe the machine", "Escalate to IR"],
+    "correctActions": [
+      "Verify ticket",
+      "Confirm with analyst",
+      "Document as test",
+      "Close"
+    ],
+    "redHerrings": [
+      "Wipe the machine",
+      "Escalate to IR"
+    ],
     "playbookReason": "EICAR is the universal AV test - not malicious. Verify scheduled and close.",
-    "mitre": ["T1204 - User Execution"],
-    "hunterHints": ["The SHA256 for EICAR is universal - 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f. Memorise it - you'll see it monthly."]
+    "mitre": [
+      "T1204 - User Execution"
+    ],
+    "hunterHints": [
+      "The SHA256 for EICAR is universal - 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f. Memorise it - you'll see it monthly."
+    ],
+    "category": "malware",
+    "mitreId": "T1204"
   },
-
   {
     "id": "INC-2026-0516",
     "ruleName": "Suspicious inbox rule created",
@@ -318,17 +664,41 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T09:55:30Z",
     "ruleDescription": "New inbox rule with characteristics typical of BEC: forward-to-external, finance keywords, hidden/single-character name.",
-    "entities": {"user": "finance.lead@contoso.com"},
-    "relatedTables": ["OfficeActivity"],
+    "entities": {
+      "user": "finance.lead@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"New-InboxRule\"\n| project TimeGenerated, UserId, ClientIP, Parameters",
-    "investigationGoals": ["Who created it?", "From what IP?", "Forward target?", "Rule name and filters?"],
+    "investigationGoals": [
+      "Who created it?",
+      "From what IP?",
+      "Forward target?",
+      "Rule name and filters?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Rule named '.' forwards invoice/wire/payment emails to attacker@protonmail.com. Created from Bucharest IP.",
-    "correctActions": ["Delete rule", "Disable account", "Revoke sessions", "Escalate - BEC"],
-    "redHerrings": ["Ask user about rule", "Monitor for further activity"],
+    "correctActions": [
+      "Delete rule",
+      "Disable account",
+      "Revoke sessions",
+      "Escalate - BEC"
+    ],
+    "redHerrings": [
+      "Ask user about rule",
+      "Monitor for further activity"
+    ],
     "playbookReason": "Hallmarks of BEC: single-char name (hides in UI), finance keywords, external forward, foreign IP.",
-    "mitre": ["T1114.003 - Email Forwarding Rule"],
-    "hunterHints": ["Parameters field contains the rule details. Look for ForwardTo, SubjectContainsWords.", "Cross-reference ClientIP with TI table."]
+    "mitre": [
+      "T1114.003 - Email Forwarding Rule"
+    ],
+    "hunterHints": [
+      "Parameters field contains the rule details. Look for ForwardTo, SubjectContainsWords.",
+      "Cross-reference ClientIP with TI table."
+    ],
+    "category": "phishing",
+    "mitreId": "T1114.003"
   },
   {
     "id": "INC-2026-0517",
@@ -338,17 +708,41 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T10:52:00Z",
     "ruleDescription": "Abnormal rate of FileDeleted operations from a single user.",
-    "entities": {"user": "j.harrington@contoso.com"},
-    "relatedTables": ["OfficeActivity"],
+    "entities": {
+      "user": "j.harrington@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"FileDeleted\"\n| where TimeGenerated > ago(1h)\n| summarize Count=count() by UserId, bin(TimeGenerated, 5m)",
-    "investigationGoals": ["Rate?", "Which user?", "Already-compromised?", "Recovery window?"],
+    "investigationGoals": [
+      "Rate?",
+      "Which user?",
+      "Already-compromised?",
+      "Recovery window?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "1,247 files deleted in 4 minutes from compromised account. Pre-ransomware/destruction.",
-    "correctActions": ["Disable user (if not already)", "Initiate OneDrive recovery", "Preserve audit logs", "Escalate Critical"],
-    "redHerrings": ["Ask user about cleanup", "Restore one file as test"],
+    "correctActions": [
+      "Disable user (if not already)",
+      "Initiate OneDrive recovery",
+      "Preserve audit logs",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Ask user about cleanup",
+      "Restore one file as test"
+    ],
     "playbookReason": "Mass deletion at this rate is automated. Connected to a compromised account - destructive activity.",
-    "mitre": ["T1485 - Data Destruction"],
-    "hunterHints": ["Use bin() to bucket by time and count() to spot the spike.", "OneDrive retention typically gives you 93 days to recover."]
+    "mitre": [
+      "T1485 - Data Destruction"
+    ],
+    "hunterHints": [
+      "Use bin() to bucket by time and count() to spot the spike.",
+      "OneDrive retention typically gives you 93 days to recover."
+    ],
+    "category": "malware",
+    "mitreId": "T1485"
   },
   {
     "id": "INC-2026-0518",
@@ -358,17 +752,41 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T08:56:00Z",
     "ruleDescription": "User consented to a third-party application requesting high-privilege scopes from an unverified publisher.",
-    "entities": {"user": "j.harrington@contoso.com"},
-    "relatedTables": ["OfficeActivity"],
+    "entities": {
+      "user": "j.harrington@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"Consent to application\"\n| project TimeGenerated, UserId, ClientIP, Parameters",
-    "investigationGoals": ["Which app?", "What scopes?", "Publisher verified?", "What data accessed since?"],
+    "investigationGoals": [
+      "Which app?",
+      "What scopes?",
+      "Publisher verified?",
+      "What data accessed since?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "User consented to 'DocSign Helper' with Mail.ReadWrite + Files.Read.All + offline_access. Unverified publisher.",
-    "correctActions": ["Revoke OAuth grant", "Audit data accessed", "Add app to blocklist", "User training assignment"],
-    "redHerrings": ["Notify user only", "Add to monitoring list"],
+    "correctActions": [
+      "Revoke OAuth grant",
+      "Audit data accessed",
+      "Add app to blocklist",
+      "User training assignment"
+    ],
+    "redHerrings": [
+      "Notify user only",
+      "Add to monitoring list"
+    ],
     "playbookReason": "Illicit consent grants bypass MFA - the token persists until revoked. Audit access before killing the token.",
-    "mitre": ["T1528 - Steal Application Access Token"],
-    "hunterHints": ["Scopes containing Mail.ReadWrite or Files.Read.All are red flags from unverified apps.", "offline_access means refresh tokens - long-term persistence."]
+    "mitre": [
+      "T1528 - Steal Application Access Token"
+    ],
+    "hunterHints": [
+      "Scopes containing Mail.ReadWrite or Files.Read.All are red flags from unverified apps.",
+      "offline_access means refresh tokens - long-term persistence."
+    ],
+    "category": "phishing",
+    "mitreId": "T1528"
   },
   {
     "id": "INC-2026-0519",
@@ -378,17 +796,39 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T11:38:30Z",
     "ruleDescription": "Anonymous (anyone-with-link) sharing created on a file matching sensitivity classifiers.",
-    "entities": {"user": "j.harrington@contoso.com"},
-    "relatedTables": ["OfficeActivity"],
+    "entities": {
+      "user": "j.harrington@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"AnonymousLinkCreated\"\n| project TimeGenerated, UserId, SourceFileName, ClientIP, Parameters",
-    "investigationGoals": ["Which file?", "Already-compromised user?", "Who accessed the link?"],
+    "investigationGoals": [
+      "Which file?",
+      "Already-compromised user?",
+      "Who accessed the link?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "MA_Project_Confidential.pdf shared with anyone-with-link by compromised account. Exfil via 'innocent' link.",
-    "correctActions": ["Revoke link", "Audit link access logs", "Disable user (if not already)", "Escalate + Legal"],
-    "redHerrings": ["Change link to internal-only", "Notify file owner"],
+    "correctActions": [
+      "Revoke link",
+      "Audit link access logs",
+      "Disable user (if not already)",
+      "Escalate + Legal"
+    ],
+    "redHerrings": [
+      "Change link to internal-only",
+      "Notify file owner"
+    ],
     "playbookReason": "Anonymous link from a compromised account targeting M&A material = exfil. Audit who fetched the file before revocation.",
-    "mitre": ["T1567.002 - Exfiltration to Cloud Storage"],
-    "hunterHints": ["SourceFileName field contains the filename. Anything with 'Confidential', 'MA_', 'Q1_Earnings', or similar deserves a second look."]
+    "mitre": [
+      "T1567.002 - Exfiltration to Cloud Storage"
+    ],
+    "hunterHints": [
+      "SourceFileName field contains the filename. Anything with 'Confidential', 'MA_', 'Q1_Earnings', or similar deserves a second look."
+    ],
+    "category": "network",
+    "mitreId": "T1567.002"
   },
   {
     "id": "INC-2026-0520",
@@ -398,19 +838,40 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T11:16:00Z",
     "ruleDescription": "Compliance / eDiscovery export performed by an account that gained admin privileges within the last 7 days.",
-    "entities": {"user": "temp.admin@contoso.com"},
-    "relatedTables": ["OfficeActivity"],
+    "entities": {
+      "user": "temp.admin@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"SearchExportDownloaded\"\n| project TimeGenerated, UserId, ClientIP, Parameters",
-    "investigationGoals": ["What was exported?", "How old is the account?", "Business justification?"],
+    "investigationGoals": [
+      "What was exported?",
+      "How old is the account?",
+      "Business justification?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "2-day-old admin account exported all executive mailboxes (18,420 items). No ticket.",
-    "correctActions": ["Disable account", "Revoke download URL", "Audit all account activity", "Escalate + Legal"],
-    "redHerrings": ["Verify with user's manager", "Add to watchlist"],
+    "correctActions": [
+      "Disable account",
+      "Revoke download URL",
+      "Audit all account activity",
+      "Escalate + Legal"
+    ],
+    "redHerrings": [
+      "Verify with user's manager",
+      "Add to watchlist"
+    ],
     "playbookReason": "Brand-new admin doing privileged exports is a major red flag. Legal-grade exfil potential.",
-    "mitre": ["T1213 - Data from Information Repositories"],
-    "hunterHints": ["Cross-check the user against AzureActivity for when they were granted admin role - new = suspicious."]
+    "mitre": [
+      "T1213 - Data from Information Repositories"
+    ],
+    "hunterHints": [
+      "Cross-check the user against AzureActivity for when they were granted admin role - new = suspicious."
+    ],
+    "category": "privilege-escalation",
+    "mitreId": "T1213"
   },
-
   {
     "id": "INC-2026-0521",
     "ruleName": "Public access enabled on storage account",
@@ -419,17 +880,40 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T06:01:00Z",
     "ruleDescription": "Storage account configuration changed to allow anonymous public access. Possible data exposure.",
-    "entities": {"resource": "stgprodbackups01"},
-    "relatedTables": ["AzureActivity"],
+    "entities": {
+      "resource": "stgprodbackups01"
+    },
+    "relatedTables": [
+      "AzureActivity"
+    ],
     "starterQuery": "AzureActivity\n| where OperationNameValue contains \"STORAGEACCOUNTS/WRITE\"\n| where ResourceId has \"stgprodbackups01\"\n| project TimeGenerated, Caller, CallerIpAddress, Properties",
-    "investigationGoals": ["What did the change enable?", "Who?", "From where?", "What's in the account?"],
+    "investigationGoals": [
+      "What did the change enable?",
+      "Who?",
+      "From where?",
+      "What's in the account?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "stgprodbackups01 (DB backups) made publicly accessible by sp-backup-rotator from C2 IP.",
-    "correctActions": ["Disable public access", "Audit access logs", "Revoke service principal", "Escalate"],
-    "redHerrings": ["Open a Jira ticket for next sprint", "Notify owner"],
+    "correctActions": [
+      "Disable public access",
+      "Audit access logs",
+      "Revoke service principal",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Open a Jira ticket for next sprint",
+      "Notify owner"
+    ],
     "playbookReason": "Public exposure of backups = breach precondition. Containment first, identity second.",
-    "mitre": ["T1530 - Data from Cloud Storage"],
-    "hunterHints": ["Properties field has the actual setting - look for publicAccess or allowBlobPublicAccess."]
+    "mitre": [
+      "T1530 - Data from Cloud Storage"
+    ],
+    "hunterHints": [
+      "Properties field has the actual setting - look for publicAccess or allowBlobPublicAccess."
+    ],
+    "category": "network",
+    "mitreId": "T1530"
   },
   {
     "id": "INC-2026-0522",
@@ -439,17 +923,39 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T11:03:00Z",
     "ruleDescription": "JIT access requested from an IP not on the standard admin allowlist.",
-    "entities": {"resource": "vm-jumpbox-01"},
-    "relatedTables": ["AzureActivity"],
+    "entities": {
+      "resource": "vm-jumpbox-01"
+    },
+    "relatedTables": [
+      "AzureActivity"
+    ],
     "starterQuery": "AzureActivity\n| where OperationNameValue contains \"JITNETWORKACCESSPOLICIES\"\n| project TimeGenerated, Caller, CallerIpAddress, ResourceId, Properties",
-    "investigationGoals": ["Who?", "From where?", "Cross-check IP across other alerts"],
+    "investigationGoals": [
+      "Who?",
+      "From where?",
+      "Cross-check IP across other alerts"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "JIT for jumpbox RDP requested from 185.220.101.42 - the C2 IP seen across multiple alerts.",
-    "correctActions": ["Deny request", "Disable user", "Audit recent JIT grants", "Escalate Critical"],
-    "redHerrings": ["Approve and monitor", "Require MFA prompt"],
+    "correctActions": [
+      "Deny request",
+      "Disable user",
+      "Audit recent JIT grants",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Approve and monitor",
+      "Require MFA prompt"
+    ],
     "playbookReason": "IP is correlated across multiple alerts. Attacker is pivoting endpoint -> identity -> cloud.",
-    "mitre": ["T1078.004 - Cloud Accounts"],
-    "hunterHints": ["Cross-reference the CallerIpAddress against ThreatIntelligenceIndicator and against SigninLogs for other suspicious activity."]
+    "mitre": [
+      "T1078.004 - Cloud Accounts"
+    ],
+    "hunterHints": [
+      "Cross-reference the CallerIpAddress against ThreatIntelligenceIndicator and against SigninLogs for other suspicious activity."
+    ],
+    "category": "authentication",
+    "mitreId": "T1078.004"
   },
   {
     "id": "INC-2026-0523",
@@ -459,17 +965,39 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T11:23:00Z",
     "ruleDescription": "Key Vault secret read from an IP not seen accessing this vault before.",
-    "entities": {"resource": "kv-prod-secrets"},
-    "relatedTables": ["AzureActivity"],
+    "entities": {
+      "resource": "kv-prod-secrets"
+    },
+    "relatedTables": [
+      "AzureActivity"
+    ],
     "starterQuery": "AzureActivity\n| where OperationNameValue contains \"KEYVAULT\"\n| where ResourceId has \"kv-prod-secrets\"",
-    "investigationGoals": ["Which secret?", "Caller identity?", "IP known-bad?"],
+    "investigationGoals": [
+      "Which secret?",
+      "Caller identity?",
+      "IP known-bad?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "db-conn-string-prod read by compromised SP from C2 IP. All accessed secrets are burned.",
-    "correctActions": ["Rotate accessed secrets immediately", "Revoke service principal", "Audit downstream apps", "Escalate"],
-    "redHerrings": ["Add IP to allowlist", "Increase Key Vault logging"],
+    "correctActions": [
+      "Rotate accessed secrets immediately",
+      "Revoke service principal",
+      "Audit downstream apps",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Add IP to allowlist",
+      "Increase Key Vault logging"
+    ],
     "playbookReason": "If attacker reached Key Vault, every secret accessed must be rotated. Downstream apps will need redeployment.",
-    "mitre": ["T1552.001 - Credentials In Files"],
-    "hunterHints": ["Properties field has the secretName. That's what you rotate."]
+    "mitre": [
+      "T1552.001 - Credentials In Files"
+    ],
+    "hunterHints": [
+      "Properties field has the secretName. That's what you rotate."
+    ],
+    "category": "privilege-escalation",
+    "mitreId": "T1552.001"
   },
   {
     "id": "INC-2026-0524",
@@ -479,17 +1007,39 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-12T22:12:00Z",
     "ruleDescription": "Network Security Group rule allows inbound traffic from 0.0.0.0/0 on a management port.",
-    "entities": {"resource": "nsg-prod-web"},
-    "relatedTables": ["AzureActivity"],
+    "entities": {
+      "resource": "nsg-prod-web"
+    },
+    "relatedTables": [
+      "AzureActivity"
+    ],
     "starterQuery": "AzureActivity\n| where OperationNameValue contains \"NETWORKSECURITYGROUPS/SECURITYRULES/WRITE\"\n| project TimeGenerated, Caller, Properties",
-    "investigationGoals": ["Which port?", "What source?", "Who made the change?"],
+    "investigationGoals": [
+      "Which port?",
+      "What source?",
+      "Who made the change?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "Developer enabled SSH (22) from 0.0.0.0/0 to prod web subnet. Misconfiguration, not malicious - but unacceptable risk.",
-    "correctActions": ["Remove the rule", "Restrict to bastion only", "Educate developer", "Document policy violation"],
-    "redHerrings": ["Wait for compliance scan", "Apply MFA to SSH"],
+    "correctActions": [
+      "Remove the rule",
+      "Restrict to bastion only",
+      "Educate developer",
+      "Document policy violation"
+    ],
+    "redHerrings": [
+      "Wait for compliance scan",
+      "Apply MFA to SSH"
+    ],
     "playbookReason": "Treat as misconfiguration with breach potential. Remediate, then handle the human side.",
-    "mitre": ["T1133 - External Remote Services"],
-    "hunterHints": ["Properties shows sourceAddressPrefix - 0.0.0.0/0 means anywhere. Combined with port 22 or 3389, it's a panic."]
+    "mitre": [
+      "T1133 - External Remote Services"
+    ],
+    "hunterHints": [
+      "Properties shows sourceAddressPrefix - 0.0.0.0/0 means anywhere. Combined with port 22 or 3389, it's a panic."
+    ],
+    "category": "network",
+    "mitreId": "T1133"
   },
   {
     "id": "INC-2026-0525",
@@ -499,19 +1049,41 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T04:19:00Z",
     "ruleDescription": "Process matching crypto-mining signatures detected on cloud VM.",
-    "entities": {"resource": "vm-build-runner-04"},
-    "relatedTables": ["DeviceProcessEvents"],
+    "entities": {
+      "resource": "vm-build-runner-04"
+    },
+    "relatedTables": [
+      "DeviceProcessEvents"
+    ],
     "starterQuery": "DeviceProcessEvents\n| where DeviceName == \"vm-build-runner-04\"\n| where FileName has \"xmrig\" or ProcessCommandLine has \"pool.minexmr\"",
-    "investigationGoals": ["What's running?", "How did it get there (initiating process)?", "Outbound traffic?"],
+    "investigationGoals": [
+      "What's running?",
+      "How did it get there (initiating process)?",
+      "Outbound traffic?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "xmrig running as jenkins, dropped via curl from 91.243.59.110. Foothold is exposed Jenkins webhook.",
-    "correctActions": ["Snapshot VM for forensics", "Kill xmrig", "Rotate jenkins credentials", "Patch exposed webhook", "Escalate to DevOps"],
-    "redHerrings": ["Reboot the VM", "Increase CPU quota"],
+    "correctActions": [
+      "Snapshot VM for forensics",
+      "Kill xmrig",
+      "Rotate jenkins credentials",
+      "Patch exposed webhook",
+      "Escalate to DevOps"
+    ],
+    "redHerrings": [
+      "Reboot the VM",
+      "Increase CPU quota"
+    ],
     "playbookReason": "Mining is the symptom. The entry point matters more. Snapshot before remediation.",
-    "mitre": ["T1496 - Resource Hijacking"],
-    "hunterHints": ["The InitiatingProcessCommandLine shows the curl|bash - that's your entry point."]
+    "mitre": [
+      "T1496 - Resource Hijacking"
+    ],
+    "hunterHints": [
+      "The InitiatingProcessCommandLine shows the curl|bash - that's your entry point."
+    ],
+    "category": "malware",
+    "mitreId": "T1496"
   },
-
   {
     "id": "INC-2026-0526",
     "ruleName": "Suspicious phishing email delivered",
@@ -520,17 +1092,42 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T09:42:00Z",
     "ruleDescription": "Email from a lookalike domain delivered with attachment matching malicious patterns.",
-    "entities": {"user": "j.harrington@contoso.com"},
-    "relatedTables": ["OfficeActivity", "ThreatIntelligenceIndicator"],
+    "entities": {
+      "user": "j.harrington@contoso.com"
+    },
+    "relatedTables": [
+      "OfficeActivity",
+      "ThreatIntelligenceIndicator"
+    ],
     "starterQuery": "OfficeActivity\n| where Operation == \"MailItemsAccessed\"\n| where Parameters has \"contos0.com\"\n| project TimeGenerated, UserId, Parameters",
-    "investigationGoals": ["Sender?", "Attachment?", "User opened it?", "Other users targeted?"],
+    "investigationGoals": [
+      "Sender?",
+      "Attachment?",
+      "User opened it?",
+      "Other users targeted?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "billing@contos0.com (typosquat) sent Invoice_April2026.docm to j.harrington. Opened 7 min later. Patient zero email.",
-    "correctActions": ["Purge tenant-wide via Threat Explorer", "Block sender domain", "Add lookalike to URL blocklist", "Trigger user training"],
-    "redHerrings": ["Mark as junk", "Forward to phishing@ only"],
+    "correctActions": [
+      "Purge tenant-wide via Threat Explorer",
+      "Block sender domain",
+      "Add lookalike to URL blocklist",
+      "Trigger user training"
+    ],
+    "redHerrings": [
+      "Mark as junk",
+      "Forward to phishing@ only"
+    ],
     "playbookReason": "This is the entry. Connect to INC-2026-0506 (Office spawned PS) and the rest of the chain.",
-    "mitre": ["T1566.001 - Spearphishing Attachment"],
-    "hunterHints": ["Cross-reference the sender domain against ThreatIntelligenceIndicator.", "Look for other users who got similar emails - search Parameters for the attachment name."]
+    "mitre": [
+      "T1566.001 - Spearphishing Attachment"
+    ],
+    "hunterHints": [
+      "Cross-reference the sender domain against ThreatIntelligenceIndicator.",
+      "Look for other users who got similar emails - search Parameters for the attachment name."
+    ],
+    "category": "phishing",
+    "mitreId": "T1566.001"
   },
   {
     "id": "INC-2026-0527",
@@ -540,17 +1137,44 @@
     "alertSeverity": "Critical",
     "displayedAt": "2026-05-13T10:16:00Z",
     "ruleDescription": "Outbound connection allowed to an IP appearing on threat intelligence feeds.",
-    "entities": {"srcHost": "10.4.5.114"},
-    "relatedTables": ["AzureFirewallNetworkRule", "ThreatIntelligenceIndicator", "DeviceNetworkEvents"],
+    "entities": {
+      "srcHost": "10.4.5.114"
+    },
+    "relatedTables": [
+      "AzureFirewallNetworkRule",
+      "ThreatIntelligenceIndicator",
+      "DeviceNetworkEvents"
+    ],
     "starterQuery": "AzureFirewallNetworkRule\n| where DstIP == \"185.220.101.42\"\n| project TimeGenerated, SrcIP, DstIP, DstPort, BytesOut",
-    "investigationGoals": ["Source host?", "Volume?", "Frequency?", "Confirm on TI?"],
+    "investigationGoals": [
+      "Source host?",
+      "Volume?",
+      "Frequency?",
+      "Confirm on TI?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "12.4 MB exfiltrated to Cobalt Strike C2 (TI-confirmed). Source = WS-FIN-014.",
-    "correctActions": ["Block IP at firewall", "Isolate source host", "Capture traffic for IR", "Escalate Critical"],
-    "redHerrings": ["Rate-limit", "Add to watchlist"],
+    "correctActions": [
+      "Block IP at firewall",
+      "Isolate source host",
+      "Capture traffic for IR",
+      "Escalate Critical"
+    ],
+    "redHerrings": [
+      "Rate-limit",
+      "Add to watchlist"
+    ],
     "playbookReason": "Active exfil. Block first, capture if possible, isolate host. Connect to the rest of the WS-FIN-014 chain.",
-    "mitre": ["T1071.001 - Web Protocols", "T1041 - Exfiltration"],
-    "hunterHints": ["Use sum(BytesOut) to spot exfil volume.", "DeviceNetworkEvents will show the source host and process name for the same IP."]
+    "mitre": [
+      "T1071.001 - Web Protocols",
+      "T1041 - Exfiltration"
+    ],
+    "hunterHints": [
+      "Use sum(BytesOut) to spot exfil volume.",
+      "DeviceNetworkEvents will show the source host and process name for the same IP."
+    ],
+    "category": "network",
+    "mitreId": "T1041"
   },
   {
     "id": "INC-2026-0528",
@@ -560,17 +1184,39 @@
     "alertSeverity": "High",
     "displayedAt": "2026-05-13T10:25:00Z",
     "ruleDescription": "Unusually high volume of DNS queries to subdomains of a single parent. Possible DNS tunneling.",
-    "entities": {"srcHost": "WS-FIN-014"},
-    "relatedTables": ["DeviceNetworkEvents"],
+    "entities": {
+      "srcHost": "WS-FIN-014"
+    },
+    "relatedTables": [
+      "DeviceNetworkEvents"
+    ],
     "starterQuery": "DeviceNetworkEvents\n| where DeviceName == \"WS-FIN-014\"\n| where RemotePort == 53\n| where RemoteUrl contains \"uefihelper\"\n| project Timestamp, DeviceName, RemoteUrl",
-    "investigationGoals": ["Query count?", "Subdomain length pattern?", "What process?"],
+    "investigationGoals": [
+      "Query count?",
+      "Subdomain length pattern?",
+      "What process?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "820 long-subdomain DNS queries to *.queries.uefihelper.xyz by rundll32. DNS tunneling.",
-    "correctActions": ["Sinkhole the domain", "Isolate host", "Capture queries for decoding", "Escalate"],
-    "redHerrings": ["Block the domain", "Increase DNS cache TTL"],
+    "correctActions": [
+      "Sinkhole the domain",
+      "Isolate host",
+      "Capture queries for decoding",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Block the domain",
+      "Increase DNS cache TTL"
+    ],
     "playbookReason": "Volume + length + single parent = DNS tunneling. Sinkhole at resolver, isolate host.",
-    "mitre": ["T1071.004 - DNS"],
-    "hunterHints": ["strlen() on subdomain shows the data-carrying length. Tunnels use long random-looking labels."]
+    "mitre": [
+      "T1071.004 - DNS"
+    ],
+    "hunterHints": [
+      "strlen() on subdomain shows the data-carrying length. Tunnels use long random-looking labels."
+    ],
+    "category": "network",
+    "mitreId": "T1071.004"
   },
   {
     "id": "INC-2026-0529",
@@ -580,17 +1226,39 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T13:00:00Z",
     "ruleDescription": "Consistent periodic connections from a single host to a single external IP. Low jitter suggests automation.",
-    "entities": {"srcHost": "10.4.5.114"},
-    "relatedTables": ["DeviceNetworkEvents"],
+    "entities": {
+      "srcHost": "10.4.5.114"
+    },
+    "relatedTables": [
+      "DeviceNetworkEvents"
+    ],
     "starterQuery": "DeviceNetworkEvents\n| where DeviceName == \"WS-FIN-014\"\n| where RemoteIP == \"185.220.101.42\"\n| project Timestamp, BytesSent, BytesReceived",
-    "investigationGoals": ["Interval consistency?", "Bytes per beacon?", "Started when?"],
+    "investigationGoals": [
+      "Interval consistency?",
+      "Bytes per beacon?",
+      "Started when?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "5-minute interval beacons from WS-FIN-014 to C2 IP starting 08:00. Earliest indicator of compromise.",
-    "correctActions": ["Block IP", "Isolate host", "Capture packets if possible", "Escalate"],
-    "redHerrings": ["Allow HTTPS traffic", "Adjust threshold"],
+    "correctActions": [
+      "Block IP",
+      "Isolate host",
+      "Capture packets if possible",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Allow HTTPS traffic",
+      "Adjust threshold"
+    ],
     "playbookReason": "Beaconing is the C2 heartbeat. Catching it at 08:00 would have prevented everything that followed.",
-    "mitre": ["T1071.001 - Web Protocols"],
-    "hunterHints": ["bin(Timestamp, 5m) and count() will reveal the pattern. Consistent count per bucket = automation."]
+    "mitre": [
+      "T1071.001 - Web Protocols"
+    ],
+    "hunterHints": [
+      "bin(Timestamp, 5m) and count() will reveal the pattern. Consistent count per bucket = automation."
+    ],
+    "category": "network",
+    "mitreId": "T1071.001"
   },
   {
     "id": "INC-2026-0530",
@@ -600,16 +1268,286 @@
     "alertSeverity": "Medium",
     "displayedAt": "2026-05-13T07:56:00Z",
     "ruleDescription": "Internal host initiated SMB (port 445) connection to a public IP. Workstations rarely have a legitimate reason.",
-    "entities": {"srcHost": "WS-DEV-031"},
-    "relatedTables": ["DeviceNetworkEvents"],
+    "entities": {
+      "srcHost": "WS-DEV-031"
+    },
+    "relatedTables": [
+      "DeviceNetworkEvents"
+    ],
     "starterQuery": "DeviceNetworkEvents\n| where RemotePort == 445\n| where not(RemoteIP startswith \"10.\") and not(RemoteIP startswith \"172.\") and not(RemoteIP startswith \"192.168.\")",
-    "investigationGoals": ["Source host?", "Destination?", "Process?", "TI hit?"],
+    "investigationGoals": [
+      "Source host?",
+      "Destination?",
+      "Process?",
+      "TI hit?"
+    ],
     "groundTruthVerdict": "True Positive",
     "groundTruthSummary": "WS-DEV-031 SMB to 45.83.193.150. Likely forced authentication for NTLM hash capture.",
-    "correctActions": ["Block destination", "Investigate source for credential theft vector", "Check egress policy", "Escalate"],
-    "redHerrings": ["Allow for file sync", "Document and ignore"],
+    "correctActions": [
+      "Block destination",
+      "Investigate source for credential theft vector",
+      "Check egress policy",
+      "Escalate"
+    ],
+    "redHerrings": [
+      "Allow for file sync",
+      "Document and ignore"
+    ],
     "playbookReason": "Outbound SMB leaks NTLM hashes via forced auth even if session fails. Credential theft vector.",
-    "mitre": ["T1187 - Forced Authentication"],
-    "hunterHints": ["RFC1918 ranges are private. Anything else on port 445 outbound is suspicious."]
+    "mitre": [
+      "T1187 - Forced Authentication"
+    ],
+    "hunterHints": [
+      "RFC1918 ranges are private. Anything else on port 445 outbound is suspicious."
+    ],
+    "category": "network",
+    "mitreId": "T1187"
+  },
+  {
+    "id": "INC-2026-0531",
+    "ruleName": "Suspicious process execution: Word spawned encoded PowerShell",
+    "product": "Microsoft Defender for Endpoint",
+    "productCode": "MDE",
+    "alertSeverity": "High",
+    "displayedAt": "2026-05-13T14:07:22Z",
+    "ruleDescription": "Defender for Endpoint detected a PowerShell process spawned by WINWORD.EXE running with an encoded (-EncodedCommand) payload and an outbound connection to a non-whitelisted IP. Classic macro-based execution from a phishing attachment.",
+    "entities": {
+      "host": "WIN10-WS-047",
+      "user": "jamie.chen@contoso.com",
+      "srcIp": "185.220.101.47"
+    },
+    "relatedTables": [
+      "DeviceAlertEvents",
+      "DeviceProcessEvents",
+      "DeviceNetworkEvents"
+    ],
+    "starterQuery": "DeviceAlertEvents\n| where DeviceName == \"WIN10-WS-047\"\n| where Timestamp > ago(2h)\n| project Timestamp, AlertTitle, FileName, InitiatingProcessFileName, ProcessCommandLine, RemoteIP",
+    "investigationGoals": [
+      "What parent process spawned PowerShell?",
+      "What was the encoded command content?",
+      "Was there successful C2 communication?",
+      "Is this the only affected host?"
+    ],
+    "groundTruthVerdict": "True Positive",
+    "groundTruthSummary": "WINWORD.EXE on WIN10-WS-047 opened Invoice-Q2.docm and spawned powershell.exe -enc <base64>. Decoded command contacts 185.220.101.47. 2.1MB exfiltrated. Single host so far but lateral movement underway.",
+    "correctActions": [
+      "Isolate WIN10-WS-047 via MDE",
+      "Block 185.220.101.47 at firewall",
+      "Decode the -enc payload and IOC-share with email security",
+      "Escalate to Tier 2"
+    ],
+    "redHerrings": [
+      "Educate user about macros",
+      "Quarantine the document only"
+    ],
+    "playbookReason": "Word spawning encoded PowerShell with an outbound to a Tor exit is unambiguous. Isolate first, then preserve evidence. Encoded command and process tree are the deliverables for IR.",
+    "mitre": [
+      "T1059.001 - PowerShell",
+      "T1566.001 - Spearphishing Attachment"
+    ],
+    "hunterHints": [
+      "Start at DeviceAlertEvents for WIN10-WS-047, then pivot to DeviceProcessEvents to walk the parent chain.",
+      "ProcessCommandLine contains '-enc' or '-EncodedCommand' — base64 the rest and decode.",
+      "DeviceNetworkEvents will show the RemoteIP the powershell.exe process actually called."
+    ],
+    "category": "malware",
+    "mitreId": "T1059.001"
+  },
+  {
+    "id": "INC-2026-0532",
+    "ruleName": "Multiple mailboxes accessed from anonymizing service",
+    "product": "Microsoft Defender for Office 365",
+    "productCode": "M365",
+    "alertSeverity": "Medium",
+    "displayedAt": "2026-05-13T09:22:11Z",
+    "ruleDescription": "Multiple finance team mailboxes were accessed in sequence from a single Tor exit node IP. No interactive MFA challenge was recorded for any of the sessions — suggests OAuth token replay or refresh-token theft.",
+    "entities": {
+      "user": "finance-team@contoso.com",
+      "srcIp": "185.220.101.47"
+    },
+    "relatedTables": [
+      "EmailEvents",
+      "OfficeActivity",
+      "SigninLogs",
+      "ThreatIntelligenceIndicator"
+    ],
+    "starterQuery": "EmailEvents\n| where SrcIP == \"185.220.101.47\"\n| where TimeGenerated > ago(6h)\n| project TimeGenerated, Operation, UserId, SrcIP, MailboxId",
+    "investigationGoals": [
+      "How many mailboxes were accessed and by which accounts?",
+      "Was this a successful OAuth token theft or credential reuse?",
+      "Were any emails forwarded or exfiltrated?",
+      "Is MFA enforced on these accounts?"
+    ],
+    "groundTruthVerdict": "True Positive",
+    "groundTruthSummary": "4 finance mailboxes (ap@, ar@, payroll@, controller@) accessed sequentially from Tor exit 185.220.101.47 09:18–09:22 UTC. No SigninLogs MFA event — replayed refresh token. Two auto-forward rules created. Compromise confirmed.",
+    "correctActions": [
+      "Revoke all sessions for the 4 accounts",
+      "Delete the auto-forward rules and audit sent items",
+      "Block 185.220.101.47 on conditional access",
+      "Escalate — BEC / token theft"
+    ],
+    "redHerrings": [
+      "Reset passwords only",
+      "Notify users to watch for phishing"
+    ],
+    "playbookReason": "Tor + sequential mailbox access + no MFA event = token replay. Password reset alone won't kill the refresh token — revoke sessions. Auto-forward rules are the exfil vector.",
+    "mitre": [
+      "T1114.002 - Remote Email Collection",
+      "T1528 - Steal Application Access Token"
+    ],
+    "hunterHints": [
+      "EmailEvents filtered by SrcIP shows the full set of mailboxes touched.",
+      "Look for Operation == 'New-InboxRule' from the same IP — the persistence move.",
+      "Cross-reference 185.220.101.47 against ThreatIntelligenceIndicator — it'll be on Tor exit lists."
+    ],
+    "category": "phishing",
+    "mitreId": "T1114.002"
+  },
+  {
+    "id": "INC-2026-0533",
+    "ruleName": "IDPS: Repeated port scan from internal host",
+    "product": "Azure Firewall IDPS",
+    "productCode": "AFW",
+    "alertSeverity": "Medium",
+    "displayedAt": "2026-05-13T14:31:05Z",
+    "ruleDescription": "Azure Firewall IDPS triggered on a high-rate horizontal port scan from an internal host. 847 connection attempts across 22 destination ports inside 4 minutes — pattern matches Nmap default SYN scan timing.",
+    "entities": {
+      "srcIp": "10.0.2.88",
+      "host": "WIN10-WS-047"
+    },
+    "relatedTables": [
+      "AzureFirewallNetworkRule",
+      "DeviceNetworkEvents",
+      "DeviceProcessEvents"
+    ],
+    "starterQuery": "AzureFirewallNetworkRule\n| where SrcIP == \"10.0.2.88\"\n| where TimeGenerated between (datetime(2026-05-13T14:25:00Z) .. datetime(2026-05-13T14:35:00Z))\n| summarize Attempts=count(), DistinctPorts=dcount(DstPort), Allowed=countif(Action == \"Allow\") by SrcIP",
+    "investigationGoals": [
+      "Is 10.0.2.88 the same host as the Defender alert 30 minutes earlier?",
+      "What ports were targeted and what services do they correspond to?",
+      "Were any connections successful (allowed by firewall)?",
+      "Does the scan pattern match a known tool (Nmap, Masscan)?"
+    ],
+    "groundTruthVerdict": "True Positive",
+    "groundTruthSummary": "10.0.2.88 resolves to WIN10-WS-047 — same host as INC-2026-0531. Scanned 22 ports (22, 80, 135, 139, 389, 443, 445, 1433, 3389, 5985, …) — classic Nmap top-ports list. 6 succeeded on the file server, including SMB (445) and WinRM (5985). Attacker pivoting from initial foothold.",
+    "correctActions": [
+      "Confirm WIN10-WS-047 is already isolated from INC-2026-0531",
+      "Investigate the 6 successful connections — focus on the file server",
+      "Audit WinRM/SMB sessions on receiving hosts",
+      "Escalate — internal lateral movement underway"
+    ],
+    "redHerrings": [
+      "Block the scanning IP",
+      "Wait for IDPS rule to expire"
+    ],
+    "playbookReason": "Internal port scan from a host already under suspicion is lateral movement reconnaissance. Following the 6 successful connections is more important than blocking the scanner — the host is already isolated.",
+    "mitre": [
+      "T1046 - Network Service Discovery"
+    ],
+    "hunterHints": [
+      "bin(TimeGenerated, 30s) and count() will show the scan rate — Nmap defaults to roughly 5/sec.",
+      "Group by DstPort then filter Action == 'Allow' to find the successful pivots.",
+      "DeviceProcessEvents on the source host shows the scanning binary — likely nmap.exe or a PowerShell port-test loop."
+    ],
+    "category": "lateral-movement",
+    "mitreId": "T1046"
+  },
+  {
+    "id": "INC-2026-0534",
+    "ruleName": "Ransomware precursor: Volume shadow copies deleted",
+    "product": "Microsoft Defender for Endpoint",
+    "productCode": "MDE",
+    "alertSeverity": "Critical",
+    "displayedAt": "2026-05-13T15:44:18Z",
+    "ruleDescription": "vssadmin.exe executed with 'delete shadows /all /quiet' parameters on two hosts within 30 seconds. Preceded by encoded PowerShell and lateral movement activity. Highest-fidelity pre-ransomware indicator.",
+    "entities": {
+      "host": "WIN10-WS-047",
+      "fileServer": "FILE-SRV-001",
+      "srcIp": "185.220.101.47"
+    },
+    "relatedTables": [
+      "DeviceAlertEvents",
+      "DeviceProcessEvents"
+    ],
+    "starterQuery": "DeviceProcessEvents\n| where DeviceName in (\"WIN10-WS-047\", \"FILE-SRV-001\")\n| where ProcessCommandLine has \"vssadmin\" and ProcessCommandLine has \"delete shadows\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName",
+    "investigationGoals": [
+      "Confirm the full attack chain from the earlier PowerShell alert",
+      "Has the attacker reached the file server?",
+      "Is encryption already underway (look for mass file rename events)?",
+      "What is the immediate containment action?"
+    ],
+    "groundTruthVerdict": "True Positive",
+    "groundTruthSummary": "vssadmin delete shadows /all /quiet ran on WIN10-WS-047 at 15:44:18 and FILE-SRV-001 at 15:44:42 — both invoked by SYSTEM via remote PowerShell session from WIN10-WS-047. Mass file rename events follow on the file server within 90 seconds. Active ransomware encryption.",
+    "correctActions": [
+      "Confirm network isolation for WIN10-WS-047 and FILE-SRV-001",
+      "Verify offsite backup integrity immediately",
+      "Activate ransomware playbook — invoke IR retainer + Legal",
+      "Escalate Critical — executive notification per IR plan"
+    ],
+    "redHerrings": [
+      "Reboot the file server",
+      "Run AV scan first"
+    ],
+    "playbookReason": "Shadow copy deletion is the pre-encryption ritual. By the time you see this alert, encryption has either started or is seconds away. Isolation and backup verification are now in parallel — there is no investigation phase here, only containment.",
+    "mitre": [
+      "T1490 - Inhibit System Recovery",
+      "T1486 - Data Encrypted for Impact"
+    ],
+    "hunterHints": [
+      "/quiet flag suppresses the prompt — search for it specifically.",
+      "InitiatingProcessFileName will likely be powershell.exe or wmiexec.py — that's your lateral movement vector.",
+      "Look for the same command on multiple hosts within the same minute — that's the scope of the attacker's foothold."
+    ],
+    "category": "malware",
+    "mitreId": "T1490"
+  },
+  {
+    "id": "INC-2026-0535",
+    "ruleName": "Privileged role assigned outside change window",
+    "product": "Microsoft Entra ID",
+    "productCode": "AAD",
+    "alertSeverity": "High",
+    "displayedAt": "2026-05-13T14:53:00Z",
+    "ruleDescription": "Service account svc-backup@contoso.com was assigned the Global Administrator role at 14:53 UTC. No matching change ticket in ServiceNow. The assigning account was last seen signing in from a Tor exit node 6 hours earlier.",
+    "entities": {
+      "user": "svc-backup@contoso.com",
+      "assigningUser": "finance-controller@contoso.com",
+      "srcIp": "185.220.101.47"
+    },
+    "relatedTables": [
+      "AzureActivity",
+      "SigninLogs",
+      "OfficeActivity"
+    ],
+    "starterQuery": "AzureActivity\n| where OperationNameValue contains \"ROLEASSIGNMENTS/WRITE\"\n| where TimeGenerated > ago(2h)\n| project TimeGenerated, Caller, CallerIpAddress, Properties",
+    "investigationGoals": [
+      "Who assigned the role and from what IP/session?",
+      "Is the assigning account itself compromised (trace back to INC-2026-0532)?",
+      "What actions has svc-backup taken since the role assignment?",
+      "Has the role been removed? If not, what is the immediate action?"
+    ],
+    "groundTruthVerdict": "True Positive",
+    "groundTruthSummary": "finance-controller@contoso.com (compromised in INC-2026-0532) granted Global Administrator to svc-backup@contoso.com at 14:53. svc-backup then created an app registration with Mail.ReadWrite and disabled conditional access on itself. Active privilege escalation pivoting from BEC.",
+    "correctActions": [
+      "Remove Global Administrator role from svc-backup immediately",
+      "Disable svc-backup and finance-controller accounts",
+      "Audit and revoke any app registrations / API permissions created in the window",
+      "Escalate Critical — multi-stage identity compromise"
+    ],
+    "redHerrings": [
+      "Wait for next access review",
+      "Notify the account owner"
+    ],
+    "playbookReason": "Role assignment from a compromised identity to a service account is a textbook persistence move. Service accounts are rarely watched, GA gives full tenant control. Containment is identity-first: kill the sessions, then unwind any objects created.",
+    "mitre": [
+      "T1098.003 - Additional Cloud Roles",
+      "T1078.004 - Cloud Accounts"
+    ],
+    "hunterHints": [
+      "Pivot the Caller field against SigninLogs from the last 24h — was the assigning account on Tor recently?",
+      "Properties contains the role definition ID — '62e90394-69f5-4237-9190-012177145e10' is Global Administrator.",
+      "AzureActivity for Caller == 'svc-backup@contoso.com' shows what they did with the new privilege."
+    ],
+    "category": "privilege-escalation",
+    "mitreId": "T1098.003"
   }
 ]
