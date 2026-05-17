@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Book, Check, Copy, CheckCheck, Lightbulb } from "lucide-react";
+import { Book, BookOpen, Check, Copy, CheckCheck, Lightbulb } from "lucide-react";
 import runbooksData from "@/data/runbooks.json";
 import type { Runbook, RunbookCategory, RunbookMap } from "@/lib/types";
 
@@ -9,12 +9,24 @@ interface RunbookPanelProps {
   alertId: string;
   alertCategory: RunbookCategory;
   mitreId: string;
-  // Hint integration (Part 7b): runbook is where guidance lives.
+  // Hint integration: runbook is where guidance lives.
   hintCount?: number;
   hintShown?: number;
   hunterHints?: string[];
   onAskHint?: () => void;
+  // Guided-mode integration: open the StepGuideDialog for a given step.
+  onGuideStep?: (category: RunbookCategory, stepId: number) => void;
+  guidedMode?: boolean;
 }
+
+const CATEGORY_PILL: Record<RunbookCategory, string> = {
+  authentication: "bg-blue-500/15 border-blue-500/40 text-blue-300",
+  malware: "bg-red-500/15 border-red-500/40 text-red-300",
+  phishing: "bg-orange-500/15 border-orange-500/40 text-orange-300",
+  network: "bg-cyan-500/15 border-cyan-500/40 text-cyan-300",
+  "lateral-movement": "bg-yellow-500/15 border-yellow-500/40 text-yellow-300",
+  "privilege-escalation": "bg-purple-500/15 border-purple-500/40 text-purple-300",
+};
 
 const TOOL_BADGE: Record<string, string> = {
   Sentinel: "bg-[#0078d4]/15 border-[#0078d4]/40 text-[#4faaff]",
@@ -41,6 +53,8 @@ export function RunbookPanel({
   hintShown,
   hunterHints,
   onAskHint,
+  onGuideStep,
+  guidedMode,
 }: RunbookPanelProps) {
   const runbook: Runbook | undefined = runbooks[alertCategory];
 
@@ -104,15 +118,13 @@ export function RunbookPanel({
           </div>
           <div className="flex items-center gap-1">
             <span
-              className={`text-[10px] mono uppercase tracking-wider rounded border px-1.5 py-0.5 ${toolClass(runbook.tool)}`}
+              className={`text-[10px] mono uppercase tracking-wider rounded border px-1.5 py-0.5 ${CATEGORY_PILL[alertCategory] ?? "bg-muted/40 border-border text-foreground/80"}`}
+              data-testid="runbook-category-pill"
             >
-              {runbook.tool}
-            </span>
-            <span className="text-[10px] mono rounded border border-primary/40 bg-primary/10 text-primary px-1.5 py-0.5">
-              {mitreId}
-            </span>
-            <span className="text-[10px] mono rounded border border-border bg-muted/40 text-foreground/80 px-1.5 py-0.5">
               {alertCategory}
+            </span>
+            <span className="text-[10px] mono uppercase tracking-wider rounded border border-border bg-muted/40 text-foreground/80 px-1.5 py-0.5">
+              {mitreId}
             </span>
           </div>
         </div>
@@ -159,7 +171,7 @@ export function RunbookPanel({
           )}
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-5">
           {runbook.steps.map((step) => {
             const isDone = completed.has(step.id);
             return (
@@ -192,7 +204,10 @@ export function RunbookPanel({
                     </div>
                     {step.kql && (
                       <div className="relative group">
-                        <pre className="mono text-xs bg-background border border-border rounded p-2.5 overflow-x-auto whitespace-pre leading-relaxed min-h-[3.5rem] text-foreground/90">
+                        <pre
+                          className="mono text-[12px] border border-border rounded p-2.5 overflow-x-auto whitespace-pre leading-relaxed min-h-[4.5rem] text-slate-100"
+                          style={{ backgroundColor: "#0b1220" }}
+                        >
                           {step.kql}
                         </pre>
                         <button
@@ -212,20 +227,31 @@ export function RunbookPanel({
                         </button>
                       </div>
                     )}
-                    <p className="text-sm text-muted-foreground leading-snug">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       <span className="text-foreground/80 font-semibold">Expected: </span>
                       {step.expectedResult}
                     </p>
                     <div className="space-y-1.5">
-                      <div className="text-sm leading-snug rounded border-l-4 border-l-green-500 border-y border-r border-green-900/40 bg-green-900/10 text-green-200/90 p-3">
+                      <div className="text-sm leading-relaxed rounded border-l-4 border-l-green-500 border-y border-r border-green-900/40 bg-green-900/10 text-green-200/90 p-3">
                         <span className="font-semibold">Yes → </span>
                         {step.decisionYes}
                       </div>
-                      <div className="text-sm leading-snug rounded border-l-4 border-l-amber-500 border-y border-r border-amber-900/40 bg-amber-900/10 text-amber-200/90 p-3">
+                      <div className="text-sm leading-relaxed rounded border-l-4 border-l-amber-500 border-y border-r border-amber-900/40 bg-amber-900/10 text-amber-200/90 p-3">
                         <span className="font-semibold">No → </span>
                         {step.decisionNo}
                       </div>
                     </div>
+                    {onGuideStep && (
+                      <button
+                        onClick={() => onGuideStep(alertCategory, step.id)}
+                        className={`text-[11px] text-primary hover:underline inline-flex items-center gap-1 mt-0.5 ${
+                          guidedMode ? "animate-pulse" : ""
+                        }`}
+                        data-testid={`runbook-step-${step.id}-guide`}
+                      >
+                        <BookOpen className="h-3 w-3" /> Guide me through this step
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

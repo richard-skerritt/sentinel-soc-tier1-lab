@@ -1,0 +1,227 @@
+{
+  "authentication": {
+    "intro": {
+      "title": "Authentication Alert — What's happening?",
+      "body": "Authentication alerts fire when the SIEM detects unusual login patterns. Your job is to figure out whether a real attacker is trying to get in, or whether it's noise — a misconfigured app, a locked-out user, or a scheduled scanner.\n\nThe runbook on the right walks you through every step. Follow it in order. Each step has a KQL query — run it in Sentinel, read the results, then answer the Yes/No question.",
+      "analogy": "Think of it like CCTV footage. The alert says 'something happened at the front door'. The runbook is your checklist for reviewing the footage."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're asking Sentinel: 'For every IP address, how many login failures happened in the last hour, and across how many different user accounts?' This tells us two things instantly: how many attempts (scale of attack) and how many users targeted (spray vs brute force).",
+        "why": "Password spraying hits many users with a few guesses each. Brute force hammers one user with thousands of guesses. The DistinctUsers column is what separates them. One IP, hundreds of users = spray. One IP, one user, thousands of attempts = brute force. Different threats, different responses.",
+        "what_to_look_for": "Look at the DistinctUsers number. More than 10 distinct users from one IP is almost always a spray attack. Note down the IP address — you'll use it in every subsequent step.",
+        "practice_prompt": "Type the KQL query that counts failures per IP and shows distinct user count:",
+        "practice_keywords": ["summarize", "dcount", "FailureCount", "DistinctUsers", "IPAddress"],
+        "practice_placeholder": "SigninLogs\n| where ...",
+        "practice_success": "Exactly right. summarize + dcount is the core pattern for spray detection. You'll use this in almost every authentication investigation.",
+        "practice_hint": "You need two things: count() for total failures, and dcount(UserPrincipalName) for unique users. Use summarize to group them by IPAddress.",
+        "tool": "sentinel",
+        "runbook_connection": "This is Step 1 of the Authentication runbook — always run this first to confirm the alert fired on real data, not a one-off blip.",
+        "report_connection": "When you write the incident report, the output of this query gives you the 'Scope' section: source IP, failure count, and number of targeted accounts."
+      },
+      "2": {
+        "plain_english": "Now we know an IP is hammering logins. This query asks: did any of those login attempts actually succeed? ResultType '0' in Azure AD means success. Everything else is a failure code.",
+        "why": "A failed spray is a nuisance. A successful spray is a breach. If this query returns even one row, you have a compromised account and you need to escalate to Tier 2 immediately — that changes everything about how you respond.",
+        "what_to_look_for": "Any result at all is a red flag. Note the UserPrincipalName and the timestamp. The time gap between the first failure and the first success tells you how long the attack took.",
+        "practice_prompt": "Type a KQL query that finds successful sign-ins (ResultType == '0') from the attacker IP:",
+        "practice_keywords": ["ResultType", "0", "where", "IPAddress"],
+        "practice_placeholder": "SigninLogs\n| where IPAddress == \"...\"\n| where ResultType == ...",
+        "practice_success": "Perfect. ResultType == '0' is Azure AD's success code — memorise it. You'll use this in every authentication alert.",
+        "practice_hint": "Filter SigninLogs by the attacker's IP, then add another where clause for ResultType. In Azure AD, ResultType '0' means the login worked.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 2 is the most important decision point in the whole runbook. Yes = escalate. No = contain and close.",
+        "report_connection": "If you find successful sign-ins, list the compromised UPNs and their timestamps in the 'Compromise Confirmed' section of your incident report."
+      },
+      "3": {
+        "plain_english": "We're checking if the attacker's IP address appears in Microsoft's threat intelligence feed. This is a database of known-bad IPs — TOR exit nodes, command-and-control servers, known scanners.",
+        "why": "If the IP is already flagged as malicious, your confidence that this is a real attack goes to near 100%. It also tells you what type of threat actor is likely behind it. If the IP isn't in the feed, that doesn't mean it's safe — it just means it's unknown.",
+        "what_to_look_for": "Look for ThreatType — common values are 'Botnet', 'Scanner', 'TOR'. The Source field tells you which threat intel provider flagged it.",
+        "practice_prompt": "Type a KQL query to check the ThreatIntelligenceIndicator table for the attacker IP:",
+        "practice_keywords": ["ThreatIntelligenceIndicator", "IndicatorValue", "where"],
+        "practice_placeholder": "ThreatIntelligenceIndicator\n| where ...",
+        "practice_success": "Good. ThreatIntelligenceIndicator is one of the most useful tables in Sentinel — always check it when you have an IP or domain.",
+        "practice_hint": "Query the ThreatIntelligenceIndicator table and filter where IndicatorValue equals the IP address.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 3 feeds directly into your confidence level for the triage verdict. Known-bad IP = higher confidence True Positive.",
+        "report_connection": "Record the ThreatType and Source in the 'Threat Intelligence' section of your report."
+      },
+      "4": {
+        "plain_english": "Now we map out the full blast radius. Which specific accounts did the attacker try? Which ones did they get into? This query groups results by UserPrincipalName — one row per target account.",
+        "why": "You need this to know who to notify and what to remediate. An IT admin account that was compromised is far more urgent than a generic service account. You also need this list for the containment step.",
+        "what_to_look_for": "Accounts where Successes > 0 are confirmed compromised. Sort by Successes desc. The accounts with Attempts > 50 but Successes = 0 were targeted but held — check if they have MFA.",
+        "practice_prompt": "Write a KQL query that shows per-user attempt and success counts from the attacker IP:",
+        "practice_keywords": ["summarize", "count", "countif", "UserPrincipalName", "by"],
+        "practice_placeholder": "SigninLogs\n| where IPAddress == \"...\"\n| summarize ...",
+        "practice_success": "Well done. countif() inside a summarize is a powerful pattern — it lets you count only the rows that meet a condition within each group.",
+        "practice_hint": "Use summarize with count() for total attempts and countif(ResultType == '0') for successful ones, grouped by UserPrincipalName.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 4 gives you the scope for Steps 5 and 7 (containment and MFA check).",
+        "report_connection": "Paste the full table output into the 'Affected Accounts' section. List compromised accounts separately and clearly."
+      },
+      "5": {
+        "plain_english": "This KQL is a verification query — not the actual containment. Real account disabling happens in Azure AD portal or PowerShell. This query runs a few minutes after containment to confirm the compromised accounts are no longer signing in.",
+        "why": "Containment without verification is just hope. If an account is still successfully signing in after you thought you disabled it, something went wrong — maybe a secondary account, maybe a token that's still active.",
+        "what_to_look_for": "After containment: zero rows with ResultType '0' for the affected accounts in the last 15 minutes. If you still see successful sign-ins, the session tokens haven't expired — you need to revoke them explicitly.",
+        "practice_prompt": "Type a PowerShell command to disable a compromised Azure AD account (this is reference practice — it won't execute):",
+        "practice_keywords": ["Disable-AzureADUser", "Set-AzureADUser", "AccountEnabled", "False"],
+        "practice_placeholder": "Set-AzureADUser -ObjectId \"user@domain.com\" -AccountEnabled ...",
+        "practice_success": "Correct. Set-AzureADUser -AccountEnabled $false is the standard account lockout. Always follow up with Revoke-AzureADUserAllRefreshToken to kill active sessions.",
+        "practice_hint": "In Azure AD, use Set-AzureADUser with -AccountEnabled $false to disable an account. You also need to revoke refresh tokens separately.",
+        "tool": "sentinel",
+        "terminal_mode": true,
+        "terminal_context": "PowerShell — Azure AD account containment",
+        "runbook_connection": "Step 5 is containment. In a real shift, you'd do this in the Azure portal or via PowerShell, then run the verification KQL to confirm.",
+        "report_connection": "Document: who performed containment, at what time, which accounts were disabled, and the post-containment query output confirming no further successful sign-ins."
+      },
+      "6": {
+        "plain_english": "Now we switch to Rapid7 InsightIDR to see if the same attack is visible from a different data source. Use LEQL (Log Entry Query Language) — it's Rapid7's query syntax, simpler than KQL: where(field, value).",
+        "why": "Cross-tool verification matters for two reasons: first, it catches ingestion gaps (if Sentinel missed events but Rapid7 caught them). Second, it builds the habit of not trusting a single data source — real attackers sometimes target specific logging pipelines.",
+        "what_to_look_for": "The same source IP should appear in Rapid7's Authentication log set. If the user count matches Sentinel, your data is consistent. If Rapid7 shows more users, Sentinel may have missed events.",
+        "practice_prompt": "Type a LEQL query in the Rapid7 tab to search for the attacker IP in authentication logs:",
+        "practice_keywords": ["where", "source_ip"],
+        "practice_placeholder": "where(source_ip, 45.83.193.150) groupby(destination_user)",
+        "practice_success": "Good. LEQL is much simpler than KQL — where(field, value) is the basic pattern. groupby() is the equivalent of KQL's summarize by.",
+        "practice_hint": "LEQL syntax: where(field_name, value). To group results: add groupby(another_field). Try: where(source_ip, <IP>) groupby(destination_user)",
+        "tool": "rapid7",
+        "runbook_connection": "Step 6 is the cross-tool pivot. After this, you have confirmation from two independent data sources.",
+        "report_connection": "Note in the report: 'Confirmed in Rapid7 InsightIDR — X matching events. Data consistent / inconsistent with Sentinel.' Always state your secondary source."
+      },
+      "7": {
+        "plain_english": "This query checks whether the targeted accounts have MFA enabled. In Azure AD, AuthenticationRequirement = 'multiFactorAuthentication' means a second factor was required. If an account has 0% MFA usage, it had no second layer of protection.",
+        "why": "Accounts without MFA are the ones that get compromised in password sprays. This isn't just blame — it's remediation intelligence. Your recommendation needs to say 'enable MFA on these accounts' with the specific UPNs.",
+        "what_to_look_for": "Any account with MFAUsed = 0 and Total > 0 had no MFA. That's a finding. If all accounts had MFA and still got breached, the attacker bypassed MFA — that's a more serious finding (push fatigue, SIM swap, token theft).",
+        "practice_prompt": "Write a KQL query that checks MFA usage per user for the affected accounts:",
+        "practice_keywords": ["AuthenticationRequirement", "multiFactorAuthentication", "countif", "summarize"],
+        "practice_placeholder": "SigninLogs\n| where UserPrincipalName in (...)\n| summarize ...",
+        "practice_success": "Exactly right. countif with AuthenticationRequirement is the standard MFA posture check. You'll run this after almost every credential attack.",
+        "practice_hint": "Use countif(AuthenticationRequirement == 'multiFactorAuthentication') inside a summarize grouped by UserPrincipalName.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 7 feeds your remediation recommendations. If MFA gaps exist, 'Enable MFA enforcement' belongs in your correct actions.",
+        "report_connection": "List accounts with MFA gaps by name in the 'Remediation Recommendations' section. This is what the identity team will act on."
+      },
+      "8": {
+        "plain_english": "The investigation is complete. Now you write it up. The export button generates a structured incident report in Markdown format — it includes your verdict, all queries you ran, affected accounts, and recommended actions.",
+        "why": "Tier 2 analysts and incident responders will use your report to understand what happened, what you found, and what's still open. A vague report creates rework. A good report has: source IP, scope, timeline, containment confirmation, and clear open items.",
+        "what_to_look_for": "Before exporting: check that you've ticked all the correct response actions (not the red herrings), written a summary note, and set your verdict. The export will include your full query history automatically.",
+        "practice_prompt": "In the triage panel (bottom right), what verdict would you choose for a confirmed password spray with 3 successful sign-ins?",
+        "practice_keywords": ["True Positive"],
+        "practice_placeholder": "Type your verdict decision here...",
+        "practice_success": "True Positive is correct. A confirmed attacker action with evidence = True Positive. Don't second-guess it when the data is clear.",
+        "practice_hint": "True Positive = the alert fired because a real attack happened. False Positive = the alert fired but it was actually benign. Benign Positive = real but expected/authorised activity.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 8 closes the loop. Submit triage → review Morgan's feedback → export report.",
+        "report_connection": "The Export Report button packages everything into a handoff document. Click it, then copy the Markdown into your ticket or escalation email to Tier 2."
+      }
+    }
+  },
+  "malware": {
+    "intro": {
+      "title": "Malware Alert — A process is behaving badly",
+      "body": "Malware alerts fire when Defender for Endpoint or another EDR detects suspicious process behaviour — unusual parent-child process relationships, known malicious hashes, or anomalous command-line patterns.\n\nYour job: confirm it's real malware (not a false positive from a legitimate tool), understand what it did, contain the host, and hand off.",
+      "analogy": "Think of it like a patient showing symptoms. The alert is the symptom. Your investigation is the diagnosis. The runbook is the clinical protocol."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're querying DeviceProcessEvents to see the exact process that triggered the alert — its name, command line, and parent process. The command line often contains the smoking gun.",
+        "why": "Malware almost always has a tell in its command line: base64-encoded payloads, unusual paths (AppData\\Roaming, Temp), or known-bad binary names. The parent process matters too — Word spawning PowerShell is almost always malicious.",
+        "what_to_look_for": "Look for: encoded strings (-enc or -encodedcommand in PowerShell), processes running from Temp or AppData, cmd.exe or PowerShell spawned by Office applications, unusual file paths in the command line.",
+        "practice_prompt": "Write a KQL query to see the suspicious process and its command line on the affected device:",
+        "practice_keywords": ["DeviceProcessEvents", "DeviceName", "ProcessCommandLine", "where"],
+        "practice_placeholder": "DeviceProcessEvents\n| where DeviceName == \"...\"\n| project ...",
+        "practice_success": "Good. ProcessCommandLine is the most revealing field in DeviceProcessEvents — always project it.",
+        "practice_hint": "Query DeviceProcessEvents, filter by DeviceName, and use project to show FileName, ProcessCommandLine, InitiatingProcessFileName, and Timestamp.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 1 confirms whether the alert is real. A base64-encoded PowerShell command in the results is confirmation enough to proceed with containment.",
+        "report_connection": "Copy the suspicious command line into your report verbatim — it's the primary evidence."
+      }
+    }
+  },
+  "phishing": {
+    "intro": {
+      "title": "Phishing Alert — Someone received a suspicious email",
+      "body": "Phishing alerts fire when Defender for Office 365 or mail flow rules detect indicators of a phishing email — malicious URLs, impersonation, suspicious attachments, or user reports.\n\nYour job: confirm the email is malicious, find out who received it, determine if anyone clicked, and remove it from inboxes.",
+      "analogy": "Think of it as a contamination sweep. The alert tells you a toxic package arrived. Your job is to find every copy in the building and remove it before anyone opens it."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're querying EmailEvents to find the specific email — sender, subject, recipients, and whether it contained a URL or attachment.",
+        "why": "You need to confirm the alert is about a real email (not a test or false positive) and identify every recipient. If 50 people received it, you have 50 potential click events to check.",
+        "what_to_look_for": "RecipientCount tells you the blast radius. The SenderFromAddress often shows spoofing (display name doesn't match the actual address). Note the NetworkMessageId — you'll use it to track clicks.",
+        "practice_prompt": "Write a KQL query to find the phishing email by subject or sender in EmailEvents:",
+        "practice_keywords": ["EmailEvents", "where", "SenderFromAddress", "Subject"],
+        "practice_placeholder": "EmailEvents\n| where Subject contains \"...\"\n| project ...",
+        "practice_success": "Correct. Always project SenderFromAddress, RecipientEmailAddress, Subject, and NetworkMessageId as a minimum.",
+        "practice_hint": "Query EmailEvents and filter by Subject or SenderFromAddress. Project the key fields: sender, recipient, subject, timestamp, NetworkMessageId.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 1 establishes the email is real. Without confirming this, you could be chasing a test phishing campaign from your own security team.",
+        "report_connection": "Include the sender address, subject line, and recipient count in the 'Phishing Email Details' section."
+      }
+    }
+  },
+  "network": {
+    "intro": {
+      "title": "Network Alert — Unusual traffic detected",
+      "body": "Network alerts fire when Azure Firewall, IDS/IPS, or network flow analysis detects unusual traffic patterns — port scans, large data transfers, connections to known-bad IPs, or unusual protocols.",
+      "analogy": "Think of it as border control. Normal traffic flows through the gate. The alert flags something that tried to sneak through or is trying to leave with too much luggage."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're querying AzureFirewallNetworkRule to see the blocked or allowed traffic — source IP, destination IP, destination port, and whether it was permitted.",
+        "why": "The firewall log tells you direction (inbound vs outbound), volume, and destination. Outbound to unusual ports or IPs often indicates data exfiltration or C2 beaconing. Inbound scanning from one IP indicates reconnaissance.",
+        "what_to_look_for": "Look for: repeated connections to the same destination on unusual ports (not 80/443), large BytesSent values on outbound connections, or one source IP hitting many destination ports in sequence (port scan pattern).",
+        "practice_prompt": "Write a KQL query to count traffic by source IP and destination port from the firewall logs:",
+        "practice_keywords": ["AzureFirewallNetworkRule", "summarize", "count", "DstPort", "SrcIP"],
+        "practice_placeholder": "AzureFirewallNetworkRule\n| summarize ...",
+        "practice_success": "Good. Counting by SrcIP and DstPort in one summarize is the standard port-scan detection pattern.",
+        "practice_hint": "Query AzureFirewallNetworkRule and use summarize count() by SrcIP, DstPort. Sort by count desc to see the busiest combinations.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 1 gives you the traffic picture. The pattern you see (scanning, beaconing, exfil) determines which branch of the runbook you follow.",
+        "report_connection": "Include source IP, destination IP/port, traffic volume, and whether it was blocked or allowed in the 'Network Traffic Summary' section."
+      }
+    }
+  },
+  "lateral-movement": {
+    "intro": {
+      "title": "Lateral Movement Alert — An attacker is spreading through the network",
+      "body": "Lateral movement alerts fire when an attacker who already has a foothold starts moving to other systems — using stolen credentials, exploiting shares, or abusing legitimate admin tools like PsExec or WMI.",
+      "analogy": "Think of it as a burglar who got into one room and is now trying every door to get deeper into the building. Your job is to find which doors they tried and which ones opened."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're looking at DeviceNetworkEvents to see what remote connections the affected host made — which other machines it connected to, and via what protocol.",
+        "why": "Lateral movement almost always involves SMB (port 445), RPC (port 135), or WinRM (port 5985). Seeing a workstation suddenly connecting to 20 other machines via port 445 is a major red flag — normal workstations don't do that.",
+        "what_to_look_for": "Look for: connections to many unique RemoteIPs in a short time window, connections on ports 445, 135, 5985, or 3389, RemoteIP addresses that are internal (10.x, 192.168.x) — lateral movement stays inside the network.",
+        "practice_prompt": "Write a KQL query to see all remote connections from the affected host in the last 2 hours:",
+        "practice_keywords": ["DeviceNetworkEvents", "DeviceName", "RemoteIP", "RemotePort", "where"],
+        "practice_placeholder": "DeviceNetworkEvents\n| where DeviceName == \"...\"\n| where ...",
+        "practice_success": "Correct. DeviceNetworkEvents with RemotePort filter is the lateral movement detection query you'll use on almost every endpoint alert.",
+        "practice_hint": "Query DeviceNetworkEvents filtered by DeviceName. Project Timestamp, RemoteIP, RemotePort, and InitiatingProcessFileName to see which process made the connections.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 1 maps the movement path. Each unique RemoteIP the host connected to is potentially another compromised machine.",
+        "report_connection": "List the movement path in your report: Host A → Host B → Host C, with timestamps and ports. This is the kill chain narrative."
+      }
+    }
+  },
+  "privilege-escalation": {
+    "intro": {
+      "title": "Privilege Escalation Alert — An account just gained elevated access",
+      "body": "Privilege escalation alerts fire when an account gains new permissions it shouldn't have — being added to admin groups, assigning privileged Azure roles, or bypassing UAC.",
+      "analogy": "Think of it as an employee who started in the post room and just gave themselves a master key. Your job is to find out how they got it and who gave it to them."
+    },
+    "steps": {
+      "1": {
+        "plain_english": "We're querying AzureActivity to see role assignment events — who added a new permission, which account got it, and what role was assigned.",
+        "why": "Legitimate privilege changes almost always follow a change management process — they're planned, they happen during business hours, and there's a ticket for them. An unexpected role assignment at 3am by an account that doesn't normally make changes is a major red flag.",
+        "what_to_look_for": "Look for: the Caller (who made the change), the time (outside business hours = suspicious), the RoleDefinitionName (Owner, Global Administrator, or any *Admin role is critical), and the PrincipalName (who got the privilege).",
+        "practice_prompt": "Write a KQL query to find privilege role assignment events in AzureActivity:",
+        "practice_keywords": ["AzureActivity", "roleAssignments", "write", "where", "OperationName"],
+        "practice_placeholder": "AzureActivity\n| where OperationName contains \"...\"\n| project ...",
+        "practice_success": "Good. OperationName contains 'roleAssignment' or 'write' and filtering by success gives you all privilege changes in the environment.",
+        "practice_hint": "Query AzureActivity and filter OperationName for 'roleAssignment'. Also filter ActivityStatus == 'Success' to see only changes that went through.",
+        "tool": "sentinel",
+        "runbook_connection": "Step 1 establishes the who, what, and when of the escalation. This immediately tells you if it was planned change management or a covert action.",
+        "report_connection": "Include the exact role assigned, the granting account, the receiving account, and the timestamp. This is the core evidence for the escalation finding."
+      }
+    }
+  }
+}

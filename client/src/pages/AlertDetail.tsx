@@ -6,7 +6,8 @@ import { SeverityBadge } from "@/components/SeverityBadge";
 import { KqlEditor } from "@/components/KqlEditor";
 import { ResultsTable } from "@/components/ResultsTable";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { runQuery } from "@/lib/kqlClient";
 import { tableSchemas } from "@/data/tableSchemas";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -18,6 +19,11 @@ import { Rapid7Panel } from "@/components/Rapid7Panel";
 import { ElkPanel } from "@/components/ElkPanel";
 import { MitreDetailDialog } from "@/components/MitreDetailDialog";
 import { ToolIntroBanner, INTRO_TEXT } from "@/components/ToolIntroBanner";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { StepGuideDialog } from "@/components/StepGuideDialog";
+import { CategoryIntroDialog } from "@/components/CategoryIntroDialog";
+import { WelcomeDialog } from "@/components/WelcomeDialog";
+import type { RunbookCategory } from "@/lib/types";
 import {
   exportIncident,
   downloadIncidentReport,
@@ -51,6 +57,8 @@ import {
   Download,
   BarChart3,
   CircleAlert,
+  GraduationCap,
+  BookOpen,
 } from "lucide-react";
 
 const alerts = alertsData as unknown as Alert[];
@@ -98,39 +106,96 @@ export default function AlertDetail() {
   const activeStack = useMemo(() => getActiveStack(), [stackId]);
   const stackSupported = useMemo(() => isStackFullySupported(stackId), [stackId]);
 
-  // ===== Right-column drag-to-resize =====
-  const [rightWidth, setRightWidth] = useState<number>(() => {
+  // ===== Resizable panel sizes (persisted) =====
+  const initialHorizontal = useMemo(() => {
     try {
-      const v = localStorage.getItem("runbook_panel_width");
-      if (v) {
-        const n = parseInt(v, 10);
-        if (!Number.isNaN(n)) return Math.max(340, Math.min(600, n));
+      const raw = localStorage.getItem("nightshift_panel_sizes");
+      if (raw) {
+        const parsed = JSON.parse(raw) as { horizontal?: number[]; vertical?: number[] };
+        if (Array.isArray(parsed.horizontal) && parsed.horizontal.length === 3)
+          return parsed.horizontal;
       }
     } catch {}
-    return 480;
-  });
-  const startDrag = (e: React.MouseEvent) => {
-    e.preventDefault();
-    document.body.style.userSelect = "none";
-    document.body.style.cursor = "col-resize";
-    const onMove = (ev: MouseEvent) => {
-      const w = Math.max(340, Math.min(600, window.innerWidth - ev.clientX));
-      setRightWidth(w);
-    };
-    const onUp = () => {
-      document.body.style.userSelect = "";
-      document.body.style.cursor = "";
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-      setRightWidth((curr) => {
-        try {
-          localStorage.setItem("runbook_panel_width", String(curr));
-        } catch {}
-        return curr;
-      });
-    };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    return [22, 45, 33];
+  }, []);
+  const initialVertical = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("nightshift_panel_sizes");
+      if (raw) {
+        const parsed = JSON.parse(raw) as { horizontal?: number[]; vertical?: number[] };
+        if (Array.isArray(parsed.vertical) && parsed.vertical.length === 2) return parsed.vertical;
+      }
+    } catch {}
+    return [60, 40];
+  }, []);
+  const persistPanelSizes = (key: "horizontal" | "vertical", sizes: number[]) => {
+    try {
+      const raw = localStorage.getItem("nightshift_panel_sizes");
+      const cur = raw ? JSON.parse(raw) : {};
+      cur[key] = sizes;
+      localStorage.setItem("nightshift_panel_sizes", JSON.stringify(cur));
+    } catch {}
+  };
+
+  // ===== Tutorial / Guided Mode =====
+  const [guidedMode, setGuidedModeState] = useState<boolean>(false);
+  useEffect(() => {
+    try {
+      setGuidedModeState(localStorage.getItem("nightshift_guided_mode") === "true");
+    } catch {}
+  }, []);
+  const setGuidedMode = (v: boolean) => {
+    setGuidedModeState(v);
+    try {
+      localStorage.setItem("nightshift_guided_mode", v ? "true" : "false");
+    } catch {}
+  };
+  const toggleGuidedMode = () => setGuidedMode(!guidedMode);
+
+  const [activeGuideStep, setActiveGuideStep] = useState<
+    { category: RunbookCategory; stepId: number } | null
+  >(null);
+  const openGuideStep = (category: RunbookCategory, stepId: number) =>
+    setActiveGuideStep({ category, stepId });
+  const closeGuideStep = () => setActiveGuideStep(null);
+
+  // Category intro: open automatically once per category when guided mode is on.
+  const [introOpen, setIntroOpen] = useState(false);
+  useEffect(() => {
+    if (!guidedMode) {
+      setIntroOpen(false);
+      return;
+    }
+    try {
+      const seen = localStorage.getItem(`nightshift_intro_seen_${alert.category}`) === "true";
+      if (!seen) setIntroOpen(true);
+    } catch {
+      setIntroOpen(true);
+    }
+  }, [guidedMode, alert.category]);
+  const markIntroSeen = () => {
+    try {
+      localStorage.setItem(`nightshift_intro_seen_${alert.category}`, "true");
+    } catch {}
+  };
+
+  // Ref on the triage / notebook bottom panel — used to auto-scroll when goals complete.
+  const triageRef = useRef<HTMLDivElement | null>(null);
+
+  // First-alert welcome — show once per user, before any tutorial dialogs.
+  const [welcomeOpen, setWelcomeOpen] = useState(false);
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("nightshift_first_alert_seen") === "true";
+      if (!seen) setWelcomeOpen(true);
+    } catch {}
+  }, []);
+  const dismissWelcome = (enableGuided: boolean) => {
+    try {
+      localStorage.setItem("nightshift_first_alert_seen", "true");
+    } catch {}
+    if (enableGuided) setGuidedMode(true);
+    setWelcomeOpen(false);
   };
 
   const runIt = async () => {
@@ -327,9 +392,14 @@ export default function AlertDetail() {
 
   return (
     <Layout>
-      <div className="flex h-full">
-        {/* ===== Left pane ===== */}
-        <aside className="w-[22%] min-w-[280px] border-r border-border overflow-y-auto scrollbar-thin p-5 space-y-4">
+      <PanelGroup
+        direction="horizontal"
+        onLayout={(sizes) => persistPanelSizes("horizontal", sizes)}
+        className="h-full"
+      >
+        {/* ===== Left panel ===== */}
+        <Panel defaultSize={initialHorizontal[0]} minSize={15} className="border-r border-border">
+        <aside className="h-full overflow-y-auto scrollbar-thin p-5 space-y-4">
           <Link href="/queue">
             <a className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
               <ChevronLeft className="h-3 w-3" /> Back to queue
@@ -382,7 +452,17 @@ export default function AlertDetail() {
             </div>
           </div>
 
-          <InvestigationGoals alertId={alert.id} goals={alert.investigationGoals} />
+          <InvestigationGoals
+            alertId={alert.id}
+            goals={alert.investigationGoals}
+            guidedMode={guidedMode}
+            onAllChecked={() => {
+              setRightTab("triage");
+              setTimeout(() => {
+                triageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 80);
+            }}
+          />
 
           <div className="space-y-2">
             <Button
@@ -405,9 +485,43 @@ export default function AlertDetail() {
             </p>
           </div>
         </aside>
+        </Panel>
 
-        {/* ===== Middle pane: Tools (Sentinel / Rapid7 / ELK / EDR) ===== */}
-        <section className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <PanelResizeHandle className="w-1 bg-border hover:bg-primary/60 active:bg-primary transition-colors" />
+
+        {/* ===== Middle panel: Tools (Sentinel / Rapid7 / ELK / EDR) ===== */}
+        <Panel defaultSize={initialHorizontal[1]} minSize={30}>
+        <section className="h-full flex flex-col overflow-hidden">
+          {/* Slim alert header bar above the tool tabs */}
+          <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-3 py-1.5 text-[12px]">
+            <span className="mono text-muted-foreground shrink-0">{alert.id}</span>
+            <span className="text-muted-foreground/60 shrink-0">·</span>
+            <span className="font-medium truncate">{alert.ruleName}</span>
+            <button
+              onClick={toggleGuidedMode}
+              className={`ml-auto shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border transition-colors ${
+                guidedMode
+                  ? "bg-blue-500/20 border-blue-400/60 text-blue-200 shadow-[0_0_0_2px_rgba(96,165,250,0.15)]"
+                  : "bg-muted/30 border-border text-muted-foreground hover:text-foreground hover:border-primary/40"
+              }`}
+              data-testid="btn-guided-mode-toggle"
+              title={guidedMode ? "Guided Mode is ON — click to disable" : "Turn on Guided Mode for interactive coaching"}
+            >
+              <GraduationCap className="h-3.5 w-3.5" />
+              <span>Guided Mode</span>
+              <span
+                className={`relative inline-block w-7 h-3.5 rounded-full transition-colors ${
+                  guidedMode ? "bg-blue-500" : "bg-muted-foreground/30"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 w-2.5 h-2.5 rounded-full bg-white transition-transform ${
+                    guidedMode ? "translate-x-3.5" : "translate-x-0.5"
+                  }`}
+                />
+              </span>
+            </button>
+          </div>
           <div className="flex items-stretch border-b border-border bg-muted/30 px-1">
             <ToolTab
               active={activeTool === "sentinel"}
@@ -460,23 +574,28 @@ export default function AlertDetail() {
             />
           )}
         </section>
+        </Panel>
 
-        {/* ===== Drag handle between middle and right column ===== */}
-        <div
-          onMouseDown={startDrag}
-          className="w-1 cursor-col-resize bg-border hover:bg-primary/60 active:bg-primary transition-colors shrink-0"
-          data-testid="right-column-drag"
-          title="Drag to resize"
-        />
+        <PanelResizeHandle className="w-1 bg-border hover:bg-primary/60 active:bg-primary transition-colors" />
 
-        {/* ===== Right column: Runbook (top) + Notebook/Triage (bottom) ===== */}
-        <aside
-          className="flex flex-col overflow-hidden border-l border-border shrink-0"
-          style={{ width: rightWidth, minWidth: 340, maxWidth: 600 }}
+        {/* ===== Right panel: Runbook (top) + Notebook/Triage (bottom) ===== */}
+        <Panel
+          defaultSize={initialHorizontal[2]}
+          minSize={25}
+          className="border-l border-border"
+        >
+        <PanelGroup
+          direction="vertical"
+          onLayout={(sizes) => persistPanelSizes("vertical", sizes)}
+          className="h-full"
           data-testid="right-column"
         >
           {/* Top: Runbook — always visible */}
-          <div className="flex-[3] min-h-0 overflow-hidden border-b-2 border-border">
+          <Panel
+            defaultSize={initialVertical[0]}
+            minSize={40}
+            className={`overflow-hidden ${guidedMode ? "ring-2 ring-inset ring-blue-500/40" : ""}`}
+          >
             <RunbookPanel
               alertId={alert.id}
               alertCategory={alert.category}
@@ -485,11 +604,16 @@ export default function AlertDetail() {
               hintShown={hintShown}
               hunterHints={alert.hunterHints}
               onAskHint={askHint}
+              onGuideStep={openGuideStep}
+              guidedMode={guidedMode}
             />
-          </div>
+          </Panel>
+
+          <PanelResizeHandle className="h-1 bg-border hover:bg-primary/60 active:bg-primary transition-colors" />
 
           {/* Bottom: Notebook / Triage */}
-          <div className="flex-[2] min-h-0 flex flex-col overflow-hidden">
+          <Panel defaultSize={initialVertical[1]} minSize={25} className="overflow-hidden">
+          <div ref={triageRef} className="h-full flex flex-col overflow-hidden">
           <div className="flex items-center border-b border-border bg-muted/20">
             <button
               onClick={() => setRightTab("notebook")}
@@ -694,16 +818,55 @@ export default function AlertDetail() {
             </div>
           )}
           </div>
-        </aside>
+          </Panel>
+        </PanelGroup>
+        </Panel>
 
         {/* ===== Pivot menu ===== */}
         {pivot && <PivotMenu pivot={pivot} onClose={closePivot} onApply={applyPivot} />}
-      </div>
+      </PanelGroup>
 
       <MitreDetailDialog
         mitreId={alert.mitreId}
         open={mitreOpen}
         onOpenChange={setMitreOpen}
+      />
+
+      <WelcomeDialog
+        open={welcomeOpen}
+        onEnableGuided={() => dismissWelcome(true)}
+        onJustExplore={() => dismissWelcome(false)}
+      />
+
+      <CategoryIntroDialog
+        open={introOpen && !welcomeOpen}
+        category={alert.category}
+        onAccept={() => {
+          markIntroSeen();
+          setIntroOpen(false);
+        }}
+        onDismiss={() => {
+          markIntroSeen();
+          setIntroOpen(false);
+        }}
+      />
+
+      <StepGuideDialog
+        open={activeGuideStep != null}
+        category={activeGuideStep?.category ?? null}
+        stepId={activeGuideStep?.stepId ?? null}
+        onClose={closeGuideStep}
+        onNavigate={(newStepId) => {
+          if (activeGuideStep) {
+            setActiveGuideStep({ category: activeGuideStep.category, stepId: newStepId });
+          }
+        }}
+        onLoadQuery={(q) => {
+          setQuery(q);
+          setActiveTool("sentinel");
+          setBottomTab("results");
+        }}
+        onSwitchTool={(tool) => setActiveTool(tool)}
       />
     </Layout>
   );
@@ -737,11 +900,23 @@ function ToolTab({
   );
 }
 
-function InvestigationGoals({ alertId, goals }: { alertId: string; goals: string[] }) {
+function InvestigationGoals({
+  alertId,
+  goals,
+  guidedMode,
+  onAllChecked,
+}: {
+  alertId: string;
+  goals: string[];
+  guidedMode?: boolean;
+  onAllChecked?: () => void;
+}) {
   const storageKey = `goals_checked_${alertId}`;
   const [checked, setChecked] = useState<Set<number>>(new Set());
+  const firedRef = useRef(false);
 
   useEffect(() => {
+    firedRef.current = false;
     try {
       const raw = localStorage.getItem(`goals_checked_${alertId}`);
       setChecked(new Set<number>(raw ? JSON.parse(raw) : []));
@@ -764,6 +939,14 @@ function InvestigationGoals({ alertId, goals }: { alertId: string; goals: string
   const done = goals.filter((_, i) => checked.has(i)).length;
   const total = goals.length;
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  const allDone = total > 0 && done === total;
+
+  useEffect(() => {
+    if (allDone && guidedMode && !firedRef.current) {
+      firedRef.current = true;
+      onAllChecked?.();
+    }
+  }, [allDone, guidedMode, onAllChecked]);
 
   return (
     <div className="bg-card border border-border rounded p-3 space-y-2.5">
@@ -803,6 +986,24 @@ function InvestigationGoals({ alertId, goals }: { alertId: string; goals: string
           );
         })}
       </ul>
+      <AnimatePresence>
+        {allDone && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 220, damping: 18 }}
+            className="flex items-start gap-2 rounded border border-green-700/40 bg-green-900/20 text-green-200/90 px-3 py-2 text-sm"
+            data-testid="goals-all-done"
+          >
+            <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-green-400" />
+            <span>
+              All goals confirmed — ready to triage{" "}
+              <span className="text-green-300">✓</span>
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1091,7 +1292,7 @@ function EdrPanel({
   edrName: string;
 }) {
   const [edrTab, setEdrTab] = useState<
-    "overview" | "timeline" | "alerts" | "recommendations" | "software"
+    "overview" | "timeline" | "alerts" | "software"
   >("overview");
 
   if (!stackAvailable) {
@@ -1215,12 +1416,11 @@ function EdrPanel({
         >
           {([
             ["overview", "Overview"],
-            ["alerts", "Alerts"],
             ["timeline", "Timeline"],
-            ["recommendations", "Security recommendations"],
+            ["alerts", "Alerts"],
             ["software", "Software inventory"],
           ] as [typeof edrTab, string][]).map(([id, label]) => {
-            const isReal = id === "overview" || id === "alerts";
+            const isReal = true;
             const isActive = edrTab === id;
             return (
               <button
@@ -1251,6 +1451,28 @@ function EdrPanel({
               {/* Security assessments pills */}
               <div className="grid grid-cols-3 gap-3">
                 <AssessmentCard
+                  label="AV Status"
+                  value="Active / Updated"
+                  tone="ok"
+                  caption="Real-time protection ON"
+                />
+                <AssessmentCard
+                  label="EDR sensor"
+                  value="Onboarded"
+                  tone="ok"
+                  caption="Cloud-managed, latest version"
+                />
+                <AssessmentCard
+                  label="MDE license"
+                  value="E5 [simulated]"
+                  tone="warn"
+                  caption="Defender for Endpoint Plan 2"
+                />
+              </div>
+
+              {/* Risk + exposure summary */}
+              <div className="grid grid-cols-2 gap-3">
+                <AssessmentCard
                   label="Risk level"
                   value={riskLevel}
                   tone={riskLevel === "High" ? "danger" : riskLevel === "Medium" ? "warn" : "ok"}
@@ -1261,12 +1483,6 @@ function EdrPanel({
                   value={exposureLevel}
                   tone={exposureLevel === "High" ? "danger" : "warn"}
                   caption="Recommendations not applied"
-                />
-                <AssessmentCard
-                  label="Antivirus"
-                  value="Active"
-                  tone="ok"
-                  caption="Real-time protection ON"
                 />
               </div>
 
@@ -1300,10 +1516,14 @@ function EdrPanel({
                 </div>
               </Section>
             </>
-          ) : (
+          ) : edrTab === "timeline" ? (
+            <EdrTimeline alert={alert} host={host} user={user} />
+          ) : edrTab === "alerts" ? (
             <Section title="Alerts on this device">
               <AlertRow alert={alert} expanded />
             </Section>
+          ) : (
+            <EdrSoftwareInventory />
           )}
         </div>
       </div>
@@ -1362,6 +1582,128 @@ function AssessmentCard({
       </div>
       <div className="text-[10px] text-slate-400 mt-1">{caption}</div>
     </div>
+  );
+}
+
+function EdrTimeline({ alert, host, user }: { alert: Alert; host: string; user: string }) {
+  // Five synthetic timeline entries derived from the alert. Real MDE timelines come from
+  // DeviceProcessEvents + DeviceNetworkEvents — we give the analyst the shape, not the volume.
+  const baseTs = Date.parse(alert.displayedAt);
+  const at = (offsetSec: number) =>
+    new Date(baseTs + offsetSec * 1000).toISOString().replace("T", " ").replace(/\..*Z$/, " UTC");
+  const entries: { icon: React.ReactNode; t: string; tone: string; title: string; body: string }[] = [
+    {
+      icon: <ChevronRight className="h-3 w-3" />,
+      t: at(-180),
+      tone: "#8a9099",
+      title: "Parent process",
+      body: `OUTLOOK.EXE invoked WINWORD.EXE on ${host} under user ${user}`,
+    },
+    {
+      icon: <Code2 className="h-3 w-3" />,
+      t: at(-90),
+      tone: "#f59e0b",
+      title: "Child process",
+      body: `WINWORD.EXE spawned powershell.exe with -enc payload (see ProcessCommandLine in Sentinel)`,
+    },
+    {
+      icon: <SearchIcon className="h-3 w-3" />,
+      t: at(-30),
+      tone: "#a78bfa",
+      title: "Network connection",
+      body: `powershell.exe initiated outbound TCP 443 to external endpoint`,
+    },
+    {
+      icon: <FileDown className="h-3 w-3" />,
+      t: at(0),
+      tone: "#60a5fa",
+      title: "File write",
+      body: `Stage-2 binary written to C:\\Users\\Public\\svchost.exe`,
+    },
+    {
+      icon: <CircleAlert className="h-3 w-3" />,
+      t: at(2),
+      tone: "#ef4444",
+      title: "Alert triggered",
+      body: `${alert.product} raised "${alert.ruleName}" (${alert.id})`,
+    },
+  ];
+  return (
+    <Section title="Simplified timeline">
+      <p className="text-[11px] text-slate-400 mb-3">
+        (Simplified timeline — full event data is in Sentinel KQL via DeviceProcessEvents / DeviceNetworkEvents.)
+      </p>
+      <ol
+        className="relative border-l ml-2"
+        style={{ borderColor: "#3a3a40" }}
+      >
+        {entries.map((e, i) => (
+          <li key={i} className="ml-4 mb-4 last:mb-0">
+            <span
+              className="absolute -left-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: e.tone }}
+            >
+              <span style={{ color: "#0f0f12" }}>{e.icon}</span>
+            </span>
+            <div className="text-[11px] mono text-slate-400 mb-0.5">{e.t}</div>
+            <div className="text-sm font-medium text-white">{e.title}</div>
+            <div className="text-xs text-slate-300 leading-relaxed">{e.body}</div>
+          </li>
+        ))}
+      </ol>
+    </Section>
+  );
+}
+
+function EdrSoftwareInventory() {
+  const items: { vendor: string; product: string; version: string; weakness?: string }[] = [
+    { vendor: "Microsoft", product: "Office Pro Plus 2024", version: "16.0.18526.20106" },
+    { vendor: "Microsoft", product: "Edge", version: "126.0.2592.81" },
+    { vendor: "Adobe", product: "Acrobat Reader DC", version: "24.001.20643", weakness: "CVE-2024-30315" },
+    { vendor: "Google", product: "Chrome", version: "127.0.6533.72", weakness: "CVE-2024-7256" },
+    { vendor: "Zoom", product: "Workplace Desktop", version: "6.1.0.55400" },
+    { vendor: "VMware", product: "Tools", version: "12.4.5" },
+    { vendor: "PuTTY", product: "PuTTY", version: "0.79", weakness: "CVE-2024-31497" },
+  ];
+  return (
+    <Section title="Software inventory">
+      <p className="text-[11px] text-slate-400 mb-3">
+        [simulated data] — 7 of ~120 installed products shown for brevity.
+      </p>
+      <div
+        className="rounded border overflow-hidden"
+        style={{ borderColor: "#3a3a40", backgroundColor: "#222127" }}
+      >
+        <table className="w-full text-xs">
+          <thead style={{ backgroundColor: "#2a292f" }}>
+            <tr className="text-[10px] uppercase tracking-widest text-slate-400">
+              <th className="text-left px-3 py-2 font-medium">Vendor</th>
+              <th className="text-left px-3 py-2 font-medium">Product</th>
+              <th className="text-left px-3 py-2 font-medium">Version</th>
+              <th className="text-left px-3 py-2 font-medium">Weaknesses</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((p, i) => (
+              <tr key={i} className="border-t" style={{ borderColor: "#3a3a40" }}>
+                <td className="px-3 py-1.5 text-slate-300">{p.vendor}</td>
+                <td className="px-3 py-1.5 text-white">{p.product}</td>
+                <td className="px-3 py-1.5 mono text-slate-300">{p.version}</td>
+                <td className="px-3 py-1.5">
+                  {p.weakness ? (
+                    <span className="text-[10px] mono rounded px-1.5 py-0.5 border bg-amber-900/30 border-amber-500/40 text-amber-300">
+                      {p.weakness}
+                    </span>
+                  ) : (
+                    <span className="text-slate-500">—</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
   );
 }
 
