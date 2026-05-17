@@ -3,7 +3,11 @@ import { createServer } from "node:http";
 import type { Server } from "node:http";
 import path from "node:path";
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import { storage } from "./storage";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const LOG_TABLE_NAMES = [
   "AzureActivity",
