@@ -17,6 +17,7 @@ import { RunbookPanel } from "@/components/RunbookPanel";
 import { Rapid7Panel } from "@/components/Rapid7Panel";
 import { ElkPanel } from "@/components/ElkPanel";
 import { MitreDetailDialog } from "@/components/MitreDetailDialog";
+import { ToolIntroBanner, INTRO_TEXT } from "@/components/ToolIntroBanner";
 import {
   exportIncident,
   downloadIncidentReport,
@@ -35,7 +36,7 @@ import {
   Notebook,
   Gavel,
   ChevronLeft,
-  Lightbulb,
+  ChevronRight,
   Sparkles,
   X,
   CheckCircle2,
@@ -45,6 +46,11 @@ import {
   Shield,
   Search as SearchIcon,
   Server,
+  Calendar,
+  Plus,
+  Download,
+  BarChart3,
+  CircleAlert,
 } from "lucide-react";
 
 const alerts = alertsData as unknown as Alert[];
@@ -79,16 +85,9 @@ export default function AlertDetail() {
   const [result, setResult] = useState<any>(null);
   const [running, setRunning] = useState(false);
   const [pivot, setPivot] = useState<{ col: string; value: any } | null>(null);
-  const [activeTab, setActiveTab] = useState<"editor" | "schema">("editor");
+  const [bottomTab, setBottomTab] = useState<"results" | "schema" | "chart">("results");
   const [rightTab, setRightTab] = useState<"notebook" | "triage">("triage");
   const [activeTool, setActiveTool] = useState<"sentinel" | "rapid7" | "elk" | "edr">("sentinel");
-  const [runbookOpen, setRunbookOpen] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem("runbook_panel_open") !== "false";
-    } catch {
-      return true;
-    }
-  });
   const [mitreOpen, setMitreOpen] = useState(false);
   const [stackId, setStackId] = useState<string>(() => getActiveStackId());
   useEffect(() => {
@@ -99,14 +98,39 @@ export default function AlertDetail() {
   const activeStack = useMemo(() => getActiveStack(), [stackId]);
   const stackSupported = useMemo(() => isStackFullySupported(stackId), [stackId]);
 
-  const toggleRunbook = () => {
-    setRunbookOpen((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem("runbook_panel_open", String(next));
-      } catch {}
-      return next;
-    });
+  // ===== Right-column drag-to-resize =====
+  const [rightWidth, setRightWidth] = useState<number>(() => {
+    try {
+      const v = localStorage.getItem("runbook_panel_width");
+      if (v) {
+        const n = parseInt(v, 10);
+        if (!Number.isNaN(n)) return Math.max(340, Math.min(600, n));
+      }
+    } catch {}
+    return 480;
+  });
+  const startDrag = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
+    const onMove = (ev: MouseEvent) => {
+      const w = Math.max(340, Math.min(600, window.innerWidth - ev.clientX));
+      setRightWidth(w);
+    };
+    const onUp = () => {
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      setRightWidth((curr) => {
+        try {
+          localStorage.setItem("runbook_panel_width", String(curr));
+        } catch {}
+        return curr;
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
   };
 
   const runIt = async () => {
@@ -281,7 +305,8 @@ export default function AlertDetail() {
   const applyPivot = (newQuery: string) => {
     setQuery(newQuery);
     setPivot(null);
-    setActiveTab("editor");
+    setActiveTool("sentinel");
+    setBottomTab("results");
   };
 
   // ===== Feedback after submit =====
@@ -304,7 +329,7 @@ export default function AlertDetail() {
     <Layout>
       <div className="flex h-full">
         {/* ===== Left pane ===== */}
-        <aside className="w-[36%] min-w-[360px] border-r border-border overflow-y-auto scrollbar-thin p-5 space-y-4">
+        <aside className="w-[22%] min-w-[280px] border-r border-border overflow-y-auto scrollbar-thin p-5 space-y-4">
           <Link href="/queue">
             <a className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
               <ChevronLeft className="h-3 w-3" /> Back to queue
@@ -357,35 +382,9 @@ export default function AlertDetail() {
             </div>
           </div>
 
-          <div className="bg-card border border-border rounded p-3 space-y-2">
-            <div className="text-[10px] uppercase tracking-widest text-primary">Investigation Goals</div>
-            <ul className="text-sm space-y-1.5">
-              {alert.investigationGoals.map((g, i) => (
-                <li key={i} className="flex gap-2">
-                  <span className="text-primary mono text-xs mt-0.5">{i + 1}.</span>
-                  <span>{g}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <InvestigationGoals alertId={alert.id} goals={alert.investigationGoals} />
 
           <div className="space-y-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={askHint}
-              data-testid="btn-hint"
-              className="w-full justify-start gap-2"
-            >
-              <Lightbulb className="h-3.5 w-3.5" />
-              Ask Morgan for a hint
-              <span className="ml-auto text-[10px] text-muted-foreground">{hintCount} used</span>
-            </Button>
-            {hintShown >= 0 && (
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-3 text-xs text-yellow-100/90 leading-relaxed">
-                {alert.hunterHints[hintShown]}
-              </div>
-            )}
             <Button
               variant="outline"
               size="sm"
@@ -401,11 +400,14 @@ export default function AlertDetail() {
             {aiBlurb && (
               <div className="bg-card border border-border rounded p-3 text-xs leading-relaxed">{aiBlurb}</div>
             )}
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
+              Need help? Use <span className="text-foreground/80">Ask Morgan</span> in the runbook on the right.
+            </p>
           </div>
         </aside>
 
         {/* ===== Middle pane: Tools (Sentinel / Rapid7 / ELK / EDR) ===== */}
-        <section className="flex-1 min-w-0 border-r border-border flex flex-col overflow-hidden">
+        <section className="flex-1 min-w-0 flex flex-col overflow-hidden">
           <div className="flex items-stretch border-b border-border bg-muted/30 px-1">
             <ToolTab
               active={activeTool === "sentinel"}
@@ -444,98 +446,50 @@ export default function AlertDetail() {
           ) : activeTool === "edr" ? (
             <EdrPanel alert={alert} stackAvailable={stackSupported} edrName={activeStack.edr} />
           ) : (
-            <>
-          <div className="flex items-center border-b border-border bg-muted/20 px-2">
-            <button
-              onClick={() => setActiveTab("editor")}
-              className={`px-3 py-2 text-xs flex items-center gap-1.5 border-b-2 ${activeTab === "editor" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}
-              data-testid="tab-editor"
-            >
-              <Code2 className="h-3 w-3" /> Editor
-            </button>
-            <button
-              onClick={() => setActiveTab("schema")}
-              className={`px-3 py-2 text-xs flex items-center gap-1.5 border-b-2 ${activeTab === "schema" ? "border-primary text-primary" : "border-transparent text-muted-foreground"}`}
-              data-testid="tab-schema"
-            >
-              <Database className="h-3 w-3" /> Schema
-            </button>
-            <div className="ml-auto flex items-center gap-2 py-1">
-              <Button size="sm" variant="ghost" onClick={saveCurrentQuery} data-testid="btn-save-notebook">
-                <Save className="h-3 w-3 mr-1" /> Save
-              </Button>
-              <Button size="sm" onClick={runIt} disabled={running} data-testid="btn-run-query" className="gap-1.5">
-                <Play className="h-3 w-3" /> Run (⌘↵)
-              </Button>
-            </div>
-          </div>
-
-          {activeTab === "editor" ? (
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="p-3">
-                <KqlEditor value={query} onChange={setQuery} onRun={runIt} minHeight="160px" />
-              </div>
-              <div className="flex-1 overflow-hidden flex flex-col min-h-0 px-3 pb-3">
-                {result?.error ? (
-                  <div className="bg-destructive/10 border border-destructive/30 rounded p-3 text-xs text-destructive">
-                    <div className="font-semibold mb-1">Query error</div>
-                    <div className="mono">{result.error}</div>
-                  </div>
-                ) : result ? (
-                  <>
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 flex justify-between">
-                      <span>Results</span>
-                      <span className="mono normal-case">
-                        {result.displayedRows} / {result.totalRows} rows · {result.executionMs?.toFixed(1)} ms
-                      </span>
-                    </div>
-                    <div className="flex-1 min-h-0">
-                      <ResultsTable
-                        columns={result.columns}
-                        rows={result.rows}
-                        onCellClick={onCellClick}
-                        maxHeight={500}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex-1 border border-dashed border-border/50 rounded flex items-center justify-center text-xs text-muted-foreground">
-                    Run a query to see results
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="flex-1 overflow-auto scrollbar-thin p-4 space-y-4">
-              {alert.relatedTables.map((t) => (
-                <div key={t} className="space-y-2">
-                  <h3 className="text-sm font-semibold text-primary mono">{t}</h3>
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border">
-                        <th className="text-left py-1 pr-3 font-medium w-48">Column</th>
-                        <th className="text-left py-1 font-medium">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(tableSchemas[t] ?? []).map((c) => (
-                        <tr key={c.name} className="border-b border-border/20">
-                          <td className="py-1 pr-3 mono text-primary">{c.name}</td>
-                          <td className="py-1 text-muted-foreground">{c.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ))}
-            </div>
-          )}
-            </>
+            <SentinelPanel
+              alert={alert}
+              query={query}
+              setQuery={setQuery}
+              running={running}
+              result={result}
+              runIt={runIt}
+              saveCurrentQuery={saveCurrentQuery}
+              onCellClick={onCellClick}
+              bottomTab={bottomTab}
+              setBottomTab={setBottomTab}
+            />
           )}
         </section>
 
-        {/* ===== Right pane: Notebook / Triage ===== */}
-        <aside className="w-[28%] min-w-[280px] flex flex-col overflow-hidden">
+        {/* ===== Drag handle between middle and right column ===== */}
+        <div
+          onMouseDown={startDrag}
+          className="w-1 cursor-col-resize bg-border hover:bg-primary/60 active:bg-primary transition-colors shrink-0"
+          data-testid="right-column-drag"
+          title="Drag to resize"
+        />
+
+        {/* ===== Right column: Runbook (top) + Notebook/Triage (bottom) ===== */}
+        <aside
+          className="flex flex-col overflow-hidden border-l border-border shrink-0"
+          style={{ width: rightWidth, minWidth: 340, maxWidth: 600 }}
+          data-testid="right-column"
+        >
+          {/* Top: Runbook — always visible */}
+          <div className="flex-[3] min-h-0 overflow-hidden border-b-2 border-border">
+            <RunbookPanel
+              alertId={alert.id}
+              alertCategory={alert.category}
+              mitreId={alert.mitreId}
+              hintCount={hintCount}
+              hintShown={hintShown}
+              hunterHints={alert.hunterHints}
+              onAskHint={askHint}
+            />
+          </div>
+
+          {/* Bottom: Notebook / Triage */}
+          <div className="flex-[2] min-h-0 flex flex-col overflow-hidden">
           <div className="flex items-center border-b border-border bg-muted/20">
             <button
               onClick={() => setRightTab("notebook")}
@@ -583,7 +537,8 @@ export default function AlertDetail() {
                           <button
                             onClick={() => {
                               setQuery(q.query);
-                              setActiveTab("editor");
+                              setActiveTool("sentinel");
+                              setBottomTab("results");
                             }}
                             className="text-[10px] text-primary hover:underline"
                           >
@@ -738,16 +693,8 @@ export default function AlertDetail() {
               <MorganBubble lines={feedbackLines} compact />
             </div>
           )}
+          </div>
         </aside>
-
-        {/* ===== Far-right rail: Runbook ===== */}
-        <RunbookPanel
-          alertId={alert.id}
-          alertCategory={alert.category}
-          mitreId={alert.mitreId}
-          isOpen={runbookOpen}
-          onToggle={toggleRunbook}
-        />
 
         {/* ===== Pivot menu ===== */}
         {pivot && <PivotMenu pivot={pivot} onClose={closePivot} onApply={applyPivot} />}
@@ -790,6 +737,350 @@ function ToolTab({
   );
 }
 
+function InvestigationGoals({ alertId, goals }: { alertId: string; goals: string[] }) {
+  const storageKey = `goals_checked_${alertId}`;
+  const [checked, setChecked] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(`goals_checked_${alertId}`);
+      setChecked(new Set<number>(raw ? JSON.parse(raw) : []));
+    } catch {
+      setChecked(new Set());
+    }
+  }, [alertId]);
+
+  const toggle = (idx: number) => {
+    setChecked((prev) => {
+      const next = new Set(prev);
+      next.has(idx) ? next.delete(idx) : next.add(idx);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(Array.from(next)));
+      } catch {}
+      return next;
+    });
+  };
+
+  const done = goals.filter((_, i) => checked.has(i)).length;
+  const total = goals.length;
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+  return (
+    <div className="bg-card border border-border rounded p-3 space-y-2.5">
+      <div className="flex items-center justify-between">
+        <div className="text-[10px] uppercase tracking-widest text-primary">Investigation Goals</div>
+        <span className="text-[10px] mono text-muted-foreground" data-testid="goals-progress">
+          {done} of {total} checked
+        </span>
+      </div>
+      <div className="h-1 bg-muted/40 rounded overflow-hidden">
+        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+      </div>
+      <ul className="text-sm space-y-1">
+        {goals.map((g, i) => {
+          const isDone = checked.has(i);
+          return (
+            <li key={i}>
+              <label
+                className={`flex items-start gap-2 px-1.5 py-1 rounded cursor-pointer ${
+                  isDone ? "" : "hover:bg-muted/30"
+                }`}
+                data-testid={`goal-${i}`}
+              >
+                <input
+                  type="checkbox"
+                  className="accent-primary mt-1 shrink-0"
+                  checked={isDone}
+                  onChange={() => toggle(i)}
+                />
+                <span
+                  className={`leading-snug ${isDone ? "line-through text-muted-foreground" : ""}`}
+                >
+                  {g}
+                </span>
+              </label>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function SentinelPanel({
+  alert,
+  query,
+  setQuery,
+  running,
+  result,
+  runIt,
+  saveCurrentQuery,
+  onCellClick,
+  bottomTab,
+  setBottomTab,
+}: {
+  alert: Alert;
+  query: string;
+  setQuery: (s: string) => void;
+  running: boolean;
+  result: any;
+  runIt: () => void;
+  saveCurrentQuery: () => void;
+  onCellClick: (col: string, value: any, row?: any) => void;
+  bottomTab: "results" | "schema" | "chart";
+  setBottomTab: (t: "results" | "schema" | "chart") => void;
+}) {
+  return (
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden" style={{ backgroundColor: "#0b1120" }}>
+      {/* Azure portal header: breadcrumb + time range */}
+      <div
+        className="border-b px-4 py-2 flex items-center gap-3"
+        style={{ backgroundColor: "#0b1120", borderColor: "#1f2d4a" }}
+      >
+        <div className="flex items-center gap-2 text-xs">
+          <span style={{ color: "#8a9ab5" }}>Microsoft Sentinel</span>
+          <ChevronRight className="h-3 w-3" style={{ color: "#4a5874" }} />
+          <span style={{ color: "#8a9ab5" }}>nightshift-workspace</span>
+          <ChevronRight className="h-3 w-3" style={{ color: "#4a5874" }} />
+          <span className="font-medium text-white">Logs</span>
+        </div>
+        <div className="ml-auto">
+          <button
+            disabled
+            className="text-xs rounded-full px-3 py-1 flex items-center gap-1.5 border cursor-default"
+            style={{ color: "#cbd5e1", backgroundColor: "#1a2436", borderColor: "#2a3a5c" }}
+            title="Frozen lab time"
+          >
+            <Calendar className="h-3 w-3" />
+            2026-05-13  11:00 – 13:00  UTC
+          </button>
+        </div>
+      </div>
+
+      <ToolIntroBanner toolId="sentinel" message={INTRO_TEXT.sentinel} />
+
+      {/* Azure command toolbar */}
+      <div
+        className="border-b px-3 py-1.5 flex items-center gap-1"
+        style={{ backgroundColor: "#0e1527", borderColor: "#1f2d4a" }}
+      >
+        <button
+          onClick={() => setQuery(alert.starterQuery)}
+          className="text-xs rounded px-2 py-1 flex items-center gap-1.5 hover:bg-[#1a2436]"
+          style={{ color: "#cbd5e1" }}
+          data-testid="btn-new-query"
+        >
+          <Plus className="h-3 w-3" /> New query
+        </button>
+        <button
+          disabled
+          className="text-xs rounded px-2 py-1 flex items-center gap-1.5 cursor-not-allowed"
+          style={{ color: "#5a6478" }}
+          title="Save (lab no-op)"
+        >
+          <Save className="h-3 w-3" /> Save
+        </button>
+        <button
+          disabled
+          className="text-xs rounded px-2 py-1 flex items-center gap-1.5 cursor-not-allowed"
+          style={{ color: "#5a6478" }}
+          title="Export (lab no-op)"
+        >
+          <Download className="h-3 w-3" /> Export
+        </button>
+        <div className="ml-auto">
+          <button
+            onClick={runIt}
+            disabled={running}
+            data-testid="btn-run-query"
+            className="text-xs rounded-full px-4 py-1 flex items-center gap-1.5 text-white font-medium disabled:opacity-60 hover:brightness-110"
+            style={{ backgroundColor: "#0078d4" }}
+          >
+            <Play className="h-3 w-3" /> {running ? "Running…" : "Run"}
+          </button>
+        </div>
+      </div>
+
+      {/* Query 1 card */}
+      <div className="px-4 pt-3" style={{ backgroundColor: "#0b1120" }}>
+        <div className="rounded border" style={{ borderColor: "#2a3a5c" }}>
+          <div
+            className="px-3 py-1.5 flex items-center justify-between border-b"
+            style={{ backgroundColor: "#0e1527", borderColor: "#2a3a5c" }}
+          >
+            <span className="text-[10px] uppercase tracking-widest" style={{ color: "#8a9ab5" }}>
+              Query 1
+            </span>
+            <button
+              onClick={saveCurrentQuery}
+              className="text-[10px] hover:underline"
+              style={{ color: "#4faaff" }}
+              data-testid="btn-save-notebook"
+            >
+              Save to notebook
+            </button>
+          </div>
+          <div style={{ backgroundColor: "#0b1120" }}>
+            <KqlEditor value={query} onChange={setQuery} onRun={runIt} minHeight="160px" />
+          </div>
+        </div>
+      </div>
+
+      {/* Results / Chart / Schema tabs */}
+      <div className="px-4 pt-3" style={{ backgroundColor: "#0b1120" }}>
+        <div
+          className="flex items-center gap-1 border-b"
+          style={{ borderColor: "#1f2d4a" }}
+        >
+          <AzureTab
+            active={bottomTab === "results"}
+            onClick={() => setBottomTab("results")}
+            label="Results"
+            testId="tab-results"
+          />
+          <AzureTab
+            active={false}
+            onClick={() => {}}
+            label={
+              <span className="inline-flex items-center gap-1 opacity-60">
+                <BarChart3 className="h-3 w-3" /> Chart
+              </span>
+            }
+            disabled
+            title="Chart view not available in lab"
+            testId="tab-chart"
+          />
+          <AzureTab
+            active={bottomTab === "schema"}
+            onClick={() => setBottomTab("schema")}
+            label="Schema"
+            testId="tab-schema"
+          />
+        </div>
+      </div>
+
+      {/* Tab content */}
+      <div
+        className="flex-1 overflow-hidden flex flex-col min-h-0 px-4 pb-3 pt-2"
+        style={{ backgroundColor: "#0b1120" }}
+      >
+        {bottomTab === "schema" ? (
+          <div className="flex-1 overflow-auto scrollbar-thin space-y-4 pr-1">
+            {alert.relatedTables.map((t) => (
+              <div key={t} className="space-y-2">
+                <h3 className="text-sm font-semibold mono" style={{ color: "#4faaff" }}>
+                  {t}
+                </h3>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr
+                      className="text-[10px] uppercase tracking-widest border-b"
+                      style={{ color: "#8a9ab5", borderColor: "#1f2d4a" }}
+                    >
+                      <th className="text-left py-1 pr-3 font-medium w-48">Column</th>
+                      <th className="text-left py-1 font-medium">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(tableSchemas[t] ?? []).map((c) => (
+                      <tr key={c.name} className="border-b" style={{ borderColor: "#1f2d4a55" }}>
+                        <td className="py-1 pr-3 mono" style={{ color: "#4faaff" }}>
+                          {c.name}
+                        </td>
+                        <td className="py-1" style={{ color: "#8a9ab5" }}>
+                          {c.description}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+        ) : result?.error ? (
+          <div
+            className="rounded p-3 text-xs"
+            style={{ backgroundColor: "#3a1a1a", color: "#ff8080", border: "1px solid #5a2a2a" }}
+          >
+            <div className="font-semibold mb-1">Query error</div>
+            <div className="mono">{result.error}</div>
+          </div>
+        ) : result ? (
+          <div className="flex-1 min-h-0 flex flex-col">
+            <div className="flex-1 min-h-0">
+              <ResultsTable
+                variant="azure"
+                columns={result.columns}
+                rows={result.rows}
+                onCellClick={onCellClick}
+                maxHeight={500}
+              />
+            </div>
+            <div
+              className="border-t mt-1.5 px-2 py-1 text-[10px] mono flex items-center justify-between"
+              style={{ borderColor: "#1f2d4a", color: "#8a9ab5" }}
+              data-testid="azure-status-bar"
+            >
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3 w-3" style={{ color: "#4ade80" }} />
+                Completed
+              </span>
+              <span>
+                {result.displayedRows} of {result.totalRows} rows · {result.executionMs?.toFixed(1)} ms
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="flex-1 rounded flex items-center justify-center text-xs"
+            style={{
+              border: "1px dashed #1f2d4a",
+              color: "#8a9ab5",
+            }}
+          >
+            Run a query to see results
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AzureTab({
+  active,
+  onClick,
+  label,
+  disabled = false,
+  title,
+  testId,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: React.ReactNode;
+  disabled?: boolean;
+  title?: string;
+  testId?: string;
+}) {
+  return (
+    <button
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      title={title}
+      data-testid={testId}
+      className={`px-3 py-1.5 text-xs border-b-2 -mb-px transition-colors ${
+        disabled ? "cursor-not-allowed" : "cursor-pointer"
+      }`}
+      style={{
+        color: active ? "#ffffff" : disabled ? "#5a6478" : "#8a9ab5",
+        borderColor: active ? "#0078d4" : "transparent",
+        fontWeight: active ? 600 : 400,
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
 function EdrPanel({
   alert,
   stackAvailable,
@@ -799,45 +1090,319 @@ function EdrPanel({
   stackAvailable: boolean;
   edrName: string;
 }) {
+  const [edrTab, setEdrTab] = useState<
+    "overview" | "timeline" | "alerts" | "recommendations" | "software"
+  >("overview");
+
   if (!stackAvailable) {
     return (
-      <div className="flex items-center justify-center h-full text-xs text-muted-foreground">
+      <div
+        className="flex-1 flex items-center justify-center text-xs text-slate-300"
+        style={{ backgroundColor: "#1b1a1f" }}
+      >
         <div className="text-center space-y-1">
-          <div className="text-sm text-foreground">{edrName}</div>
-          <div>Not configured for the active tool stack.</div>
+          <div className="text-sm text-white">{edrName}</div>
+          <div className="text-slate-400">Not configured for the active tool stack.</div>
         </div>
       </div>
     );
   }
-  const host =
-    (alert.entities as Record<string, string>).host ??
-    (alert.entities as Record<string, string>).srcHost ??
-    (alert.entities as Record<string, string>).fileServer ??
-    "—";
+
+  const entities = alert.entities as Record<string, string>;
+  const host = entities.host ?? entities.srcHost ?? entities.fileServer ?? "—";
+  const ip = entities.srcIp ?? "10.0.2.88";
+  const user = entities.user ?? entities.assigningUser ?? "—";
+
+  // Risk/exposure derived from the alert severity so the page reflects reality.
+  const sev = alert.alertSeverity;
+  const riskLevel =
+    sev === "Critical" || sev === "High" ? "High" : sev === "Medium" ? "Medium" : "Low";
+  const exposureLevel = sev === "Critical" ? "High" : "Medium";
+
   return (
-    <div className="flex-1 overflow-auto scrollbar-thin p-5 space-y-3">
-      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-        {edrName} — Device summary
-      </div>
-      <div className="bg-card border border-border rounded p-3 space-y-2">
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-primary" />
-          <span className="font-semibold mono text-sm">{host}</span>
+    <div
+      className="flex-1 flex flex-col overflow-hidden"
+      style={{ backgroundColor: "#1b1a1f", color: "#e6e6e6" }}
+      data-testid="edr-panel"
+    >
+      {/* Microsoft Security header */}
+      <div
+        className="px-4 py-2 flex items-center gap-3 text-white"
+        style={{
+          background: "linear-gradient(90deg, #5c2d91 0%, #4527a0 60%, #0078d4 100%)",
+        }}
+      >
+        <div className="flex items-center gap-1.5">
+          <span
+            className="inline-block w-3 h-3 grid grid-cols-2 grid-rows-2 gap-[1px]"
+            aria-hidden
+          >
+            <span style={{ backgroundColor: "#f25022" }} />
+            <span style={{ backgroundColor: "#7fba00" }} />
+            <span style={{ backgroundColor: "#00a4ef" }} />
+            <span style={{ backgroundColor: "#ffb900" }} />
+          </span>
+          <span className="text-xs font-semibold">Microsoft Defender</span>
         </div>
-        <dl className="grid grid-cols-2 gap-y-1.5 text-xs">
-          <dt className="text-muted-foreground">Alert title</dt>
-          <dd>{alert.ruleName}</dd>
-          <dt className="text-muted-foreground">Severity</dt>
-          <dd>{alert.alertSeverity}</dd>
-          <dt className="text-muted-foreground">Category</dt>
-          <dd>{alert.category}</dd>
-          <dt className="text-muted-foreground">First seen</dt>
-          <dd className="mono">{alert.displayedAt}</dd>
-        </dl>
+        <div className="text-[10px] opacity-80">security.microsoft.com</div>
+        <div className="ml-auto text-[10px] mono opacity-80">contoso.onmicrosoft.com</div>
       </div>
-      <div className="text-xs text-muted-foreground leading-relaxed">
-        Use the Sentinel tab for full timeline / process-tree queries. This pane shows the EDR's
-        device-level summary only.
+
+      {/* Breadcrumb */}
+      <div
+        className="px-4 py-2 border-b flex items-center gap-2 text-xs"
+        style={{ borderColor: "#3a3a40", backgroundColor: "#26252b" }}
+      >
+        <span className="text-slate-400">Device inventory</span>
+        <ChevronRight className="h-3 w-3 text-slate-500" />
+        <span className="text-white font-semibold mono">{host}</span>
+      </div>
+
+      <ToolIntroBanner toolId="edr" message={INTRO_TEXT.edr} />
+
+      <div className="flex-1 overflow-auto scrollbar-thin">
+        {/* Device card */}
+        <div
+          className="border-b px-5 py-4 flex gap-5"
+          style={{ borderColor: "#3a3a40", backgroundColor: "#222127" }}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="w-12 h-12 rounded flex items-center justify-center"
+              style={{ backgroundColor: "#5c2d91" }}
+            >
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <div className="text-base font-semibold text-white mono">{host}</div>
+              <div className="text-xs text-slate-400">Windows 10 22H2 · domain-joined · onboarded</div>
+            </div>
+          </div>
+          <div className="flex-1 grid grid-cols-3 gap-x-6 gap-y-1.5 text-xs">
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">IP address</div>
+              <div className="mono">{ip}</div>
+            </div>
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">Logged-on user</div>
+              <div className="mono">{user}</div>
+            </div>
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">First seen</div>
+              <div className="mono">{alert.displayedAt}</div>
+            </div>
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">Risk level</div>
+              <RiskPill level={riskLevel} />
+            </div>
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">Exposure level</div>
+              <RiskPill level={exposureLevel} />
+            </div>
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-slate-400">AV status</div>
+              <span className="inline-block text-[10px] mono uppercase tracking-wider rounded px-2 py-0.5 border bg-emerald-900/30 border-emerald-500/40 text-emerald-300">
+                Active
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* MDE tab row */}
+        <div
+          className="px-4 border-b flex items-stretch"
+          style={{ borderColor: "#3a3a40", backgroundColor: "#1b1a1f" }}
+        >
+          {([
+            ["overview", "Overview"],
+            ["alerts", "Alerts"],
+            ["timeline", "Timeline"],
+            ["recommendations", "Security recommendations"],
+            ["software", "Software inventory"],
+          ] as [typeof edrTab, string][]).map(([id, label]) => {
+            const isReal = id === "overview" || id === "alerts";
+            const isActive = edrTab === id;
+            return (
+              <button
+                key={id}
+                onClick={() => (isReal ? setEdrTab(id) : undefined)}
+                disabled={!isReal}
+                className={`text-xs px-3 py-2 border-b-2 transition-colors -mb-px ${
+                  isActive
+                    ? "text-white font-medium"
+                    : isReal
+                    ? "text-slate-300 hover:text-white"
+                    : "text-slate-500 cursor-not-allowed"
+                }`}
+                style={{ borderColor: isActive ? "#0078d4" : "transparent" }}
+                data-testid={`edr-tab-${id}`}
+                title={isReal ? undefined : "Not available in lab"}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tab content */}
+        <div className="p-5 space-y-5">
+          {edrTab === "overview" ? (
+            <>
+              {/* Security assessments pills */}
+              <div className="grid grid-cols-3 gap-3">
+                <AssessmentCard
+                  label="Risk level"
+                  value={riskLevel}
+                  tone={riskLevel === "High" ? "danger" : riskLevel === "Medium" ? "warn" : "ok"}
+                  caption="Based on active alerts"
+                />
+                <AssessmentCard
+                  label="Exposure level"
+                  value={exposureLevel}
+                  tone={exposureLevel === "High" ? "danger" : "warn"}
+                  caption="Recommendations not applied"
+                />
+                <AssessmentCard
+                  label="Antivirus"
+                  value="Active"
+                  tone="ok"
+                  caption="Real-time protection ON"
+                />
+              </div>
+
+              {/* Active alerts */}
+              <Section title="Active alerts">
+                <AlertRow alert={alert} />
+              </Section>
+
+              {/* Logged-on users */}
+              <Section title="Logged-on users (last 30 days)">
+                <div
+                  className="rounded border"
+                  style={{ borderColor: "#3a3a40", backgroundColor: "#222127" }}
+                >
+                  <div className="px-3 py-2 text-xs flex items-center gap-3">
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold text-white"
+                      style={{ backgroundColor: "#5c2d91" }}
+                    >
+                      {user
+                        .split("@")[0]
+                        .split(".")
+                        .map((s) => s[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </div>
+                    <div className="mono">{user}</div>
+                    <div className="ml-auto text-[10px] text-slate-400">Most recent</div>
+                  </div>
+                </div>
+              </Section>
+            </>
+          ) : (
+            <Section title="Alerts on this device">
+              <AlertRow alert={alert} expanded />
+            </Section>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+function RiskPill({ level }: { level: string }) {
+  const tone =
+    level === "High"
+      ? "bg-red-900/30 border-red-500/40 text-red-300"
+      : level === "Medium"
+      ? "bg-amber-900/30 border-amber-500/40 text-amber-300"
+      : "bg-emerald-900/30 border-emerald-500/40 text-emerald-300";
+  return (
+    <span
+      className={`inline-block text-[10px] mono uppercase tracking-wider rounded px-2 py-0.5 border ${tone}`}
+    >
+      {level}
+    </span>
+  );
+}
+
+function AssessmentCard({
+  label,
+  value,
+  tone,
+  caption,
+}: {
+  label: string;
+  value: string;
+  tone: "danger" | "warn" | "ok";
+  caption: string;
+}) {
+  const accent =
+    tone === "danger" ? "#ef4444" : tone === "warn" ? "#f59e0b" : "#10b981";
+  return (
+    <div
+      className="rounded border p-3"
+      style={{ borderColor: "#3a3a40", backgroundColor: "#222127", borderLeft: `4px solid ${accent}` }}
+    >
+      <div className="text-[10px] uppercase tracking-widest text-slate-400">{label}</div>
+      <div className="text-sm font-semibold mt-1" style={{ color: accent }}>
+        {value}
+      </div>
+      <div className="text-[10px] text-slate-400 mt-1">{caption}</div>
+    </div>
+  );
+}
+
+function AlertRow({ alert, expanded = false }: { alert: Alert; expanded?: boolean }) {
+  const sev = alert.alertSeverity;
+  const sevTone =
+    sev === "Critical"
+      ? "bg-red-900/40 border-red-500/50 text-red-200"
+      : sev === "High"
+      ? "bg-orange-900/40 border-orange-500/50 text-orange-200"
+      : sev === "Medium"
+      ? "bg-amber-900/30 border-amber-500/40 text-amber-200"
+      : "bg-slate-800/40 border-slate-500/40 text-slate-200";
+  return (
+    <div
+      className="rounded border"
+      style={{ borderColor: "#3a3a40", backgroundColor: "#222127" }}
+    >
+      <div className="px-3 py-2.5 flex items-start gap-3 text-xs">
+        <CircleAlert className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-white">{alert.ruleName}</span>
+            <span
+              className={`text-[10px] mono uppercase tracking-wider rounded px-1.5 py-0.5 border ${sevTone}`}
+            >
+              {sev}
+            </span>
+          </div>
+          <div className="text-[11px] text-slate-400 mt-0.5">
+            {alert.id} · {alert.product} · {alert.displayedAt}
+          </div>
+          <div className="text-[11px] text-slate-400 mt-0.5">
+            MITRE: {alert.mitre.join(", ")}
+          </div>
+          {expanded && (
+            <div className="text-xs text-slate-300 mt-2 leading-relaxed">
+              {alert.ruleDescription}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

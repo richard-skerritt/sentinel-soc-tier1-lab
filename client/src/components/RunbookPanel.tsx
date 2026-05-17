@@ -1,16 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  Book,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CheckCheck,
-  Wrench,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Book, Check, Copy, CheckCheck, Lightbulb } from "lucide-react";
 import runbooksData from "@/data/runbooks.json";
 import type { Runbook, RunbookCategory, RunbookMap } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 
 const runbooks = runbooksData as unknown as RunbookMap;
 
@@ -18,20 +9,38 @@ interface RunbookPanelProps {
   alertId: string;
   alertCategory: RunbookCategory;
   mitreId: string;
-  isOpen: boolean;
-  onToggle: () => void;
+  // Hint integration (Part 7b): runbook is where guidance lives.
+  hintCount?: number;
+  hintShown?: number;
+  hunterHints?: string[];
+  onAskHint?: () => void;
 }
 
-function progressKey(alertId: string) {
-  return `runbook_progress_${alertId}`;
-}
+const TOOL_BADGE: Record<string, string> = {
+  Sentinel: "bg-[#0078d4]/15 border-[#0078d4]/40 text-[#4faaff]",
+  Rapid7: "bg-[#e5402a]/15 border-[#e5402a]/40 text-[#ff7d63]",
+  Kibana: "bg-[#0077cc]/15 border-[#0077cc]/40 text-[#5ab2ff]",
+  ELK: "bg-[#0077cc]/15 border-[#0077cc]/40 text-[#5ab2ff]",
+  EDR: "bg-purple-500/15 border-purple-500/40 text-purple-300",
+  ServiceNow: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300",
+  Firewall: "bg-amber-500/15 border-amber-500/40 text-amber-300",
+  "Entra ID": "bg-blue-400/15 border-blue-400/40 text-blue-300",
+  "Defender for O365": "bg-cyan-500/15 border-cyan-500/40 text-cyan-300",
+};
+
+const toolClass = (tool: string): string =>
+  TOOL_BADGE[tool] ?? "bg-muted/40 border-border text-foreground/80";
+
+const progressKey = (alertId: string) => `runbook_progress_${alertId}`;
 
 export function RunbookPanel({
   alertId,
   alertCategory,
   mitreId,
-  isOpen,
-  onToggle,
+  hintCount,
+  hintShown,
+  hunterHints,
+  onAskHint,
 }: RunbookPanelProps) {
   const runbook: Runbook | undefined = runbooks[alertCategory];
 
@@ -66,103 +75,129 @@ export function RunbookPanel({
     } catch {}
   };
 
-  const completedCount = useMemo(
-    () => (runbook ? runbook.steps.filter((s) => completed.has(s.id)).length : 0),
-    [runbook, completed],
-  );
-
-  // Always show a thin toggle on the right edge — even when content area is missing
   if (!runbook) {
     return (
-      <RunbookEdgeToggle isOpen={isOpen} onToggle={onToggle} disabled>
-        <div className="p-4 text-xs text-muted-foreground">
-          No runbook is defined for category <code className="mono">{alertCategory}</code>. Update{" "}
-          <code className="mono">runbooks.json</code> to add one.
-        </div>
-      </RunbookEdgeToggle>
+      <div className="h-full flex flex-col items-center justify-center text-sm text-muted-foreground p-6 text-center bg-card/30">
+        No runbook is defined for category <code className="mono text-primary">{alertCategory}</code>.
+        <br />
+        Add one to <code className="mono">runbooks.json</code>.
+      </div>
     );
   }
 
   const total = runbook.steps.length;
+  const completedCount = runbook.steps.filter((s) => completed.has(s.id)).length;
   const pct = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+  const currentStepIdx = Math.min(completedCount + 1, total);
+
+  const showHint = hintShown !== undefined && hintShown >= 0 && hunterHints && hunterHints[hintShown];
 
   return (
-    <RunbookEdgeToggle isOpen={isOpen} onToggle={onToggle}>
-      <div className="flex flex-col h-full">
-        <div className="border-b border-border p-3 space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Book className="h-4 w-4 text-primary" />
-              <span className="text-xs font-semibold uppercase tracking-wider">Runbook</span>
-            </div>
-            <span className="text-[10px] mono text-muted-foreground">
-              {mitreId} · {alertCategory}
+    <div className="h-full flex flex-col overflow-hidden bg-card/30">
+      <div className="border-b border-border px-4 pt-3 pb-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Book className="h-4 w-4 text-primary" />
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Runbook
             </span>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold leading-tight" data-testid="runbook-title">
-              {runbook.title}
-            </h3>
-            <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-              <Wrench className="h-3 w-3" />
-              <span>{runbook.tool}</span>
-            </div>
+          <div className="flex items-center gap-1">
+            <span
+              className={`text-[10px] mono uppercase tracking-wider rounded border px-1.5 py-0.5 ${toolClass(runbook.tool)}`}
+            >
+              {runbook.tool}
+            </span>
+            <span className="text-[10px] mono rounded border border-primary/40 bg-primary/10 text-primary px-1.5 py-0.5">
+              {mitreId}
+            </span>
+            <span className="text-[10px] mono rounded border border-border bg-muted/40 text-foreground/80 px-1.5 py-0.5">
+              {alertCategory}
+            </span>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-              <span>Progress</span>
-              <span data-testid="runbook-progress">
+        </div>
+        <h2 className="text-base font-semibold leading-tight" data-testid="runbook-title">
+          {runbook.title}
+        </h2>
+      </div>
+
+      <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border px-4 py-2 space-y-2">
+          <div>
+            <div className="flex justify-between items-center text-[11px] mb-1.5">
+              <span className="text-muted-foreground">
+                Step {currentStepIdx} of {total}
+              </span>
+              <span className="mono text-foreground/80" data-testid="runbook-progress">
                 {completedCount} / {total}
               </span>
             </div>
             <div className="h-1.5 bg-muted/40 rounded overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all"
-                style={{ width: `${pct}%` }}
-              />
+              <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
             </div>
           </div>
+          {onAskHint && (
+            <div className="space-y-1.5">
+              <button
+                onClick={onAskHint}
+                className="w-full flex items-center gap-2 px-2 py-1.5 rounded border border-border hover:border-primary/40 hover:bg-muted/30 transition-colors text-xs"
+                data-testid="btn-hint-runbook"
+                title="Ask Morgan for a hint"
+              >
+                <Lightbulb className="h-3.5 w-3.5 text-yellow-400" />
+                <span>Ask Morgan for a hint</span>
+                <span className="ml-auto text-[10px] text-muted-foreground">
+                  {hintCount ?? 0} used
+                </span>
+              </button>
+              {showHint && (
+                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-2.5 text-xs text-yellow-100/90 leading-relaxed">
+                  {hunterHints![hintShown!]}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-3">
+        <div className="p-4 space-y-4">
           {runbook.steps.map((step) => {
             const isDone = completed.has(step.id);
             return (
               <div
                 key={step.id}
-                className={`border rounded-md p-3 space-y-2 ${
-                  isDone ? "border-primary/40 bg-primary/5" : "border-border bg-card"
-                }`}
+                className={`border rounded-md p-3 space-y-2.5 ${isDone ? "border-primary/40 bg-primary/5" : "border-border bg-card"}`}
                 data-testid={`runbook-step-${step.id}`}
               >
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2.5">
                   <button
                     onClick={() => toggleStep(step.id)}
-                    className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-[10px] mono ${
+                    className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center text-sm mono font-medium ${
                       isDone
                         ? "bg-primary border-primary text-primary-foreground"
-                        : "border-border text-muted-foreground hover:border-primary"
+                        : "border-border text-muted-foreground hover:border-primary hover:text-foreground"
                     }`}
                     title={isDone ? "Mark step incomplete" : "Mark step complete"}
                     data-testid={`runbook-step-${step.id}-toggle`}
                   >
-                    {isDone ? <Check className="h-3 w-3" /> : step.id}
+                    {isDone ? <Check className="h-3.5 w-3.5" /> : step.id}
                   </button>
-                  <div className="flex-1 space-y-1.5">
+                  <div className="flex-1 min-w-0 space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-xs font-medium leading-snug">{step.action}</p>
-                      <span className="shrink-0 text-[9px] mono uppercase tracking-wider bg-muted/40 border border-border rounded px-1.5 py-0.5 text-muted-foreground">
+                      <p className="text-sm font-medium leading-snug">{step.action}</p>
+                      <span
+                        className={`shrink-0 text-[9px] mono uppercase tracking-wider rounded border px-1.5 py-0.5 ${toolClass(step.tool)}`}
+                      >
                         {step.tool}
                       </span>
                     </div>
                     {step.kql && (
-                      <div className="relative">
-                        <pre className="mono text-[10px] bg-background border border-border rounded p-2 overflow-x-auto whitespace-pre">
+                      <div className="relative group">
+                        <pre className="mono text-xs bg-background border border-border rounded p-2.5 overflow-x-auto whitespace-pre leading-relaxed min-h-[3.5rem] text-foreground/90">
                           {step.kql}
                         </pre>
                         <button
                           onClick={() => copyKql(step.id, step.kql)}
-                          className="absolute top-1 right-1 bg-muted/60 hover:bg-muted border border-border rounded px-1.5 py-0.5 text-[9px] flex items-center gap-1"
+                          className="absolute top-1.5 right-1.5 bg-muted/80 hover:bg-muted border border-border rounded px-1.5 py-0.5 text-[10px] flex items-center gap-1"
                           data-testid={`runbook-step-${step.id}-copy`}
                         >
                           {copiedId === step.id ? (
@@ -177,16 +212,16 @@ export function RunbookPanel({
                         </button>
                       </div>
                     )}
-                    <p className="text-[11px] text-muted-foreground leading-snug">
-                      <span className="text-foreground/80 font-medium">Expected: </span>
+                    <p className="text-sm text-muted-foreground leading-snug">
+                      <span className="text-foreground/80 font-semibold">Expected: </span>
                       {step.expectedResult}
                     </p>
-                    <div className="grid grid-cols-1 gap-1.5 pt-1">
-                      <div className="text-[11px] leading-snug rounded border border-green-700/30 bg-green-900/10 text-green-300/90 px-2 py-1">
+                    <div className="space-y-1.5">
+                      <div className="text-sm leading-snug rounded border-l-4 border-l-green-500 border-y border-r border-green-900/40 bg-green-900/10 text-green-200/90 p-3">
                         <span className="font-semibold">Yes → </span>
                         {step.decisionYes}
                       </div>
-                      <div className="text-[11px] leading-snug rounded border border-amber-700/30 bg-amber-900/10 text-amber-200/90 px-2 py-1">
+                      <div className="text-sm leading-snug rounded border-l-4 border-l-amber-500 border-y border-r border-amber-900/40 bg-amber-900/10 text-amber-200/90 p-3">
                         <span className="font-semibold">No → </span>
                         {step.decisionNo}
                       </div>
@@ -197,44 +232,6 @@ export function RunbookPanel({
             );
           })}
         </div>
-      </div>
-    </RunbookEdgeToggle>
-  );
-}
-
-function RunbookEdgeToggle({
-  isOpen,
-  onToggle,
-  disabled = false,
-  children,
-}: {
-  isOpen: boolean;
-  onToggle: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative flex h-full">
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={onToggle}
-        disabled={disabled}
-        className="h-full rounded-none border-l border-border border-y-0 px-1.5 flex flex-col items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary"
-        data-testid="runbook-toggle"
-        title={isOpen ? "Hide runbook" : "Show runbook"}
-      >
-        {isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        <Book className="h-4 w-4" />
-        <span className="vertical-rl">{isOpen ? "Hide" : "Runbook"}</span>
-      </Button>
-      <div
-        className={`transition-all duration-200 overflow-hidden border-l border-border bg-card/30 ${
-          isOpen ? "w-[380px] min-w-[320px]" : "w-0"
-        }`}
-      >
-        {isOpen ? children : null}
       </div>
     </div>
   );
