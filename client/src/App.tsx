@@ -12,12 +12,14 @@ import AlertDetail from "@/pages/AlertDetail";
 import Mentor from "@/pages/Mentor";
 import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
+import Glossary from "@/pages/Glossary";
 
 function AppRouter() {
   return (
     <Switch>
       <Route path="/" component={Briefing} />
       <Route path="/learn" component={Learn} />
+      <Route path="/glossary" component={Glossary} />
       <Route path="/queue" component={Queue} />
       <Route path="/alert/:id" component={AlertDetail} />
       <Route path="/mentor" component={Mentor} />

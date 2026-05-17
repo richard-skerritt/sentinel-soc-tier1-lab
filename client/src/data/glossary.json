@@ -1,0 +1,226 @@
+{
+  "SOC": {
+    "term": "SOC",
+    "full": "Security Operations Centre",
+    "definition": "The team (and the room they sit in) responsible for watching a company's IT systems 24/7 for signs of attack or breach.",
+    "why_it_matters": "You are training to work in one. Tier 1 analysts are the first people who see an alert — your job is to decide if it's real and how serious it is.",
+    "analogy": "Think of it as a 999 dispatch centre, but for cyber threats instead of emergencies.",
+    "tags": ["Concepts"]
+  },
+  "SIEM": {
+    "term": "SIEM",
+    "full": "Security Information and Event Management",
+    "definition": "A system that collects logs from hundreds of different sources across a company's network and puts them in one searchable place.",
+    "why_it_matters": "Without a SIEM you'd have to log into every server individually. The SIEM pulls everything in so you can search across the whole environment from one screen.",
+    "analogy": "Think of it as the central CCTV control room — all the cameras feed into one place instead of you running between buildings.",
+    "tags": ["Concepts"]
+  },
+  "KQL": {
+    "term": "KQL",
+    "full": "Kusto Query Language",
+    "definition": "The language you type into Microsoft Sentinel to ask questions about the logs. It reads like a pipeline: start with a table, add filters, add transforms.",
+    "why_it_matters": "KQL is how you actually investigate. Every clue you find in this lab comes from running a KQL query against the log data.",
+    "analogy": "Think of it as a very precise search engine. Instead of typing keywords into Google, you write structured questions like 'show me all failed logins from this IP in the last hour'.",
+    "tags": ["Tools"]
+  },
+  "EDR": {
+    "term": "EDR",
+    "full": "Endpoint Detection and Response",
+    "definition": "Software installed on laptops and servers that records everything that happens on the device — every process that runs, every network connection made, every file written — and alerts on suspicious behaviour.",
+    "why_it_matters": "The EDR is your eyes on the endpoint. When malware runs on a laptop, the EDR sees it and tells the SIEM.",
+    "analogy": "Think of it as a security guard who never blinks, installed on every device.",
+    "tags": ["Tools"]
+  },
+  "MITRE": {
+    "term": "MITRE ATT&CK",
+    "full": "MITRE Adversarial Tactics, Techniques and Common Knowledge",
+    "definition": "A public database of how real attackers behave — organised by tactic (what they're trying to achieve) and technique (how they do it). Every technique has a code like T1110.003.",
+    "why_it_matters": "When you see a MITRE technique ID on an alert it tells you exactly what the attacker was attempting. T1110.003 is Password Spraying. T1078 is Valid Accounts. Knowing the technique tells you what to look for.",
+    "analogy": "Think of it as a criminal database of known attack methods, like a field guide for SOC analysts.",
+    "tags": ["Concepts"]
+  },
+  "TTP": {
+    "term": "TTP",
+    "full": "Tactics, Techniques and Procedures",
+    "definition": "The specific ways a threat actor carries out an attack. Tactics are the high-level goal (e.g. gain access). Techniques are how they do it (e.g. password spray). Procedures are the specific tools and commands they use.",
+    "why_it_matters": "Knowing an attacker's TTPs lets you predict what they'll do next. If you see credential access TTPs, lateral movement is probably coming next.",
+    "analogy": "Think of it as a thief's modus operandi — their signature way of operating.",
+    "tags": ["Concepts"]
+  },
+  "IOC": {
+    "term": "IOC",
+    "full": "Indicator of Compromise",
+    "definition": "A specific piece of evidence that a system has been compromised or attacked — an IP address, a file hash, a domain name, a registry key.",
+    "why_it_matters": "IOCs are the evidence you collect during an investigation. 'The IP 45.83.193.150 made 1,840 login attempts' — that IP is an IOC.",
+    "analogy": "Think of it as fingerprints at a crime scene.",
+    "tags": ["Concepts"]
+  },
+  "True Positive": {
+    "term": "True Positive",
+    "full": "True Positive (TP)",
+    "definition": "An alert that fired because a real attack actually happened. The alert is correct.",
+    "why_it_matters": "This is the most critical triage verdict. A True Positive means someone attacked the company and you need to respond — contain the threat, escalate to Tier 2, and write up the incident.",
+    "analogy": "The fire alarm went off because there is actually a fire.",
+    "tags": ["Verdicts"]
+  },
+  "False Positive": {
+    "term": "False Positive",
+    "full": "False Positive (FP)",
+    "definition": "An alert that fired but there was no real attack. The system was fooled by normal activity that looked suspicious.",
+    "why_it_matters": "Too many False Positives exhaust analysts. Part of your job is tuning rules so they fire on real threats, not noise.",
+    "analogy": "The fire alarm went off because someone burnt toast.",
+    "tags": ["Verdicts"]
+  },
+  "Benign Positive": {
+    "term": "Benign Positive",
+    "full": "Benign Positive (BP)",
+    "definition": "An alert that fired on real activity, but the activity was authorised and expected — a penetration test, a scheduled scanner, or a change management window.",
+    "why_it_matters": "Closing a BP incorrectly as a False Positive can mask real problems. Always document WHY the activity was authorised.",
+    "analogy": "The fire alarm went off because the fire brigade was doing a planned drill.",
+    "tags": ["Verdicts"]
+  },
+  "Tier 1": {
+    "term": "Tier 1",
+    "full": "Tier 1 SOC Analyst",
+    "definition": "The first level of SOC analyst. Tier 1s monitor the alert queue, triage incoming alerts, perform initial investigation, and escalate confirmed threats to Tier 2.",
+    "why_it_matters": "This is the role you are training for. Tier 1 is not entry-level in terms of importance — a missed True Positive at Tier 1 means a breach goes undetected.",
+    "analogy": "Think of it as the A&E triage nurse — not the surgeon, but the person who decides what's urgent and what can wait.",
+    "tags": ["Concepts"]
+  },
+  "Tier 2": {
+    "term": "Tier 2",
+    "full": "Tier 2 SOC Analyst / Incident Responder",
+    "definition": "The second level of SOC analyst. Tier 2s handle confirmed incidents, do deeper forensic investigation, and coordinate response across the business.",
+    "why_it_matters": "When you confirm a True Positive, you escalate to Tier 2 with a full incident report. They take over the response.",
+    "analogy": "The surgeon who takes over after the triage nurse confirms it's serious.",
+    "tags": ["Concepts"]
+  },
+  "Sentinel": {
+    "term": "Microsoft Sentinel",
+    "full": "Microsoft Sentinel (cloud-native SIEM)",
+    "definition": "Microsoft's cloud SIEM. It ingests logs from Azure, Office 365, Windows devices, and third-party tools. You query it with KQL.",
+    "why_it_matters": "This is the primary investigation tool in this lab. The KQL editor tab is your Sentinel workspace.",
+    "analogy": null,
+    "tags": ["Tools"]
+  },
+  "Rapid7": {
+    "term": "Rapid7 InsightIDR",
+    "full": "Rapid7 InsightIDR (XDR / SIEM)",
+    "definition": "A competitor SIEM/XDR product to Microsoft Sentinel. Uses LEQL (Log Entry Query Language) instead of KQL. Strong on user behaviour analytics and asset risk scoring.",
+    "why_it_matters": "Many SOCs use multiple tools. Cross-referencing the same event in Rapid7 confirms your findings aren't a data ingestion gap in Sentinel.",
+    "analogy": null,
+    "tags": ["Tools"]
+  },
+  "ELK": {
+    "term": "ELK Stack",
+    "full": "Elasticsearch, Logstash, Kibana",
+    "definition": "An open-source log platform. Elasticsearch stores the data, Logstash ingests it, Kibana is the UI (the tab you see in this lab). Uses ECS field names like source.ip instead of Microsoft's IPAddress.",
+    "why_it_matters": "ELK is extremely common in enterprise SOCs. The same attack looks different in ELK vs Sentinel because of different field naming conventions — learning both builds real versatility.",
+    "analogy": null,
+    "tags": ["Tools"]
+  },
+  "LEQL": {
+    "term": "LEQL",
+    "full": "Log Entry Query Language (Rapid7)",
+    "definition": "Rapid7's query language. Much simpler than KQL. Basic syntax: where(field_name, value). Group results: groupby(field_name).",
+    "why_it_matters": "You use LEQL in the Rapid7 InsightIDR tab. It's worth learning alongside KQL because many job postings ask for both.",
+    "analogy": null,
+    "tags": ["Tools"]
+  },
+  "ECS": {
+    "term": "ECS",
+    "full": "Elastic Common Schema",
+    "definition": "The field naming convention used by ELK. Instead of Microsoft's IPAddress, ECS uses source.ip. Instead of UserPrincipalName, ECS uses user.name.",
+    "why_it_matters": "Knowing both naming conventions (Microsoft and ECS) means you can investigate in any SIEM without getting confused by field names.",
+    "analogy": "Same thing, different language. Like saying 'car' vs 'automobile'.",
+    "tags": ["Tools"]
+  },
+  "MFA": {
+    "term": "MFA",
+    "full": "Multi-Factor Authentication",
+    "definition": "Requiring a second proof of identity beyond a password — a phone push notification, an authenticator app code, or a hardware key.",
+    "why_it_matters": "MFA is the single most effective control against password spraying and credential theft. An account with MFA requires the attacker to also compromise the second factor — much harder.",
+    "analogy": "A bank card requires both the card (something you have) and the PIN (something you know). MFA applies the same principle to logins.",
+    "tags": ["Concepts"]
+  },
+  "Azure AD": {
+    "term": "Azure AD",
+    "full": "Azure Active Directory (now called Microsoft Entra ID)",
+    "definition": "Microsoft's cloud identity system. Every Office 365 and Azure login goes through Azure AD. It's the central place user accounts and permissions are managed.",
+    "why_it_matters": "Most authentication alerts in this lab involve Azure AD logs (SigninLogs). Understanding that Azure AD is 'the login system' helps you understand why SigninLogs is the first table you query.",
+    "analogy": "The company's digital HR department — it knows who everyone is and what they're allowed to do.",
+    "tags": ["Tools"]
+  },
+  "IP": {
+    "term": "IP address",
+    "full": "Internet Protocol address",
+    "definition": "A numerical label assigned to every device on a network. Like a postal address for computers. Example: 192.168.1.1 (internal/private) or 45.83.193.150 (external/public).",
+    "why_it_matters": "IP addresses are one of the primary IOCs you'll pivot on. Seeing 1,840 login failures from one IP address is the signature of a password spray attack.",
+    "analogy": "Your home address, but for computers.",
+    "tags": ["Concepts"]
+  },
+  "Password Spray": {
+    "term": "Password Spray",
+    "full": "Password Spraying (T1110.003)",
+    "definition": "An attack where one or a few common passwords are tried against a large number of user accounts. Rather than hammering one account (which gets locked out), the attacker tries 'Password1!' against 500 accounts — slow enough to avoid lockout policies.",
+    "why_it_matters": "This is one of the most common initial access techniques. A successful spray gives the attacker a valid username and password to log in with.",
+    "analogy": "Instead of trying to pick one lock over and over (and triggering the alarm), a burglar tries the same master key on every door in the building.",
+    "tags": ["Attack Types"]
+  },
+  "Lateral Movement": {
+    "term": "Lateral Movement",
+    "full": "Lateral Movement (MITRE TA0008)",
+    "definition": "After gaining initial access, an attacker moves from the compromised account or machine to other systems in the network — spreading their foothold.",
+    "why_it_matters": "Most breaches don't end at the point of initial access. The attacker moves laterally to reach higher-value targets like domain controllers or file servers.",
+    "analogy": "A burglar who got in through the kitchen window and is now trying every interior door to find the safe.",
+    "tags": ["Attack Types"]
+  },
+  "C2": {
+    "term": "C2",
+    "full": "Command and Control",
+    "definition": "A server the attacker controls that malware 'phones home' to — receiving instructions and sending back stolen data.",
+    "why_it_matters": "If you see a device making regular connections to an unknown external IP on unusual ports, that's a potential C2 beacon. Cutting that connection is a key containment step.",
+    "analogy": "The puppet master pulling strings remotely.",
+    "tags": ["Attack Types"]
+  },
+  "UPN": {
+    "term": "UPN",
+    "full": "User Principal Name",
+    "definition": "A user's full login name in Azure AD — typically their email address format, e.g. john.smith@company.com. This is what you see in the UserPrincipalName field in SigninLogs.",
+    "why_it_matters": "When you find a compromised account, you identify it by its UPN. You'll include the UPN in your incident report and pass it to the identity team for password reset.",
+    "analogy": "A username that looks like an email address.",
+    "tags": ["Concepts"]
+  },
+  "ResultType": {
+    "term": "ResultType",
+    "full": "Azure AD Sign-in Result Code",
+    "definition": "A number in SigninLogs that tells you whether a login succeeded or failed. '0' means success. Any other number is a failure code (e.g. 50053 = account locked, 50126 = wrong password).",
+    "why_it_matters": "Filtering ResultType == '0' finds successful logins. Filtering ResultType != '0' finds failures. This distinction is the foundation of almost every authentication investigation.",
+    "analogy": "Like a door access log: 0 = door opened, anything else = door denied.",
+    "tags": ["Concepts"]
+  },
+  "SHA256": {
+    "term": "SHA256",
+    "full": "Secure Hash Algorithm 256",
+    "definition": "A fingerprint for a file. Every file has a unique SHA256 hash — even changing one byte changes the hash completely. Malware can be identified by its hash even if the filename is changed.",
+    "why_it_matters": "When you find a suspicious file on a device, you can check its SHA256 hash against threat intelligence to see if it's known malware.",
+    "analogy": "A fingerprint that identifies a file — unique, unforgeable, doesn't depend on the filename.",
+    "tags": ["Concepts"]
+  },
+  "TOR": {
+    "term": "TOR",
+    "full": "The Onion Router",
+    "definition": "An anonymising network that routes internet traffic through multiple servers to hide the user's real IP address. Commonly used by attackers to conceal their origin.",
+    "why_it_matters": "An IP flagged as a TOR exit node in threat intelligence means you can't trace the attacker's real location — but it does confirm the activity is deliberate and covert.",
+    "analogy": "Using a chain of anonymous middlemen to deliver a package so the recipient can't trace it back to you.",
+    "tags": ["Attack Types"]
+  },
+  "CVSS": {
+    "term": "CVSS",
+    "full": "Common Vulnerability Scoring System",
+    "definition": "A 0-10 score that rates how severe a software vulnerability is. 9.0+ = Critical, 7.0-8.9 = High, 4.0-6.9 = Medium, 0.1-3.9 = Low.",
+    "why_it_matters": "When you see open vulnerabilities on a device (in the Rapid7 Assets tab), CVSS tells you which ones an attacker would most likely exploit.",
+    "analogy": "Like a safety rating for a building's structural flaws — higher score = more likely to collapse.",
+    "tags": ["Concepts"]
+  }
+}

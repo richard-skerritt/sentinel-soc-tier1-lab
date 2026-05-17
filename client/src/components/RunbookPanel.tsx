@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Book, BookOpen, Check, Copy, CheckCheck, Lightbulb } from "lucide-react";
 import runbooksData from "@/data/runbooks.json";
 import type { Runbook, RunbookCategory, RunbookMap } from "@/lib/types";
+import { JargonText } from "@/components/JargonTip";
 
 const runbooks = runbooksData as unknown as RunbookMap;
 
@@ -195,7 +196,7 @@ export function RunbookPanel({
                   </button>
                   <div className="flex-1 min-w-0 space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-sm font-medium leading-snug">{step.action}</p>
+                      <JargonText asBlock text={step.action} className="text-sm font-medium leading-snug" />
                       <span
                         className={`shrink-0 text-[9px] mono uppercase tracking-wider rounded border px-1.5 py-0.5 ${toolClass(step.tool)}`}
                       >
@@ -229,16 +230,16 @@ export function RunbookPanel({
                     )}
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       <span className="text-foreground/80 font-semibold">Expected: </span>
-                      {step.expectedResult}
+                      <JargonText text={step.expectedResult} />
                     </p>
                     <div className="space-y-1.5">
                       <div className="text-sm leading-relaxed rounded border-l-4 border-l-green-500 border-y border-r border-green-900/40 bg-green-900/10 text-green-200/90 p-3">
                         <span className="font-semibold">Yes → </span>
-                        {step.decisionYes}
+                        <JargonText text={step.decisionYes} inverse />
                       </div>
                       <div className="text-sm leading-relaxed rounded border-l-4 border-l-amber-500 border-y border-r border-amber-900/40 bg-amber-900/10 text-amber-200/90 p-3">
                         <span className="font-semibold">No → </span>
-                        {step.decisionNo}
+                        <JargonText text={step.decisionNo} inverse />
                       </div>
                     </div>
                     {onGuideStep && (

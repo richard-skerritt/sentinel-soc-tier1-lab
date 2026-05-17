@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shield, Inbox, GraduationCap, MessageCircle, BarChart3, Settings, Home, Volume2, VolumeX } from "lucide-react";
+import { Shield, Inbox, GraduationCap, MessageCircle, BarChart3, Settings, Home, Volume2, VolumeX, BookMarked } from "lucide-react";
 import { ReactNode } from "react";
 import { useMuted, useVoiceConfigured, stopVoice } from "@/lib/voice";
 
@@ -7,6 +7,7 @@ const nav = [
   { to: "/", label: "Briefing", icon: Home },
   { to: "/queue", label: "Queue", icon: Inbox },
   { to: "/learn", label: "Learn", icon: GraduationCap },
+  { to: "/glossary", label: "Glossary", icon: BookMarked },
   { to: "/mentor", label: "Mentor", icon: MessageCircle },
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },

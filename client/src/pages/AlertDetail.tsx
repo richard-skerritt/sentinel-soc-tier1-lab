@@ -23,6 +23,10 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { StepGuideDialog } from "@/components/StepGuideDialog";
 import { CategoryIntroDialog } from "@/components/CategoryIntroDialog";
 import { WelcomeDialog } from "@/components/WelcomeDialog";
+import { JargonTip, JargonText } from "@/components/JargonTip";
+import { QueryExplainer } from "@/components/QueryExplainer";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { HelpCircle } from "lucide-react";
 import type { RunbookCategory } from "@/lib/types";
 import {
   exportIncident,
@@ -181,6 +185,9 @@ export default function AlertDetail() {
 
   // Ref on the triage / notebook bottom panel — used to auto-scroll when goals complete.
   const triageRef = useRef<HTMLDivElement | null>(null);
+
+  // Query Explainer side sheet.
+  const [explainerOpen, setExplainerOpen] = useState(false);
 
   // First-alert welcome — show once per user, before any tutorial dialogs.
   const [welcomeOpen, setWelcomeOpen] = useState(false);
@@ -416,7 +423,7 @@ export default function AlertDetail() {
             <div className="text-xs text-muted-foreground mt-1">{alert.product}</div>
           </div>
 
-          <p className="text-sm leading-relaxed">{alert.ruleDescription}</p>
+          <JargonText asBlock text={alert.ruleDescription} className="text-sm leading-relaxed" />
 
           <div className="space-y-1">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Entities</div>
@@ -571,6 +578,8 @@ export default function AlertDetail() {
               onCellClick={onCellClick}
               bottomTab={bottomTab}
               setBottomTab={setBottomTab}
+              onExplainQuery={() => setExplainerOpen(true)}
+              guidedMode={guidedMode}
             />
           )}
         </section>
@@ -701,7 +710,9 @@ export default function AlertDetail() {
                         onChange={() => setVerdict(v)}
                         data-testid={`verdict-${v.replace(/\s/g, "-")}`}
                       />
-                      <span>{v}</span>
+                      <span>
+                        <JargonTip slug={v} term={v} />
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -838,6 +849,12 @@ export default function AlertDetail() {
         onJustExplore={() => dismissWelcome(false)}
       />
 
+      <QueryExplainer
+        query={query}
+        open={explainerOpen}
+        onOpenChange={setExplainerOpen}
+      />
+
       <CategoryIntroDialog
         open={introOpen && !welcomeOpen}
         category={alert.category}
@@ -855,6 +872,7 @@ export default function AlertDetail() {
         open={activeGuideStep != null}
         category={activeGuideStep?.category ?? null}
         stepId={activeGuideStep?.stepId ?? null}
+        alertId={alert.id}
         onClose={closeGuideStep}
         onNavigate={(newStepId) => {
           if (activeGuideStep) {
@@ -979,7 +997,7 @@ function InvestigationGoals({
                 <span
                   className={`leading-snug ${isDone ? "line-through text-muted-foreground" : ""}`}
                 >
-                  {g}
+                  <JargonText text={g} />
                 </span>
               </label>
             </li>
@@ -1019,6 +1037,8 @@ function SentinelPanel({
   onCellClick,
   bottomTab,
   setBottomTab,
+  onExplainQuery,
+  guidedMode,
 }: {
   alert: Alert;
   query: string;
@@ -1030,6 +1050,8 @@ function SentinelPanel({
   onCellClick: (col: string, value: any, row?: any) => void;
   bottomTab: "results" | "schema" | "chart";
   setBottomTab: (t: "results" | "schema" | "chart") => void;
+  onExplainQuery: () => void;
+  guidedMode: boolean;
 }) {
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden" style={{ backgroundColor: "#0b1120" }}>
@@ -1106,20 +1128,23 @@ function SentinelPanel({
       <div className="px-4 pt-3" style={{ backgroundColor: "#0b1120" }}>
         <div className="rounded border" style={{ borderColor: "#2a3a5c" }}>
           <div
-            className="px-3 py-1.5 flex items-center justify-between border-b"
+            className="px-3 py-1.5 flex items-center justify-between border-b gap-3"
             style={{ backgroundColor: "#0e1527", borderColor: "#2a3a5c" }}
           >
             <span className="text-[10px] uppercase tracking-widest" style={{ color: "#8a9ab5" }}>
               Query 1
             </span>
-            <button
-              onClick={saveCurrentQuery}
-              className="text-[10px] hover:underline"
-              style={{ color: "#4faaff" }}
-              data-testid="btn-save-notebook"
-            >
-              Save to notebook
-            </button>
+            <div className="flex items-center gap-3">
+              {guidedMode && <KqlQuickRefButton />}
+              <button
+                onClick={saveCurrentQuery}
+                className="text-[10px] hover:underline"
+                style={{ color: "#4faaff" }}
+                data-testid="btn-save-notebook"
+              >
+                Save to notebook
+              </button>
+            </div>
           </div>
           <div style={{ backgroundColor: "#0b1120" }}>
             <KqlEditor value={query} onChange={setQuery} onRun={runIt} minHeight="160px" />
@@ -1218,7 +1243,7 @@ function SentinelPanel({
               />
             </div>
             <div
-              className="border-t mt-1.5 px-2 py-1 text-[10px] mono flex items-center justify-between"
+              className="border-t mt-1.5 px-2 py-1 text-[10px] mono flex items-center justify-between gap-3"
               style={{ borderColor: "#1f2d4a", color: "#8a9ab5" }}
               data-testid="azure-status-bar"
             >
@@ -1226,6 +1251,15 @@ function SentinelPanel({
                 <CheckCircle2 className="h-3 w-3" style={{ color: "#4ade80" }} />
                 Completed
               </span>
+              <button
+                onClick={onExplainQuery}
+                className="hover:underline normal-case"
+                style={{ color: "#4faaff" }}
+                data-testid="btn-explain-query"
+                title="Open a side panel that breaks the KQL down line by line"
+              >
+                Explain this query →
+              </button>
               <span>
                 {result.displayedRows} of {result.totalRows} rows · {result.executionMs?.toFixed(1)} ms
               </span>
@@ -1244,6 +1278,82 @@ function SentinelPanel({
         )}
       </div>
     </div>
+  );
+}
+
+function KqlQuickRefButton() {
+  const operators: { op: string; what: string }[] = [
+    { op: "where", what: "Filter rows by condition" },
+    { op: "project", what: "Choose which columns to show" },
+    { op: "summarize", what: "Group + calculate (like pivot)" },
+    { op: "count()", what: "Count rows" },
+    { op: "dcount()", what: "Count unique values" },
+    { op: "sort by", what: "Order results" },
+    { op: "take N", what: "Return first N rows" },
+    { op: "extend", what: "Add a calculated column" },
+    { op: "ago(1h)", what: "\"1 hour ago\" — for time filters" },
+    { op: "join", what: "Combine two tables" },
+  ];
+  const tips: string[] = [
+    "== is exact match,  != is \"not equal\"",
+    "contains checks if text appears anywhere",
+    "has checks for whole-word match",
+    "Always pipe (|) before each operator",
+  ];
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          className="inline-flex items-center justify-center w-5 h-5 rounded-full border hover:opacity-90"
+          style={{ borderColor: "#2a3a5c", color: "#4faaff", backgroundColor: "#0b1220" }}
+          title="KQL Quick Reference"
+          data-testid="btn-kql-quickref"
+        >
+          <HelpCircle className="h-3 w-3" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="end"
+        className="w-80 p-0 overflow-hidden"
+        style={{ backgroundColor: "#0b1220", borderColor: "#2a3a5c" }}
+      >
+        <div
+          className="px-3 py-2 border-b flex items-center justify-between"
+          style={{ borderColor: "#2a3a5c" }}
+        >
+          <div className="text-xs font-semibold text-white">KQL Quick Reference</div>
+          <span className="text-[10px] mono" style={{ color: "#8a9ab5" }}>
+            beginner cheat-sheet
+          </span>
+        </div>
+        <div className="p-3 space-y-1.5 text-[12px]">
+          {operators.map((o) => (
+            <div key={o.op} className="grid grid-cols-[5.5rem_1fr] gap-2 items-baseline">
+              <code className="mono text-[11px]" style={{ color: "#4faaff" }}>
+                {o.op}
+              </code>
+              <span className="text-slate-100">{o.what}</span>
+            </div>
+          ))}
+        </div>
+        <div
+          className="px-3 py-2 border-t space-y-1 text-[11px]"
+          style={{ borderColor: "#2a3a5c", color: "#cbd5e1", backgroundColor: "#0e1527" }}
+        >
+          <div className="text-[10px] uppercase tracking-widest" style={{ color: "#8a9ab5" }}>
+            Tips
+          </div>
+          <ul className="space-y-0.5">
+            {tips.map((t) => (
+              <li key={t} className="leading-relaxed">
+                • {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 

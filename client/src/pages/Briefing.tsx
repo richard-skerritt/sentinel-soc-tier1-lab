@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import mentor from "@/data/mentor.json";
 import alerts from "@/data/alerts.json";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { OrientationFlow } from "@/components/OrientationFlow";
 import {
   Activity,
   AlertTriangle,
@@ -29,6 +31,17 @@ export default function Briefing() {
     return acc;
   }, {} as Record<string, number>);
 
+  // Orientation — show on first visit only.
+  const [showOrientation, setShowOrientation] = useState(false);
+  useEffect(() => {
+    try {
+      const done = localStorage.getItem("nightshift_completed_orientation") === "true";
+      setShowOrientation(!done);
+    } catch {
+      setShowOrientation(false);
+    }
+  }, []);
+
   return (
     <Layout>
       <div className="max-w-5xl mx-auto p-8 space-y-8">
@@ -38,6 +51,10 @@ export default function Briefing() {
           </div>
           <h1 className="text-xl font-semibold tracking-tight">Welcome to the desk</h1>
         </header>
+
+        {showOrientation && (
+          <OrientationFlow onComplete={() => setShowOrientation(false)} />
+        )}
 
         <section className="grid grid-cols-4 gap-3">
           <Kpi icon={AlertTriangle} label="Open Alerts" value={(alerts as unknown as any[]).length} accent />
