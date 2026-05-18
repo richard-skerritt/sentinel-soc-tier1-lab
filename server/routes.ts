@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import type { Express } from "express";
 import { createServer } from "node:http";
 import type { Server } from "node:http";

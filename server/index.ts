@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import "dotenv/config";
 import express, { Response, NextFunction } from 'express';
 import type { Request } from 'express';

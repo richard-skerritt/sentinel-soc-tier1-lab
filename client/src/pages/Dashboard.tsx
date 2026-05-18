@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { Layout } from "@/components/Layout";
 import { useQuery } from "@tanstack/react-query";
 import alertsData from "@/data/alerts.json";

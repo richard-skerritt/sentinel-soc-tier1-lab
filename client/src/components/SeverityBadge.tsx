@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { ReactNode } from "react";
 
 const STYLE: Record<string, { bg: string; fg: string; bd: string }> = {

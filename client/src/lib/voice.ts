@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 // Voice playback client. Plays Morgan's dialogue via the /api/voice proxy.
 // - Sequential queue so consecutive lines don't overlap.
 // - Fails silent when voice not configured (text-only mode).

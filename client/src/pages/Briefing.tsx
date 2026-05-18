@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { Layout } from "@/components/Layout";
 import { MorganBubble } from "@/components/MorganBubble";
 import { Button } from "@/components/ui/button";

@@ -1,21 +1,27 @@
-MIT License
+Copyright © 2026 Richard Skerritt. All rights reserved.
 
-Copyright (c) 2026 Richard Skerritt
+NIGHTSHIFT — SOC Tier 1 Training Simulator
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is granted, free of charge, to any individual to:
+  - Run this software locally for personal study and non-commercial training
+  - Fork the repository to experiment with the codebase privately
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The following are NOT permitted without prior written permission from the author:
+  - Commercial use, sale, or monetisation of this software or any derivative
+  - Redistribution of this software or substantial portions of it, in source
+    or compiled form, to third parties
+  - Use of the Nightshift name, Morgan Reyes persona, alert scenarios, runbook
+    content, attack chain narratives, or tutorial copy in any other product
+    or service, whether free or paid
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The original creative content in this repository — including but not limited to
+the 35 hand-authored alert scenarios, two embedded attack chains, Morgan Reyes
+character and dialogue, category runbooks, MITRE detail entries, guided tutorial
+system, and all associated training copy — is the exclusive intellectual property
+of Richard Skerritt and is protected by copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE AUTHOR
+ACCEPTS NO LIABILITY FOR DAMAGES ARISING FROM USE OF THIS SOFTWARE.
+
+To request commercial licensing or permission beyond the above, contact:
+skerritt.richard@gmail.com

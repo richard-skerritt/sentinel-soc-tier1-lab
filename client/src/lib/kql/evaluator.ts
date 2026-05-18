@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 // KQL evaluator — walks the AST and produces rows.
 
 import { Pipeline, Operator, Expr, parseTimespan } from "./parser";

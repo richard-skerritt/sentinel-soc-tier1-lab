@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import toolStackData from "@/data/toolStacks.json";
 import type { ToolStack, ToolStackConfig } from "@/lib/types";
 

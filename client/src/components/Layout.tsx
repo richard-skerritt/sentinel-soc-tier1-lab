@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { Link, useLocation } from "wouter";
 import { Shield, Inbox, GraduationCap, MessageCircle, BarChart3, Settings, Home, Volume2, VolumeX, BookMarked } from "lucide-react";
 import { ReactNode } from "react";

@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { User } from "lucide-react";
 import { speak } from "@/lib/voice";

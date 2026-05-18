@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 // KQL tokeniser — emits a stream of tokens that the parser consumes.
 
 export type TokenType =

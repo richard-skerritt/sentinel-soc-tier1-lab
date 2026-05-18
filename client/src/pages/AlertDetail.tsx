@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { Layout } from "@/components/Layout";
 import { useParams, Link } from "wouter";
 import alertsData from "@/data/alerts.json";

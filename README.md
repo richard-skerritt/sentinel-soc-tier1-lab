@@ -4,7 +4,10 @@
 
 # Nightshift
 
-**SOC Tier 1 training for the 24/7 shift.**
+[![Licence: All Rights Reserved](https://img.shields.io/badge/licence-All%20Rights%20Reserved-red.svg)](./LICENSE)
+[![Copyright](https://img.shields.io/badge/copyright-Richard%20Skerritt%202026-blue.svg)](./NOTICE.md)
+
+**SOC Tier 1 training for the 24/7 shift.** · *Original work by Richard Skerritt*
 
 A realistic desk simulator for entry-level SOC analysts. Vague alerts across Sentinel, Rapid7, ELK and EDR. Ten raw log tables with a real attack chain hidden inside. Category runbooks, MITRE ATT&CK detail, a working KQL engine, and a senior mentor who will not give you the answer.
 
@@ -317,10 +320,25 @@ This is a **simulator**, not real Microsoft Sentinel, Rapid7 InsightIDR or ELK. 
 
 If you want to practise against the genuine product, Microsoft publishes an [official Sentinel training lab on GitHub](https://github.com/Azure/Azure-Sentinel/tree/master/Training) that deploys into your own Azure subscription. Rapid7 and Elastic both have free trial / cloud-free tiers. Nightshift is what you use **before** any of those — when you haven't got the subscription, the licence, or the confidence yet.
 
+## Licence & Copyright
+
+Copyright © 2026 Richard Skerritt. All rights reserved.
+
+Personal and non-commercial educational use is permitted. Commercial use,
+redistribution, and derivative products require written permission.
+See [LICENSE](./LICENSE) for full terms and [NOTICE.md](./NOTICE.md)
+for third-party component attributions.
+
+**Original creative content** — the 35 alert scenarios, two attack chains,
+Morgan Reyes persona and dialogue, category runbooks, MITRE detail entries,
+guided tutorial system, and all training copy — is the exclusive intellectual
+property of the author and may not be reproduced in other products or
+services without permission. Contact: skerritt.richard@gmail.com
+
 ## Disclaimer
 
-Built as a personal study tool for the Tier 1 SOC analyst path. No affiliation with Microsoft, Rapid7, Elastic, ElevenLabs or any commercial training vendor. All alert text, log data, the Morgan Reyes persona and both embedded attack chains are original fiction.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+Built as a personal study and portfolio project for the Tier 1 SOC analyst path.
+Not affiliated with, endorsed by, or connected to Microsoft, Rapid7, Elastic,
+ElevenLabs, or any other company whose products are referenced or simulated.
+All alert text, log data, the Morgan Reyes persona, and both embedded attack
+chains are original fiction created for educational purposes only.

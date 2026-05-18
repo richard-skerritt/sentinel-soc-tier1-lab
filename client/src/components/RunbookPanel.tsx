@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { useEffect, useState } from "react";
 import { Book, BookOpen, Check, Copy, CheckCheck, Lightbulb } from "lucide-react";
 import runbooksData from "@/data/runbooks.json";

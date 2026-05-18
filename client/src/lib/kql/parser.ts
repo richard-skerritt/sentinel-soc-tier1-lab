@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 // KQL parser — builds an AST from token stream.
 
 import { Token, tokenise } from "./tokeniser";

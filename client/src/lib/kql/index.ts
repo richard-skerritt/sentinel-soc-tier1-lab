@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { parse } from "./parser";
 import { evaluate, RunResult, FROZEN_NOW } from "./evaluator";
 

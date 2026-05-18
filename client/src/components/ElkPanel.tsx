@@ -1,3 +1,5 @@
+// Copyright © 2026 Richard Skerritt. All rights reserved.
+// See LICENSE for permitted use terms.
 import { Fragment, useMemo, useState } from "react";
 import { BarChart, Bar, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import {
